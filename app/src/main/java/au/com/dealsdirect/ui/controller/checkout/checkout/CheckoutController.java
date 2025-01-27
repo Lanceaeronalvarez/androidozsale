@@ -2429,14 +2429,14 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             return;
         }
 
-        final List<SaleItemProduct> items = new ArrayList<>(getBestSellerResponses);
-
-        if (items.isEmpty()) {
+        if (getBestSellerResponses == null || getBestSellerResponses.isEmpty()) {
             if (bestSellersViewHolder != null && mWidgetArea.indexOfChild(bestSellersViewHolder.itemView) < 0) {
                 mWidgetArea.removeView(bestSellersViewHolder.itemView);
             }
             return;
         }
+
+        final List<SaleItemProduct> items = new ArrayList<>(getBestSellerResponses);
 
         HorizontalScrollingItemsAdapter adapter = new HorizontalScrollingItemsAdapter(items, true, false, true);
         adapter.setOnItemTappedListener((item, position, size) -> {

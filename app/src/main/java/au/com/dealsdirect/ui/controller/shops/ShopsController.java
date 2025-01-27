@@ -27,16 +27,9 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.android.material.appbar.AppBarLayout;
-import com.mysale.genie.profiler.Profiler;
 import com.paginate.Paginate;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.net.CookieStore;
-import java.net.HttpCookie;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -66,7 +59,6 @@ import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.enums.FeatureUsageEventType;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
-import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.HorizontalScrollingItemsAdapter;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -84,10 +76,8 @@ import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CommonUtils;
-import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
-import au.com.dealsdirect.utils.PersistentCookieJar;
 import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
@@ -97,9 +87,6 @@ import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import io.reactivex.functions.Consumer;
-import okhttp3.Cookie;
-import okhttp3.HttpUrl;
-import okhttp3.Request;
 
 public class ShopsController extends BaseController implements ShopsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener {
 
@@ -181,7 +168,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private String c = "BestSeller";
     private String ca = "Shop";
     private String utm_source = "BestSeller";
-    private String utm_campaign= "BestSellerShop";
+    private String utm_campaign = "BestSellerShop";
 
     private GridLayoutManager mLayoutManager;
 
@@ -925,7 +912,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             adapter.setOnItemTappedListener((item, position, size) -> {
                 lastBestSellerItemPosition = position;
 
-                if(mCategoryName != "" && mCategoryName != null){
+                if (mCategoryName != "" && mCategoryName != null) {
                     ca = mCategoryName;
                     utm_campaign = "BestSeller" + mCategoryName;
                 }

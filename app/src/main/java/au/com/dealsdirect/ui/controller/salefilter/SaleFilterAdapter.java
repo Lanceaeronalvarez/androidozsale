@@ -1,15 +1,15 @@
 package au.com.dealsdirect.ui.controller.salefilter;
 
-import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,8 +17,8 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import au.com.dealsdirect.R;
@@ -31,39 +31,46 @@ import butterknife.ButterKnife;
 
 public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.SaleFilterViewHolder> {
 
-    private SaleFilterClickListener mSaleFilterAdapterClickListener;
-    private Context mContext;
-    private int mFilterLevel;
-    private String mFilterType = "";
-    private String mCategoryKey = "";
-    private String mSourceType = "";
-    private boolean mShowSubCategories;
+    private final SaleFilterClickListener mSaleFilterAdapterClickListener;
+    private final int mFilterLevel;
+    private String mFilterType;
+    private final boolean mShowSubCategories;
     private boolean mShowSort;
     private boolean isBrandFilter;
-    private boolean mShowColor;
-    private boolean mShowCategory;
+    private final boolean mShowColor;
+    private final boolean mShowCategory;
     private Set<SearchChipModel> mSearchItemsList;
     private Set<SearchChipModel> mPreSelectedFilters;
     private ArrayList<String> mData = new ArrayList<>();
-    private List<SearchChipModel> mSelectedFilters = new ArrayList<>();
-    private List<String> mSelectedCategoryKeys = new ArrayList<>();
-    private List<Integer> mCategoryLevel = new ArrayList<>();
-    private List<GetCategoryTreeResponse> mCategoryItems = new ArrayList<>();
-    private ArrayList<SortingResponse> mSortingList = new ArrayList<>();
-    private ArrayList<String> mfilterCountList = new ArrayList<>();
-    private ArrayList<String> mSubCategoriesToShow = new ArrayList<>();
-    private ArrayList<Pair<String, String>> mBrandsWithTotal = new ArrayList();
+    private final List<SearchChipModel> mSelectedFilters;
+    private final List<String> mSelectedCategoryKeys = new ArrayList<>();
+    private final List<Integer> mCategoryLevel = new ArrayList<>();
+    private final List<GetCategoryTreeResponse> mCategoryItems = new ArrayList<>();
+    private final List<SortingResponse> mSortingList = new ArrayList<>();
+    private final List<String> mfilterCountList = new ArrayList<>();
+    private final List<String> mSubCategoriesToShow = new ArrayList<>();
+    private final List<Pair<String, String>> mBrandsWithTotal = new ArrayList<>();
 
-    public SaleFilterAdapter(Context context, SaleFilterClickListener clickListener, int filterLevel, List<?> data, List<String> tabTitles, String filterType, List<SearchChipModel> selectedFilters, List<GetCategoryTreeResponse> mCategoryTree, boolean showSubCategories, Set<String> categoryKeys, ArrayList<SortingResponse> sortingList, Boolean showSort, ArrayList<String> filterCountList, Boolean showColor, String categoryKey, String sourceType, boolean showCategory, ArrayList<Pair<String, String>> brandsWithTotal) {
-        mContext = context;
+    public SaleFilterAdapter(SaleFilterClickListener clickListener,
+                             int filterLevel,
+                             List<String> tabTitles,
+                             String filterType,
+                             List<SearchChipModel> selectedFilters,
+                             List<GetCategoryTreeResponse> mCategoryTree,
+                             boolean showSubCategories,
+                             Set<String> categoryKeys,
+                             ArrayList<SortingResponse> sortingList,
+                             Boolean showSort,
+                             ArrayList<String> filterCountList,
+                             Boolean showColor,
+                             boolean showCategory,
+                             ArrayList<Pair<String, String>> brandsWithTotal) {
         mSaleFilterAdapterClickListener = clickListener;
         mFilterLevel = filterLevel;
         mFilterType = filterType;
         mShowSubCategories = showSubCategories;
         mSelectedFilters = selectedFilters;
         mShowColor = showColor;
-        mCategoryKey = categoryKey;
-        mSourceType = sourceType;
         mShowCategory = showCategory;
         if (showSubCategories) {
             mSelectedCategoryKeys.addAll(categoryKeys);
@@ -78,58 +85,64 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
             mfilterCountList.addAll(filterCountList);
             mData = (ArrayList<String>) tabTitles;
         }
-        if(mFilterType.equalsIgnoreCase(BundleKeys.BRANDS_FACETFILTER_NAME)) {
+        if (mFilterType.equalsIgnoreCase(BundleKeys.BRANDS_FACETFILTER_NAME)) {
             isBrandFilter = true;
             mBrandsWithTotal.addAll(brandsWithTotal);
         }
     }
 
+    @NonNull
     @Override
     public SaleFilterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_sales_filter, parent, false);
-        SaleFilterViewHolder vh = new SaleFilterViewHolder(view);
-        return vh;
+        return new SaleFilterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(SaleFilterViewHolder holder, int position) {
-        SaleFilterAdapter.SaleFilterViewHolder vh = (SaleFilterAdapter.SaleFilterViewHolder) holder;
 
         holder.categoryText.setText(mData.get(position));
 
         if (mFilterLevel == 1) {
-            if (mData.get(position).contains("Sort") || mData.get(position).contains("Delivery") || mData.get(position).contains("New arrival")) {
+            if (mData.get(position).contains("Sort") ||
+                    mData.get(position).contains("Delivery") ||
+                    mData.get(position).contains("New arrival")) {
                 holder.saleFilterTile.setVisibility(View.GONE);
             }
-            if (mShowColor == false && mData.get(position).contains("Color")) {
+            if (!mShowColor && mData.get(position).contains("Color")) {
                 holder.saleFilterTile.setVisibility(View.GONE);
             }
-            if (mShowCategory == false && mData.get(position).equals("Category")) {
+            if (!mShowCategory && mData.get(position).equals("Category")) {
                 holder.saleFilterTile.setVisibility(View.GONE);
             }
             holder.itemView.setOnClickListener(view -> {
-                mSaleFilterAdapterClickListener.onCategoryClicked(mData.get(position), position);
+                final int pos = holder.getBindingAdapterPosition();
+                mSaleFilterAdapterClickListener.onCategoryClicked(mData.get(pos), pos);
             });
         } else {
             holder.filterCheckbox.setVisibility(View.VISIBLE);
             holder.filterChevron.setVisibility(View.GONE);
             holder.productCountText.setVisibility(View.VISIBLE);
 
-            if (!mShowSort && mFilterType != BundleKeys.COLORS_FACETFILTER_NAME && !mfilterCountList.isEmpty()) {
-                holder.productCountText.setText("(" + mfilterCountList.get(position) + ")");
+            if (!mShowSort &&
+                    !Objects.equals(mFilterType, BundleKeys.COLORS_FACETFILTER_NAME) &&
+                    !mfilterCountList.isEmpty()) {
+                final String productCountText = "(" + mfilterCountList.get(position) + ")";
+                holder.productCountText.setText(productCountText);
             }
 
             //Brand filter improvements
-            if(mFilterType == BundleKeys.BRANDS_FACETFILTER_NAME){
+            if (Objects.equals(mFilterType, BundleKeys.BRANDS_FACETFILTER_NAME)) {
                 holder.categoryText.setText(mBrandsWithTotal.get(position).first);
-                holder.productCountText.setText("(" + mBrandsWithTotal.get(position).second + ")");
+                final String productCountText = "(" + mBrandsWithTotal.get(position).second + ")";
+                holder.productCountText.setText(productCountText);
             }
 
             if (mShowSubCategories) {
                 holder.filterCheckbox.setButtonDrawable(R.drawable.custom_checkbox_selector);
                 String currentCategoryKey = mCategoryItems.get(position).getKey();
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.saleFilterTile.getLayoutParams();
-                if (Integer.valueOf(mfilterCountList.get(position)) <= 1) {
+                if (Integer.parseInt(mfilterCountList.get(position)) <= 1) {
                     holder.productCountText.setVisibility(View.GONE);
                 }
 
@@ -160,23 +173,19 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                     }
                 }
 
-                if (mSelectedCategoryKeys.contains(currentCategoryKey)) {
-                    holder.filterCheckbox.setChecked(true);
-                } else {
-                    holder.filterCheckbox.setChecked(false);
-                }
+                holder.filterCheckbox.setChecked(mSelectedCategoryKeys.contains(currentCategoryKey));
 
-                if(holder.filterCheckbox.isChecked()){
+                if (holder.filterCheckbox.isChecked()) {
                     // Add category if parent category is not selected
-                    if(mCategoryLevel.get(position) == 1){
-                        if(!mSelectedCategoryKeys.contains(currentCategoryKey.split(">>>")[0])) {
+                    if (mCategoryLevel.get(position) == 1) {
+                        if (!mSelectedCategoryKeys.contains(currentCategoryKey.split(">>>")[0])) {
                             mSaleFilterAdapterClickListener.onAddCategoryFilter(currentCategoryKey, mCategoryItems.get(position).getName());
                         }
                     }
 
-                    if(mCategoryLevel.get(position) >= 2){
+                    if (mCategoryLevel.get(position) >= 2) {
                         String categoryNameKey = currentCategoryKey.substring(0, currentCategoryKey.lastIndexOf(">") - 2);
-                        if(!mSelectedCategoryKeys.contains(categoryNameKey)) {
+                        if (!mSelectedCategoryKeys.contains(categoryNameKey)) {
                             mSaleFilterAdapterClickListener.onAddCategoryFilter(currentCategoryKey, mCategoryItems.get(position).getName());
                         }
                     }
@@ -192,7 +201,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                     for (GetCategoryTreeResponse subCategories : mCategoryItems.get(position).getChildren()) {
                         if (mSelectedCategoryKeys.contains(subCategories.getKey())) {
                             totalCheckedChildCount += 1;
-                        }else if(mSelectedCategoryKeys.contains(currentCategoryKey)){
+                        } else if (mSelectedCategoryKeys.contains(currentCategoryKey)) {
                             mSelectedCategoryKeys.add(subCategories.getKey());
                             mSaleFilterAdapterClickListener.onRemoveCategoryFilter(currentCategoryKey, subCategories.getName());
                             totalCheckedChildCount += 1;
@@ -203,7 +212,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                             for (GetCategoryTreeResponse subCategories2 : subCategories.getChildren()) {
                                 if (mSelectedCategoryKeys.contains(subCategories2.getKey())) {
                                     totalCheckedChildCount += 1;
-                                }else if(mSelectedCategoryKeys.contains(currentCategoryKey)){
+                                } else if (mSelectedCategoryKeys.contains(currentCategoryKey)) {
                                     mSelectedCategoryKeys.add(subCategories2.getKey());
                                     mSaleFilterAdapterClickListener.onRemoveCategoryFilter(currentCategoryKey, subCategories2.getName());
                                     totalCheckedChildCount += 1;
@@ -214,7 +223,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                                     for (GetCategoryTreeResponse subCategories3 : subCategories2.getChildren()) {
                                         if (mSelectedCategoryKeys.contains(subCategories3.getKey())) {
                                             totalCheckedChildCount += 1;
-                                        }else if(mSelectedCategoryKeys.contains(currentCategoryKey)){
+                                        } else if (mSelectedCategoryKeys.contains(currentCategoryKey)) {
                                             mSelectedCategoryKeys.add(subCategories3.getKey());
                                             mSaleFilterAdapterClickListener.onRemoveCategoryFilter(currentCategoryKey, subCategories3.getName());
                                             totalCheckedChildCount += 1;
@@ -227,7 +236,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
 
                     if (totalCheckedChildCount == totalChildCount) {
                         holder.filterCheckbox.setChecked(true);
-                        if(!mSelectedCategoryKeys.contains(currentCategoryKey)){
+                        if (!mSelectedCategoryKeys.contains(currentCategoryKey)) {
                             mSelectedCategoryKeys.add(currentCategoryKey);
                             categoriesToShowOrHide(position, true);
                         }
@@ -241,33 +250,35 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                 }
 
                 holder.filterCheckbox.setOnClickListener(v -> {
+                    final int pos = holder.getBindingAdapterPosition();
+                    final String catKey = mCategoryItems.get(pos).getKey();
                     if (holder.filterCheckbox.isChecked()) {
-                        mSelectedCategoryKeys.add(mCategoryItems.get(position).getKey());
-                        mSelectedCategoryKeys.addAll(categoriesToShowOrHide(position, true));
+                        mSelectedCategoryKeys.add(mCategoryItems.get(pos).getKey());
+                        mSelectedCategoryKeys.addAll(categoriesToShowOrHide(pos, true));
                     } else {
-                        mSelectedCategoryKeys.remove(mCategoryItems.get(position).getKey());
-                        mSelectedCategoryKeys.removeAll(categoriesToShowOrHide(position, false));
-                        String categoryNameKey = mCategoryItems.get(position).getKey().replace(">>>"+mCategoryItems.get(position).getName(), "");
-                        String categoryNameKey2 = "";
+                        mSelectedCategoryKeys.remove(mCategoryItems.get(pos).getKey());
+                        mSelectedCategoryKeys.removeAll(categoriesToShowOrHide(pos, false));
+                        final String categoryNameKey = mCategoryItems.get(pos).getKey().replace(">>>" + mCategoryItems.get(pos).getName(), "");
                         mSelectedCategoryKeys.remove(categoryNameKey);
-                        mSelectedCategoryKeys.remove(currentCategoryKey.split(">>>")[0]);
-                        if(mCategoryLevel.get(position) == 2) {
-                            mSaleFilterAdapterClickListener.onRemoveCategoryFilter(currentCategoryKey, currentCategoryKey.split(">>>")[1]);
+                        mSelectedCategoryKeys.remove(catKey.split(">>>")[0]);
+                        if (mCategoryLevel.get(pos) == 2) {
+                            mSaleFilterAdapterClickListener.onRemoveCategoryFilter(catKey, catKey.split(">>>")[1]);
                         }
-                        if(mCategoryLevel.get(position) == 3){
-                            categoryNameKey2 = categoryNameKey.replace(">>>"+currentCategoryKey.split(">>>")[2], "");
+                        if (mCategoryLevel.get(pos) == 3) {
+                            final String categoryNameKey2 = categoryNameKey.replace(">>>" + catKey.split(">>>")[2], "");
                             mSelectedCategoryKeys.remove(categoryNameKey2);
-                            mSaleFilterAdapterClickListener.onRemoveCategoryFilter(currentCategoryKey, currentCategoryKey.split(">>>")[2]);
+                            mSaleFilterAdapterClickListener.onRemoveCategoryFilter(catKey, catKey.split(">>>")[2]);
                         }
-                        mSaleFilterAdapterClickListener.onRemoveCategoryFilter(currentCategoryKey.split(">>>")[0], currentCategoryKey.split(">>>")[0]);
+                        mSaleFilterAdapterClickListener.onRemoveCategoryFilter(catKey.split(">>>")[0], catKey.split(">>>")[0]);
                     }
                     mSaleFilterAdapterClickListener.updateSeeAllProducts();
                     notifyDataSetChanged();
                 });
 
                 holder.saleFilterTile.setOnClickListener(view -> {
+                    final int pos = holder.getBindingAdapterPosition();
                     holder.filterChevron.setImageResource(R.drawable.ic_chevron_up);
-                    for (GetCategoryTreeResponse child : mCategoryItems.get(position).getChildren()) {
+                    for (GetCategoryTreeResponse child : mCategoryItems.get(pos).getChildren()) {
                         if (mSubCategoriesToShow.contains(child.getKey())) {
                             mSubCategoriesToShow.remove(child.getKey());
                         } else {
@@ -277,9 +288,10 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                     notifyDataSetChanged();
                 });
             } else if (mShowSort) {
-                holder.categoryText.setText(mData.get(position).substring(0, 1).toUpperCase() + mData.get(position).substring(1).toLowerCase());
+                final String categoryText = mData.get(position).substring(0, 1).toUpperCase() + mData.get(position).substring(1).toLowerCase();
+                holder.categoryText.setText(categoryText);
                 for (SearchChipModel chip : mSelectedFilters) {
-                    if (chip.getFilterType() == mFilterType) {
+                    if (Objects.equals(chip.getFilterType(), mFilterType)) {
                         if (chip.getChipTitle().contains(mData.get(position))) {
                             holder.filterCheckbox.setChecked(true);
                         }
@@ -290,7 +302,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                     if (!holder.filterCheckbox.isChecked()) {
                         mSaleFilterAdapterClickListener.removeAllSort();
                     } else {
-                        addChip(position);
+                        addChip(holder.getBindingAdapterPosition());
                     }
                     notifyDataSetChanged();
                 });
@@ -303,21 +315,18 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                             if (mShowSort) {
                                 holder.filterCheck.setVisibility(View.VISIBLE);
                             }
-                        }else if(isBrandFilter && chip.getChipTitle().equals(mBrandsWithTotal.get(position).first)){
+                        } else if (isBrandFilter && chip.getChipTitle().equals(mBrandsWithTotal.get(position).first)) {
                             holder.filterCheckbox.setChecked(true);
                         }
                     }
                 }
 
-                holder.filterCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
-                            System.out.println("brandfilterChecked : " + mBrandsWithTotal.get(position).first + " | " + isBrandFilter);
-                            addChip(position);
-                        } else {
-                            removeChip(position);
-                        }
+                holder.filterCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    final int pos = holder.getBindingAdapterPosition();
+                    if (isChecked) {
+                        addChip(pos);
+                    } else {
+                        removeChip(pos);
                     }
                 });
             }
@@ -327,29 +336,29 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
 
     private List<String> categoriesToShowOrHide(int position, boolean isAdd) {
         List<String> mNewSelectedCategoryKeys = new ArrayList<>();
-        if(isAdd){
+        if (isAdd) {
             mSaleFilterAdapterClickListener.onAddCategoryFilter(mCategoryItems.get(position).getKey(), mCategoryItems.get(position).getName());
-        }else{
+        } else {
             mSaleFilterAdapterClickListener.onRemoveCategoryFilter(mCategoryItems.get(position).getKey(), mCategoryItems.get(position).getName());
         }
         if (!mCategoryItems.get(position).getChildren().isEmpty()) {
             for (GetCategoryTreeResponse subCategories : mCategoryItems.get(position).getChildren()) {
                 mSaleFilterAdapterClickListener.onRemoveCategoryFilter(subCategories.getKey(), subCategories.getName());
-                if(!mSelectedCategoryKeys.contains(subCategories.getKey()) || !isAdd){
+                if (!mSelectedCategoryKeys.contains(subCategories.getKey()) || !isAdd) {
                     mNewSelectedCategoryKeys.add(subCategories.getKey());
                 }
 
                 if (!subCategories.getChildren().isEmpty()) {
                     for (GetCategoryTreeResponse subCategories2 : subCategories.getChildren()) {
                         mSaleFilterAdapterClickListener.onRemoveCategoryFilter(subCategories2.getKey(), subCategories2.getName());
-                        if(!mSelectedCategoryKeys.contains(subCategories2.getKey()) || !isAdd){
+                        if (!mSelectedCategoryKeys.contains(subCategories2.getKey()) || !isAdd) {
                             mNewSelectedCategoryKeys.add(subCategories2.getKey());
                         }
 
                         if (!subCategories2.getChildren().isEmpty()) {
                             for (GetCategoryTreeResponse subCategories3 : subCategories2.getChildren()) {
                                 mSaleFilterAdapterClickListener.onRemoveCategoryFilter(subCategories3.getKey(), subCategories3.getName());
-                                if(!mSelectedCategoryKeys.contains(subCategories3.getKey()) || !isAdd){
+                                if (!mSelectedCategoryKeys.contains(subCategories3.getKey()) || !isAdd) {
                                     mNewSelectedCategoryKeys.add(subCategories3.getKey());
                                 }
                             }
@@ -378,31 +387,60 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
     }
 
     private void addChip(int position) {
-        SearchChipModel newChip = new SearchChipModel(mFilterType,  isBrandFilter ? mBrandsWithTotal.get(position).first : mData.get(position), mShowSort ? mSortingList.get(position).getKey() : "");
+        if (position < 0) {
+            return;
+        }
+        String chipTitle;
+        if (isBrandFilter) {
+            if (position >= mBrandsWithTotal.size()) {
+                return;
+            }
+            chipTitle = mBrandsWithTotal.get(position).first;
+        } else {
+            if (position >= mData.size()) {
+                return;
+            }
+            chipTitle = mData.get(position);
+        }
+        String key = mShowSort ? (position < mSortingList.size() ? mSortingList.get(position).getKey() : "") : "";
+        SearchChipModel newChip = new SearchChipModel(mFilterType, chipTitle, key);
         mSearchItemsList.add(newChip);
-        mSaleFilterAdapterClickListener.onAddFilter(mFilterType, isBrandFilter ? mBrandsWithTotal.get(position).first : mData.get(position), newChip);
+        mSaleFilterAdapterClickListener.onAddFilter(mFilterType, chipTitle, newChip);
     }
 
     private void removeChip(int position) {
+        if (position < 0) {
+            return;
+        }
+        String chipTitle;
+        if (isBrandFilter) {
+            if (position >= mBrandsWithTotal.size()) {
+                return;
+            }
+            chipTitle = mBrandsWithTotal.get(position).first;
+        } else {
+            if (position >= mData.size()) {
+                return;
+            }
+            chipTitle = mData.get(position);
+        }
+
         SearchChipModel chipToRemove = null;
 
-        if (mPreSelectedFilters != null && mPreSelectedFilters.size() != 0) {
+        if (mPreSelectedFilters != null && !mPreSelectedFilters.isEmpty()) {
             final Set<SearchChipModel> newSet = new HashSet<>(mPreSelectedFilters);
-            for (Iterator<SearchChipModel> it = mPreSelectedFilters.iterator(); it.hasNext(); ) {
-                SearchChipModel chip = it.next();
-                if (chip.getChipTitle().equals(isBrandFilter ? mBrandsWithTotal.get(position).first : mData.get(position))) {
+            for (SearchChipModel chip : mPreSelectedFilters) {
+                if (chip.getChipTitle().equals(chipTitle)) {
                     newSet.remove(chip);
                 }
             }
             mPreSelectedFilters = newSet;
         }
 
-        if (mSelectedFilters != null && mSelectedFilters.size() != 0) {
-            final Set<SearchChipModel> newSet = new HashSet<>(mSelectedFilters);
-            for (Iterator<SearchChipModel> it = mSelectedFilters.iterator(); it.hasNext(); ) {
-                SearchChipModel chip = it.next();
-                if (chip.getChipTitle().equals(isBrandFilter ? mBrandsWithTotal.get(position).first : mData.get(position)) && chip.getFilterType().equals(mFilterType)) {
-                    newSet.remove(chip);
+        if (mSelectedFilters != null && !mSelectedFilters.isEmpty()) {
+            for (SearchChipModel chip : mSelectedFilters) {
+                if (chip.getChipTitle().equals(chipTitle) &&
+                        chip.getFilterType().equals(mFilterType)) {
                     chipToRemove = chip;
                 }
             }
@@ -418,9 +456,9 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
         mSearchItemsList = list;
     }
 
-    public class TransformedNode {
-        private GetCategoryTreeResponse mObject;
-        private int mLevel;
+    public static class TransformedNode {
+        private final GetCategoryTreeResponse mObject;
+        private final int mLevel;
 
         TransformedNode(GetCategoryTreeResponse object, int level) {
             mObject = object;
@@ -437,13 +475,13 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
     }
 
     public List<SaleFilterAdapter.TransformedNode> transformData(List<GetCategoryTreeResponse> data) {
-        ArrayList<SaleFilterAdapter.TransformedNode> list = new ArrayList<>();
+        final ArrayList<SaleFilterAdapter.TransformedNode> list = new ArrayList<>();
         for (GetCategoryTreeResponse node : data) {
             node.traverseTree(new GetCategoryTreeResponse.TreeTraversalBlock() {
                 @Override
                 public boolean execute(GetCategoryTreeResponse parent, Object option) {
-                    int level = ((Integer) option).intValue();
-                    list.add(new SaleFilterAdapter.TransformedNode(parent, Integer.valueOf(level)));
+                    int level = (Integer) option;
+                    list.add(new TransformedNode(parent, level));
 
                     mCategoryItems.add(parent);
                     mCategoryLevel.add(level);
@@ -454,9 +492,9 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
 
                 @Override
                 public Object transformOption(GetCategoryTreeResponse parent, Object option) {
-                    return Integer.valueOf(((Integer) option).intValue() + 1);
+                    return (Integer) option + 1;
                 }
-            }, Integer.valueOf(0));
+            }, 0);
         }
 
         return list;

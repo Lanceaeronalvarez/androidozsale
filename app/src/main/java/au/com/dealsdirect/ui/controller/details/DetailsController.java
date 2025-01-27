@@ -149,7 +149,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         emailSubscriptionPreference = emailSubscriptionPreferencesRadioButtonsIdMap.get(checkedId);
         emailSubscriptionPreferenceDate = Calendar.getInstance().getTime();
 
-        if(isCategorySelectionEnabled == false){
+        if (isCategorySelectionEnabled == false) {
             isCategorySelectionEnabled = true;
             setRecyclerAdapter();
         }
@@ -177,11 +177,11 @@ public class DetailsController extends BasePullToRefreshController implements De
         emailCategoryPreferencesSuccessMessage.setText(response.getMessage());
 
         final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                emailCategoryPreferencesSuccessMessage.setVisibility(View.GONE);
+        handler.postDelayed(() -> {
+            if (!isViewAttached() || emailCategoryPreferencesSuccessMessage == null) {
+                return;
             }
+            emailCategoryPreferencesSuccessMessage.setVisibility(View.GONE);
         }, showApiResponseMillis);
     }
 
@@ -297,13 +297,13 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         updateEmailSubscriptionPreferenceRadioGroupSelection();
 
-        if(userDetailsResponse.getCategories() != null ){
+        if (userDetailsResponse.getCategories() != null) {
             mCategories.putAll(userDetailsResponse.getCategories());
         }
 
-        if(emailSubscriptionPreference.equals(UNSUBSCRIBE_PREFERENCE_KEY)){
+        if (emailSubscriptionPreference.equals(UNSUBSCRIBE_PREFERENCE_KEY)) {
             unsubscribeRecycler();
-        }else{
+        } else {
             isCategorySelectionEnabled = true;
             setRecyclerAdapter();
         }
@@ -365,22 +365,22 @@ public class DetailsController extends BasePullToRefreshController implements De
     @Override
     public void onGetEmailSubscriptionTemplates(List<GetEmailSubscriptionTemplatesResponse> list) {
         for (int it = 0; it < list.size(); it++) {
-            if(list.get(it).getProperty().equals(PREFERENCE_CATEGORIES_PROPERTY)){
+            if (list.get(it).getProperty().equals(PREFERENCE_CATEGORIES_PROPERTY)) {
                 GetEmailSubscriptionTemplatesResponse categoryPreferenceOption = list.get(it);
                 for (int itOption = 0; itOption < categoryPreferenceOption.getOptions().size(); itOption++) {
                     String key = categoryPreferenceOption.getOptions().get(itOption).getPreference().toLowerCase();
                     mCategoriesList.put(categoryPreferenceOption.getOptions().get(itOption).getText(), categoryPreferenceOption.getOptions().get(itOption).getPreference());
-                    if(!mCategories.containsKey(key)){
+                    if (!mCategories.containsKey(key)) {
                         mCategories.put(key, false);
                     }
                 }
-                if(!categoryPreferenceOption.getOptions().isEmpty()){
+                if (!categoryPreferenceOption.getOptions().isEmpty()) {
                     emailCategoryPreferencesHeaderTextView.setText(categoryPreferenceOption.getTitle());
                     mCategoriesList.put(categoryPreferenceOption.getSelectAllText(), "all");
                     setRecyclerAdapter();
                 }
             }
-            if(list.get(it).getProperty().equals(PREFERENCE_MEMBER_PROPERTY)){
+            if (list.get(it).getProperty().equals(PREFERENCE_MEMBER_PROPERTY)) {
                 emailSubscriptionTemplates = list.get(it);
                 if (emailSubscriptionTemplates == null) {
                     emailSubscriptionPreferencesContainerView.setVisibility(View.GONE);
@@ -571,7 +571,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         UpdateUserEmailSubscriptionRequest request = new UpdateUserEmailSubscriptionRequest();
         request.setEmail(email);
         request.setPreference(emailSubscriptionPreference);
-        request.setStatus(!emailSubscriptionPreference.equalsIgnoreCase(UNSUBSCRIBE_PREFERENCE_KEY));
+        request.setStatus(emailSubscriptionPreference != null && !emailSubscriptionPreference.equalsIgnoreCase(UNSUBSCRIBE_PREFERENCE_KEY));
         request.setCategories(mCategories);
 
         mPresenter.updateEmailSubscriptionPreference(request);
@@ -700,7 +700,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         setRecyclerAdapter();
     }
 
-    public void setRecyclerAdapter(){
+    public void setRecyclerAdapter() {
         mAdapter = new PreferenceCategoriesAdapter(mActivity, this, mCategoriesList, mCategories, isCategorySelectionEnabled);
         categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         categoriesRecyclerView.setMotionEventSplittingEnabled(false);
@@ -710,7 +710,7 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     }
 
-    public void unsubscribeRecycler(){
+    public void unsubscribeRecycler() {
         isCategorySelectionEnabled = false;
         setRecyclerAdapter();
     }
