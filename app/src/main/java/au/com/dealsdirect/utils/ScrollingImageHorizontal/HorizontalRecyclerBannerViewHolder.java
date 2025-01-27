@@ -30,9 +30,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by MTC on 2020-06-05.
- */
 public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder {
 
     private int scrollStepSize = 1;
@@ -334,6 +331,9 @@ public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder 
     }
 
     public void snapToCenter(boolean withAnimation) {
+        if (getStepWidth() == 0) {
+            return;
+        }
         int diff = (getXBeforeNextPosition() - getXAfterPreviousPosition()) % getStepWidth();
         if (diff < 0) {
             scrollToNext(withAnimation);

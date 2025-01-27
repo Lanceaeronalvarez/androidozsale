@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,7 +134,7 @@ public class NewSaleCategoriesController extends BaseController
         mToolbarLeftOptionButton.setOnClickListener(v -> onLeftButtonClicked());
         mToolbarSearchButton.setOnClickListener(v -> onRightButtonClick());
         mSeeAllButton.setOnClickListener(v -> {
-            System.out.println("mLevel " + mLevel);
+            Log.d("NewSaleCategories", "mLevel " + mLevel);
             if (mLevel == 1) {
                 ShopsController shopsController = ShopsController.instanceWithCategoryFilter(
                         categoryResponseId, categoryResponseKey
