@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.categories.adapter;
 
-import android.content.Context;
-import android.util.Log;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,67 +12,62 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
-import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.listener.NewSaleCategoryClickListener;
-import au.com.dealsdirect.ui.controller.categories.listener.SaleCategoryClickListener;
-import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by MTC on 2019-12-05.
- */
 public class NewSaleCategoryAdapter extends RecyclerView.Adapter<NewSaleCategoryAdapter.NewSaleCategoryViewHolder> {
 
-    private List<GetCategoryTreeResponse> mData = new ArrayList<>();
-    private NewSaleCategoryClickListener mCategoryAdapterClickListener;
-    private Context mContext;
-    private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
-    private HashMap<String, Boolean> activeStates = new HashMap<>();
+    private List<GetCategoryTreeResponse> mData;
+    private final NewSaleCategoryClickListener mCategoryAdapterClickListener;
 
-    public NewSaleCategoryAdapter(Context context,
-                                  List<GetCategoryTreeResponse> data,
-                                  NewSaleCategoryClickListener categoryClickListener,
-                                  Map<String, List<GetCategoryTreeResponse>> categoryMap) {
-
-        mContext = context;
+    public NewSaleCategoryAdapter(List<GetCategoryTreeResponse> data,
+                                  NewSaleCategoryClickListener categoryClickListener) {
         mData = data;
         mCategoryAdapterClickListener = categoryClickListener;
-        mCategoryMap = categoryMap;
     }
 
     @NonNull
     @Override
     public NewSaleCategoryAdapter.NewSaleCategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_newsalecategory, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.viewholder_newsalecategory, parent, false);
         return new NewSaleCategoryViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull NewSaleCategoryAdapter.NewSaleCategoryViewHolder holder, int position) {
-        if(mData.get(position).getName().equals("All")){
-         holder.categoryContainer.setVisibility(View.GONE);
+        final GetCategoryTreeResponse item = mData.get(position);
+        if (item.getName().equals("All")) {
+            holder.categoryContainer.setVisibility(View.GONE);
         }
-        String subCategoryTitle = mData.get(position).getName();
+        
+        final String subCategoryTitle = item.getName();
         holder.subCategoryTitle.setText(subCategoryTitle);
-        GetCategoryTreeResponse item = mData.get(position);
 
-        if(item.getChildren() != null){
-            holder.subCategoryImageButton.setVisibility(View.VISIBLE);
+        final String textColor = item.getTextColor();
+        if (textColor != null && !textColor.isEmpty()) {
+            holder.subCategoryTitle.setTextColor(Color.parseColor(textColor));
+        } else {
+            holder.resetTitleTextColor();
         }
+
+        holder.subCategoryImageButton.setVisibility(
+                item.getChildren() != null && !item.getChildren().isEmpty() ?
+                        View.VISIBLE : View.GONE);
 
         holder.itemView.setOnClickListener(view -> {
-            mCategoryAdapterClickListener.onCategoryClicked(position, mData.get(position), subCategoryTitle);
+            final int pos = holder.getBindingAdapterPosition();
+            mCategoryAdapterClickListener.onCategoryClicked(pos, mData.get(pos), mData.get(pos).getName());
         });
 
         holder.subCategoryImageButton.setOnClickListener(view -> {
-            mCategoryAdapterClickListener.onCategoryClicked(position, mData.get(position), subCategoryTitle);
+            final int pos = holder.getBindingAdapterPosition();
+            mCategoryAdapterClickListener.onCategoryClicked(pos, mData.get(pos), mData.get(pos).getName());
         });
 
     }
@@ -108,18 +102,16 @@ public class NewSaleCategoryAdapter extends RecyclerView.Adapter<NewSaleCategory
         @BindView(R.id.viewholder_salecategory_image_button)
         ImageButton subCategoryImageButton;
 
-        public CategoriesMvpPresenter mPresenter;
+        private final int titleDefaultTextColor;
 
         public NewSaleCategoryViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            titleDefaultTextColor = subCategoryTitle.getTextColors().getDefaultColor();
         }
 
-        public NewSaleCategoryViewHolder(View itemView, CategoriesMvpPresenter presenter) {
-            super(itemView);
-            mPresenter = presenter;
-            ButterKnife.bind(this, itemView);
-
+        public void resetTitleTextColor() {
+            subCategoryTitle.setTextColor(titleDefaultTextColor);
         }
     }
 

@@ -269,7 +269,7 @@ public class NewSaleCategoriesController extends BaseController
     private void setupCategories() {
         if (mCategories != null) {
 
-            mCategoryAdapter = new NewSaleCategoryAdapter(mActivity, mCategories, this, mCategoryMap);
+            mCategoryAdapter = new NewSaleCategoryAdapter(mCategories, this);
 
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
             mRecyclerView.setAdapter(mCategoryAdapter);
@@ -543,7 +543,7 @@ public class NewSaleCategoriesController extends BaseController
             mToolbarLeftOptionButton.setVisibility(
                     CommonUtils.positionOfControllerInRouterBackstack(getRouter(), this) > 0 ?
                             View.VISIBLE : View.GONE);
-            mCategoryAdapter = new NewSaleCategoryAdapter(mActivity, mCategories, this, mCategoryMap);
+            mCategoryAdapter = new NewSaleCategoryAdapter(mCategories, this);
         } else if (mLevel == 1) {
             mToolbarTextView.setText(mCategoryName);
             mSeeAllButtonText.setText(allText + mCategoryName);
@@ -554,7 +554,7 @@ public class NewSaleCategoriesController extends BaseController
             } else {
                 mSeeAllButton.setVisibility(View.GONE);
             }
-            mCategoryAdapter = new NewSaleCategoryAdapter(mActivity, mSubCategories, this, mCategoryMap);
+            mCategoryAdapter = new NewSaleCategoryAdapter(mSubCategories, this);
         } else if (mLevel == 2) {
             mToolbarTextView.setText(mSubCategoryName);
             mSeeAllButtonText.setText(allText + mSubCategoryName);
@@ -565,7 +565,7 @@ public class NewSaleCategoriesController extends BaseController
             } else {
                 mSeeAllButton.setVisibility(View.GONE);
             }
-            mCategoryAdapter = new NewSaleCategoryAdapter(mActivity, mSubCategoriesChildren, this, mCategoryMap);
+            mCategoryAdapter = new NewSaleCategoryAdapter(mSubCategoriesChildren, this);
         }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         mRecyclerView.setAdapter(mCategoryAdapter);
