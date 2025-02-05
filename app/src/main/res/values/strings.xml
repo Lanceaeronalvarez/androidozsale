@@ -581,8 +581,6 @@
         <item>@string/account_returns_policy</item>
         <item>@string/account_language</item>
         <item>@string/account_country</item>
-        <item>@string/account_ourpay</item>
-        <!--<item>@string/account_select</item>-->
         <item>@string/account_information</item>
     </integer-array>
 
