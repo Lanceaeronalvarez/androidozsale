@@ -524,7 +524,7 @@ public class ViewContactHistoryController extends BaseController implements View
             }
         }
 
-        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(mActivity, false);
+        uploadFileToServer = new ImageUploadUtil.UploadFileToServer();
         uploadFileToServer.delegate = this;
         uploadFileToServer.execute(mAttachmentId,
                 mImageFileHashMap.get(imageCount), mPresenter.getUserAgent(), imageCount,

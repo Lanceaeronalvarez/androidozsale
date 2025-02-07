@@ -822,7 +822,7 @@ public class AddContactController extends BaseController
             }
         }
 
-        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(mActivity, false);
+        uploadFileToServer = new ImageUploadUtil.UploadFileToServer();
         uploadFileToServer.delegate = this;
         uploadFileToServer.execute(mAttachmentId,
                 mImageFileHashMap.get(imageCount), mPresenter.getUserAgent(), imageCount,

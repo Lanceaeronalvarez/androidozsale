@@ -2,9 +2,9 @@ package au.com.dealsdirect.utils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -36,9 +36,6 @@ import au.com.dealsdirect.data.network.ApiEndPoint;
 import au.com.dealsdirect.service.fcm.GNotification;
 import okhttp3.Cookie;
 
-/**
- * Created by MTC on 2019-08-23.
- */
 public class ImageUploadUtil {
 
     public static final int MAX_SIZE_IN_BYTES = 1000000;
@@ -209,21 +206,22 @@ public class ImageUploadUtil {
 
         public AsyncResponse delegate = null;
         int imageCount = 0;
-        private ProgressDialog progressDialog;
-        private final Context mContext;
-        private boolean showProgressDialog = true;
+        private final ProgressDialogProvider progressDialogProvider;
 
-        public UploadFileToServer(final Context context, boolean showLoading) {
-            mContext = context;
-            showProgressDialog = showLoading;
+        public UploadFileToServer() {
+            this.progressDialogProvider = null;
+        }
+
+        public UploadFileToServer(ProgressDialogProvider progressDialogProvider) {
+            this.progressDialogProvider = progressDialogProvider;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-            if (showProgressDialog) {
-                progressDialog = new ProgressDialog(mContext);
+            if (progressDialogProvider != null) {
+                final ProgressDialog progressDialog = progressDialogProvider.getProgressDialog(true);
                 progressDialog.setMessage("Loading...");
                 progressDialog.show();
                 progressDialog.setCanceledOnTouchOutside(false);
@@ -253,11 +251,21 @@ public class ImageUploadUtil {
         protected void onPostExecute(String result) {
             // view response from server
             AppLogger.d("Response from server: " + result);
-            if (showProgressDialog) {
-                progressDialog.dismiss();
+            if (progressDialogProvider != null) {
+                final ProgressDialog progressDialog = progressDialogProvider.getProgressDialog(false);
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+                progressDialogProvider.onDismiss();
             }
             delegate.asyncExecutionFinished(result, imageCount);
             super.onPostExecute(result);
+        }
+
+        public interface ProgressDialogProvider {
+            ProgressDialog getProgressDialog(boolean newObject);
+
+            void onDismiss();
         }
     }
 
@@ -310,7 +318,11 @@ public class ImageUploadUtil {
             byte[] imageInByte = stream.toByteArray();
             fileSizeInBytes = imageInByte.length;
         } catch (OutOfMemoryError e) {
-            e.printStackTrace();
+            if (e.getMessage() == null) {
+                Log.d("ImageUploadUtil", "getFileSize() - OutOfMemoryError");
+            } else {
+                Log.d("ImageUploadUtil", "getFileSize() - " + e.getMessage());
+            }
         }
 
         return fileSizeInBytes;
@@ -366,7 +378,11 @@ public class ImageUploadUtil {
             fos.close();
             return file;
         } catch (IOException e) {
-            e.printStackTrace();
+            if (e.getMessage() == null) {
+                Log.d("ImageUploadUtil", "getFileForUpload() - IOException");
+            } else {
+                Log.d("ImageUploadUtil", "getFileForUpload() - " + e.getMessage());
+            }
         }
 
         return null;
