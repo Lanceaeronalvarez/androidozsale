@@ -50,9 +50,6 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CommonUtils;
 import butterknife.BindView;
 
-/**
- * Created by MTC on 2019-12-05.
- */
 public class NewSaleCategoriesController extends BaseController
         implements CategoriesMvpView, NewSaleCategoryClickListener {
 
@@ -198,11 +195,14 @@ public class NewSaleCategoriesController extends BaseController
         List<GetCategoryTreeResponse> customNodeTypes = new ArrayList<>();
 
         for (GetCategoryTreeResponse category : mCategories) {
-            if (category.getNodeType().equals("url")) {
+            final String nodeType = category.getNodeType();
+            if (nodeType == null) {
+                customNodeTypes.add(category);
+            } else if (nodeType.equals("url")) {
                 urlNodeTypes.add(category);
-            } else if (category.getNodeType().equals("usual") || category.getNodeType().equals("undefined")) {
+            } else if (nodeType.equals("usual") || nodeType.equals("undefined")) {
                 usualUndefinedNodeTypes.add(category);
-            } else if (category.getNodeType().equals("fixed")) {
+            } else if (nodeType.equals("fixed")) {
                 fixedNodeTypes.add(category);
             } else {
                 customNodeTypes.add(category);
@@ -436,7 +436,8 @@ public class NewSaleCategoriesController extends BaseController
             if (split.length > 0) {
                 String mainKey = split[0];
                 for (GetCategoryTreeResponse category : mCategories) {
-                    if (category.getKey().equals(mainKey)) {
+                    final String categoryKey = category.getKey();
+                    if (categoryKey != null && categoryKey.equals(mainKey)) {
                         return Lists.newArrayList(category);
                     }
                 }
