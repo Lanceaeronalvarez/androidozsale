@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.brands;
 import static au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter.BannerStyle;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.window.layout.WindowLayoutInfo;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -366,6 +368,14 @@ public class TopBrandsController extends BaseController implements TopBrandsMvpV
         request.setCategory(categoryId);
 
         mPresenter.loadTrendingBrands(request);
+    }
+
+    @Override
+    public void onWindowLayoutChanged(WindowLayoutInfo windowLayoutInfo) {
+        super.onWindowLayoutChanged(windowLayoutInfo);
+        if (mLayoutManager != null) {
+            mLayoutManager.requestLayout();
+        }
     }
 
     @Override

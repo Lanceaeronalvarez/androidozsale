@@ -45,6 +45,7 @@ import androidx.core.util.Pair;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.window.layout.WindowLayoutInfo;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
@@ -1259,6 +1260,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItemsRecyclerView.setAdapter(null);
         if (mCountDownTimer != null) mCountDownTimer.cancel();
         super.onDestroyView(view);
+    }
+
+    @Override
+    public void onWindowLayoutChanged(WindowLayoutInfo windowLayoutInfo) {
+        super.onWindowLayoutChanged(windowLayoutInfo);
+        if (mGridLayoutManager != null) {
+            mGridLayoutManager.requestLayout();
+        }
     }
 
     @Override

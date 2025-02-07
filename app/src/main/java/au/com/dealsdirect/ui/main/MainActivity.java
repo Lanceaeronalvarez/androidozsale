@@ -17,7 +17,11 @@ import android.view.WindowManager;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
+import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
+import androidx.window.java.layout.WindowInfoTrackerCallbackAdapter;
+import androidx.window.layout.WindowInfoTracker;
+import androidx.window.layout.WindowLayoutInfo;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
@@ -39,7 +43,6 @@ import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.klarna.mobile.sdk.api.KlarnaLoggingLevel;
 import com.klarna.mobile.sdk.api.KlarnaMobileSDKCommon;
-import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
 import com.mysale.genie.utility.config.model.getappsettingssection.Android;
@@ -154,6 +157,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private BraintreeClientHelper mBraintreeClientHelper;
     private FetchBraintreeClientTokenHandler mFetchBraintreeClientTokenHandler;
 
+    private WindowInfoTrackerCallbackAdapter windowInfoTracker = null;
+
     private MainController mMainController;
     private CategoriesMvpView mCategoriesView;
     private ViewContactsController mContactsController;
@@ -182,11 +187,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private Uri deeplinkUriToProcess = null;
 
+    private final Consumer<WindowLayoutInfo> layoutChangedCallback = windowLayoutInfo -> MainActivity.this.runOnUiThread(() -> {
+        final Controller controller = getMainController().getCurrentController();
+        if (controller instanceof BaseController) {
+            ((BaseController) controller).onWindowLayoutChanged(windowLayoutInfo);
+        }
+    });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        windowInfoTracker = new WindowInfoTrackerCallbackAdapter(WindowInfoTracker.getOrCreate(this));
 
         mAppHasSavedInstance = savedInstanceState != null;
 
@@ -250,6 +264,22 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
 
         setUp();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (windowInfoTracker != null) {
+            windowInfoTracker.addWindowLayoutInfoListener(this, Runnable::run, layoutChangedCallback);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (windowInfoTracker != null) {
+            windowInfoTracker.removeWindowLayoutInfoListener(layoutChangedCallback);
+        }
     }
 
     /**
