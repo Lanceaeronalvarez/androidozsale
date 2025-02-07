@@ -63,6 +63,7 @@ import com.paginate.Paginate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -1982,7 +1983,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 }
                 searchOperationType = null;
                 mGenieCategory = null;
-                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
+                mPresenter.loadSaleItems(createSaleItemsRequest(
+                        mSearchFilterMvpView == null ? Collections.emptySet() : mSearchFilterMvpView.getCategoryKeys(),
+                        0,
+                        mChipFilters));
                 if (mAppBar != null) {
                     mAppBar.setExpanded(true, true);
                 }
