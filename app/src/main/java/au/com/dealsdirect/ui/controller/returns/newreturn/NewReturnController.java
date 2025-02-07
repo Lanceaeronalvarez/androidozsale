@@ -380,7 +380,11 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         uploadFileToServer = new ImageUploadUtil.UploadFileToServer(mActivity, true);
         uploadFileToServer.delegate = (imageUrl, imagePosition) -> {
             if (imageUrl != null) {
-                getImageUrl(ImageUploadUtil.convertStringUrltoJSON(imageUrl));
+                try {
+                    getImageUrl(ImageUploadUtil.convertStringUrltoJSON(imageUrl));
+                } catch (Exception e) {
+                    someImagesWereNotUploaded = true;
+                }
             } else {
                 someImagesWereNotUploaded = true;
             }

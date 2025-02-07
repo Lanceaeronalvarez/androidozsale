@@ -765,7 +765,12 @@ public class AddContactController extends BaseController
         if (imageUrl == null) {
             onError("Image may not be uploaded.");
         }
-        getImageUrl(ImageUploadUtil.convertStringUrltoJSON(imageUrl));
+
+        try {
+            getImageUrl(ImageUploadUtil.convertStringUrltoJSON(imageUrl));
+        } catch (Exception e) {
+            onError("Image may not be uploaded.");
+        }
 
         if (mImageRecyclerView != null) {
             ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder vh = (ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder)

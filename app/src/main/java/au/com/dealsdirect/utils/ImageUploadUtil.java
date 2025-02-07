@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -24,7 +23,6 @@ import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -52,14 +50,9 @@ public class ImageUploadUtil {
         return MAX_ITERATIONS;
     }
 
-    public static String convertStringUrltoJSON(String response) {
-        try {
-            JSONObject jsonObject = new JSONObject(response);
-            return jsonObject.getString("url");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static String convertStringUrltoJSON(String response) throws Exception {
+        JSONObject jsonObject = new JSONObject(response);
+        return jsonObject.getString("url");
     }
 
     public static int convertImageLimitToBytes(int sizeInMb) {
