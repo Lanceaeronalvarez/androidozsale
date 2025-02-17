@@ -3,7 +3,9 @@ package au.com.dealsdirect.ui.controller.details;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,8 +74,14 @@ public class DetailsController extends BasePullToRefreshController implements De
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mSaveUserDetailsButton;
 
+    @BindView(R.id.controller_details_firstname_wrapper)
+    TextInputLayout mFirstNameTextWrapper;
+
     @BindView(R.id.controller_details_text_firstname)
     EditText mFirstNameText;
+
+    @BindView(R.id.controller_details_lastname_wrapper)
+    TextInputLayout mLastNameTextWrapper;
 
     @BindView(R.id.controller_details_text_lastname)
     EditText mLastNameText;
@@ -261,6 +271,48 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         mPresenter.getEmailSubscriptionTemplates();
         mPresenter.loadUser(setUserDetailsRequest);
+
+        mFirstNameText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (hasSpecialCharactersFirstName()) {
+                    mFirstNameTextWrapper.setError(getString(R.string.special_character_error));
+                } else if (isNameDuplicate()) {
+                    mFirstNameTextWrapper.setError(getString(R.string.duplicate_name_error));
+                } else {
+                    mFirstNameTextWrapper.setError(null);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        mLastNameText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (hasSpecialCharactersLastName()) {
+                    mLastNameTextWrapper.setError(getString(R.string.special_character_error));
+                } else if (isNameDuplicate()) {
+                    mLastNameTextWrapper.setError(getString(R.string.duplicate_name_error));
+                } else {
+                    mLastNameTextWrapper.setError(null);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
     @Override
@@ -475,6 +527,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         }
     }
 
+
     @OnClick(R.id.partial_toolbar_left_view)
     public void onBackClick() {
         hideKeyboard();
@@ -498,6 +551,20 @@ public class DetailsController extends BasePullToRefreshController implements De
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
         userDetailsId = null;
         mPresenter.loadUser(setUserDetailsRequest);
+    }
+
+    private boolean hasSpecialCharactersFirstName() {
+        return !mFirstNameText.getText().toString().trim().matches("[a-zA-Z ]+")
+                || mFirstNameText.getText().toString().trim().length() < 2;
+    }
+
+    private boolean hasSpecialCharactersLastName() {
+        return !mLastNameText.getText().toString().trim().matches("[a-zA-Z ]+") ||
+                mLastNameText.getText().toString().trim().length() < 2;
+    }
+
+    private boolean isNameDuplicate() {
+        return mFirstNameText.getText().toString().trim().equalsIgnoreCase(mLastNameText.getText().toString().trim());
     }
 
     private void updateDateOfBirthField() {

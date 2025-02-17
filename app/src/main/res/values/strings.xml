@@ -466,6 +466,8 @@
     <string name="refunded">refunded</string>
     <string name="cancelled">Cancelled</string>
     <string name="please_accept_terms_and_conditions">Please accept Terms and Conditions</string>
+    <string name="special_character_error">Please provide a name with 2 or more characters, using letters only.</string>
+    <string name="duplicate_name_error">First and last name cannot be the same. Please enter different names.</string>
     <string name="please_fill_out_the_form">Please fill out the form.</string>
     <string name="please_select_an_option_for_promotional_emails">Please select an option for promotional emails</string>
     <string name="please_input_promo_code">Please input a promo code.</string>

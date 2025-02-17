@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.address.addnewaddress;
 
 import androidx.appcompat.widget.AppCompatSpinner;
+
 import android.view.View;
 import android.widget.EditText;
 
@@ -29,7 +30,7 @@ import timber.log.Timber;
  * Created by smartwave on 20/06/2017.
  */
 
-public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends BasePresenter<V> implements
+public class AddNewAddressPresenter<V extends AddNewAddressMvpView> extends BasePresenter<V> implements
         AddNewAddressMvpPresenter<V> {
 
     @Inject
@@ -40,9 +41,12 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
     @Override
     public void addNewAddress(HashMap<DecorationInfoList, View> viewMap) {
         boolean isValid = true;
+        boolean hasSpecialChar = false;
         JsonObject jsonAddress = new JsonObject();
         Iterator it = viewMap.entrySet().iterator();
         String postcode = "postcode";
+        String forename = "forename";
+        String surname = "surname";
         while (it.hasNext()) {
             try {
                 Map.Entry pair = (Map.Entry) it.next();
@@ -75,6 +79,16 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
                         }
                         return;
                     }
+                    //Validate Name field
+                    if (info.getValidate() != null && label.equalsIgnoreCase(forename) || label.equalsIgnoreCase(surname)) {
+                        String str = editTextValue;
+
+                        if (!str.trim().matches("[a-zA-Z ]+") || str.length() < 2) {
+                            isValid = false;
+                            hasSpecialChar = true;
+                            getMvpView().setFieldErrorState(et);
+                        }
+                    }
                     Timber.d("ADDRESS", "Key: " + label + " ScheduledPlan: " + editTextValue);
                 } else if (pair.getValue() instanceof AppCompatSpinner) {
                     AppCompatSpinner spinner = (AppCompatSpinner) pair.getValue();
@@ -103,7 +117,11 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
         }
 
         if (!isValid && isViewAttached()) {
-            getMvpView().showErrorMessage("Please populate all fields");
+            if (hasSpecialChar) {
+                getMvpView().showErrorMessage(String.valueOf(R.string.special_character_error));
+            } else {
+                getMvpView().showErrorMessage("Please populate all fields");
+            }
             return;
         }
 

@@ -6,7 +6,9 @@ import static au.com.dealsdirect.service.datacollection.core.DataCollector.Event
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,10 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
+//import com.visa.checkout.VisaCheckoutSdk;
+
 
 import java.util.HashMap;
 
@@ -73,8 +79,14 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @BindView(R.id.partial_toolbar_title)
     TextView mToolBarTitle;
 
+    @BindView(R.id.controller_register_forename_container)
+    TextInputLayout mRegisterForenameContainer;
+
     @BindView(R.id.controller_register_forename_field)
     EditText mRegisterForenameField;
+
+    @BindView(R.id.controller_register_surname_container)
+    TextInputLayout mRegisterSurnameContainer;
 
     @BindView(R.id.controller_register_surname_field)
     EditText mRegisterSurnameField;
@@ -242,6 +254,48 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         if (mEmailsToggle != null && mPresenter.getGdprIsChecked(AppPreferencesHelper.CONSENT_EMAILS_CHECKED)) {
             mEmailsToggle.setCheckedTogglePosition(0);
         }
+
+        mRegisterForenameField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (hasSpecialCharactersFirstName()) {
+                    mRegisterForenameContainer.setError(getString(R.string.special_character_error));
+                } else if (isNameDuplicate()) {
+                    mRegisterForenameContainer.setError(getString(R.string.duplicate_name_error));
+                } else {
+                    mRegisterForenameContainer.setError(null);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        mRegisterSurnameField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (hasSpecialCharactersLastName()) {
+                    mRegisterSurnameContainer.setError(getString(R.string.special_character_error));
+                } else if (isNameDuplicate()) {
+                    mRegisterSurnameContainer.setError(getString(R.string.duplicate_name_error));
+                } else {
+                    mRegisterSurnameContainer.setError(null);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         /*mVcoButton.setOnClickListener(action -> {
             onVisaCheckoutButtonClicked();
@@ -445,6 +499,21 @@ public class RegisterController extends BaseController implements RegisterMvpVie
                 mRegisterSurnameField.getText().toString().isEmpty() &&
                 mRegisterEmailField.getText().toString().isEmpty() &&
                 mRegisterPasswordField.getText().toString().isEmpty();
+    }
+
+    private boolean hasSpecialCharactersFirstName() {
+        //English only; minimum of 3 characters; No duplicate of names;
+        return !mRegisterForenameField.getText().toString().trim().matches("[a-zA-Z ]+") ||
+                mRegisterForenameField.getText().toString().trim().length() < 2;
+    }
+
+    private boolean hasSpecialCharactersLastName() {
+        return !mRegisterSurnameField.getText().toString().trim().matches("[a-zA-Z ]+") ||
+                mRegisterSurnameField.getText().toString().trim().length() < 2;
+    }
+
+    private boolean isNameDuplicate() {
+        return mRegisterForenameField.getText().toString().trim().equalsIgnoreCase(mRegisterSurnameField.getText().toString().trim());
     }
 
     private void onSignUpClicked() {

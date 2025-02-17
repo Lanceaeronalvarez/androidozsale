@@ -61,10 +61,15 @@
                         android:textSize="@dimen/text_size_caption1" />
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/controller_details_firstname_wrapper"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.65"
-                        app:hintEnabled="false">
+                        app:hintEnabled="false"
+                        app:errorEnabled="true"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeColor="@color/white"
+                        app:boxBackgroundMode="outline">
 
                         <EditText
                             android:id="@+id/controller_details_text_firstname"
@@ -99,10 +104,14 @@
                         android:textSize="@dimen/text_size_caption1" />
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/controller_details_lastname_wrapper"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.65"
-                        app:hintEnabled="false">
+                        app:hintEnabled="false"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeColor="@color/white"
+                        app:boxBackgroundMode="outline">
 
 
                         <EditText
