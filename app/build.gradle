@@ -740,6 +740,9 @@ dependencies {
     implementation 'com.klarna.mobile:sdk:2.6.20'
 //    implementation 'com.klarna.checkout:sdk:1.6.15'
 
+    //password strength meter
+    implementation 'nu.aaro.gustav:passwordstrengthmeter:0.4'
+
     implementation project(path: ':genie-utility')
     implementation project(path: ':genie-animation')
     implementation project(path: ':genie-views')

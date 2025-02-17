@@ -250,6 +250,8 @@
     <string name="here">here</string>
     <string name="forgot_password">Forgot Password</string>
     <string name="forgot_password_title">Forgot Password</string>
+    <string name="forgot_password_underline"><u>Forgot Password?</u></string>
+    <string name="reset_password_underline"><u>Reset Password?</u></string>
     <string name="request_sent">Request sent.</string>
     <string name="okay">okay</string>
     <string name="input_email_address">Input email address</string>

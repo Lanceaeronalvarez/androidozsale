@@ -30,7 +30,7 @@ public class SetUserDetailsRequest {
     @SerializedName("gender")
     @Expose
     private boolean gender;
-    @SerializedName("userName")
+    @SerializedName("user_name")
     @Expose
     private String userName;
     @SerializedName("new_password")

@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.details;
 
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.userdetails.UpdateUserEmailSubscriptionRequest;
-import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.gdpr.GdprMvpPresenter;
 
@@ -13,7 +12,7 @@ import au.com.dealsdirect.ui.controller.gdpr.GdprMvpPresenter;
 public interface DetailsMvpPresenter<V extends MvpView> extends GdprMvpPresenter<V> {
     void loadUser(SetUserDetailsRequest setUserDetailsRequest);
 
-    void sendUserDetails(SetUserDetailsRequest userDetailsRequest);
+    void sendUserDetails(SetUserDetailsRequest userDetailsRequest, DetailsPasswordCallback detailsPasswordCallback);
 
     void accountDeletion(String userDetailsId);
 
