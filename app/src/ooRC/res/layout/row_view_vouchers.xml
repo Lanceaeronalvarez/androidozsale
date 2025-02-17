@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_voucher_card_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:ignore="MissingPrefix">
+
+    <LinearLayout
+        android:id="@+id/row_view_vouchers_layout"
+        android:layout_width="@dimen/voucher_container_width"
+        android:layout_height="@dimen/voucher_container_height"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
+        android:background="@drawable/bg_voucher_item"
+        android:clickable="true"
+        android:gravity="center_vertical|start"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        tools:ignore="UselessParent">
+
+
+        <TextView
+            android:id="@+id/row_view_voucher_name_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="start"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/row_view_voucher_cost_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@string/font_app_bold"
+            android:gravity="start"
+            android:textColor="@color/bt_black"
+            android:textSize="@dimen/text_size_voucher_title"
+            android:textStyle="bold"
+            tools:text="$1000" />
+
+        <TextView
+            android:id="@+id/row_view_voucher_value_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@string/font_app_light"
+            android:gravity="start"
+            android:text="@string/value"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_body"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/row_view_voucher_desc_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@string/font_app_light"
+            android:gravity="start"
+            android:text="@string/voucher_valid_from"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_caption2" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/row_view_voucher_expiry_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@string/font_app_light"
+                android:gravity="start"
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_caption2"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/row_view_voucher_status_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@string/font_app_light"
+                android:gravity="start"
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_caption2"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

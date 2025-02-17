@@ -69,6 +69,7 @@ public class Settings {
         return !getIsMultiCountry() ? supportedCountries[0] : null;
     }
 
+    private static final String ooAURoot = "https://www.oo.com.au/";
     private static final String buyinviteAURoot = "https://www.buyinvite.com.au/";
     private static final String ozsaleAURoot = "https://www.ozsale.com.au/";
     private static final String singsaleSGRoot = "https://www.singsale.com.sg/";
@@ -77,7 +78,35 @@ public class Settings {
     private static final String nzsaleNZRoot = "https://www.nzsale.co.nz/";
 
     static void load() {
-        if (BuildConfig.FLAVOR.equals("buyinviteRC")) {
+       if (BuildConfig.FLAVOR.equals("ooRC")) {
+            populatePackageWithCountries(
+                    new Country[]{
+                            new Country("Australia",
+                                    "OA",
+                                    "25D201EB-9A1C-4045-90B6-E6A9F122C7CB",
+                                    "$",
+                                    "oo.com.au",
+                                    "EN",
+                                    ooAURoot,
+                                    ooAURoot,
+                                    "AUD",
+                                    ooAURoot)});
+
+        } else if (BuildConfig.FLAVOR.equals("ooTest")) {
+            populatePackageWithCountries(
+                    new Country[]{
+                            new Country("Australia",
+                                    "OA",
+                                    "25D201EB-9A1C-4045-90B6-E6A9F122C7CB",
+                                    "$",
+                                    "oo.com.au",
+                                    "EN",
+                                    "https://www.oa.mysaledev.com/",
+                                    "https://www.oa.mysaledev.com/",
+                                    "AUD",
+                                    "https://www.oa.mysaledev.com/")});
+
+        } else if (BuildConfig.FLAVOR.equals("buyinviteRC")) {
             populatePackageWithCountries(
                     new Country[]{
                             new Country("Australia",

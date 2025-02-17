@@ -181,6 +181,65 @@ android {
             resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
         }
 
+        ooRC {
+            versionCode 515
+            versionName "8.13.1"
+            applicationId "au.com.oo"
+
+            buildConfigField "String", "APP_NAME", "\"oo\""
+            buildConfigField "boolean", "IS_TEST", "false"
+
+            ext.appName = "OO"
+            ext.facebookAppId = "1654976038100746"
+            ext.facebookAppSecret = "f372b6a78ffbb38215f796d1a8838bb2"
+            ext.facebookClientToken = "d5f7ea8f1814ead7a465009de837b890"
+
+            resValue "string", "app_name", ext.appName
+            def facebookAppId = "1654976038100746"
+            resValue "string", "facebook_app_id", ext.facebookAppId
+            resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "facebook_client_token", ext.facebookClientToken
+            resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
+            resValue "string", "fb_page_id", "10357598833"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
+            resValue "string", "app_uri_hostname", "www.oo.com.au"
+            resValue "string", "app_uri_klarna", "www.oo.com.au.klarna"
+
+            ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", ""
+
+            ext.reCaptchaSiteKey = "6LdxiZ4UAAAAAGKk5Xzpbps1vHtDy0cfAEbr-88n"
+            resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
+        }
+
+        ooTest {
+            versionCode 515
+            versionName "8.13.1"
+            applicationId "au.com.oo.test"
+
+            buildConfigField "String", "APP_NAME", "\"oo\""
+            buildConfigField "boolean", "IS_TEST", "true"
+
+            resValue "string", "app_name", "OO Test"
+            def facebookAppId = "600738863393881"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "576ebf7aba3f1488605eb8d8886911f6"
+            resValue "string", "facebook_client_token", "d5f7ea8f1814ead7a465009de837b890"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "10357598833"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
+            resValue "string", "app_uri_hostname", "www.oo.com.au"
+            resValue "string", "app_uri_klarna", "www.oo.com.au.klarna"
+
+            ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", ""
+
+            ext.reCaptchaSiteKey = "6Lfch54UAAAAANa6APm8vBBUttkU6mJxX0M1Kti5"
+            resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
+        }
+
         ozsaleRC {
             versionCode 515
             versionName "8.13.1"
@@ -431,6 +490,16 @@ android {
 
         dealsDirectTest {
             res.srcDirs = ['src/dealsDirectRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
+        }
+
+        ooRC {
+            res.srcDirs = ['src/ooRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
+        }
+
+        ooTest {
+            res.srcDirs = ['src/ooRC/res', 'src/commonRes/res']
             java.srcDirs = ['src/main/java/']
         }
 

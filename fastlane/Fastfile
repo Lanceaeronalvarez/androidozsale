@@ -132,6 +132,24 @@ lane :firebase_deploy_ba_test do
   " app_id:" + '1:135798231877:android:d1712d1f61e17b08'
  end
 
+ lane :firebase_deploy_oo_rc do
+  Dir.chdir("..")
+  app_dir = Dir.pwd
+
+  #Change apk_name and app_name for other flavors
+  sh "fastlane dd_build app_name:'ooRC' emails:" + dev_emails + " apk_name:" + 'app-ooRC-release.apk' + " build_variant:" + 'ooRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'ooRC' + " app_notes_path:" + app_dir + '/fastlane/OOReleaseNotes' +
+  " app_id:" + '1:461445694369:android:a4e0fae8297e663c'
+ end
+
+ lane :firebase_deploy_oo_test do
+  Dir.chdir("..")
+  app_dir = Dir.pwd
+
+  #Change apk_name and app_name for other flavors
+  sh "fastlane dd_build app_name:'ooTest' emails:" + dev_emails + " apk_name:" + 'app-ooTest-release.apk' + " build_variant:" + 'ooTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'ooTest' + " app_notes_path:" + app_dir + '/fastlane/OOReleaseNotes' +
+  " app_id:" + '1:461445694369:android:dece612b12dc3aee'
+ end
+
 lane :firebase_deploy_ozsale_rc do
   Dir.chdir("..")
   app_dir = Dir.pwd
