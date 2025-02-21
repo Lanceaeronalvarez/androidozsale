@@ -1,9 +1,10 @@
 package au.com.dealsdirect.ui.controller.address.addnewaddress;
 
-import androidx.appcompat.widget.AppCompatSpinner;
-
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+
+import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.androidnetworking.error.ANError;
 import com.google.gson.JsonObject;
@@ -17,10 +18,8 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
-import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -43,15 +42,15 @@ public class AddNewAddressPresenter<V extends AddNewAddressMvpView> extends Base
         boolean isValid = true;
         boolean hasSpecialChar = false;
         JsonObject jsonAddress = new JsonObject();
-        Iterator it = viewMap.entrySet().iterator();
+        Iterator<Map.Entry<DecorationInfoList, View>> it = viewMap.entrySet().iterator();
         String postcode = "postcode";
         String forename = "forename";
         String surname = "surname";
         while (it.hasNext()) {
             try {
-                Map.Entry pair = (Map.Entry) it.next();
+                Map.Entry<DecorationInfoList, View> pair = it.next();
 
-                DecorationInfoList info = (DecorationInfoList) pair.getKey();
+                DecorationInfoList info = pair.getKey();
 
                 if (pair.getValue() instanceof EditText) {
                     EditText et = (EditText) pair.getValue();
@@ -81,9 +80,7 @@ public class AddNewAddressPresenter<V extends AddNewAddressMvpView> extends Base
                     }
                     //Validate Name field
                     if (info.getValidate() != null && label.equalsIgnoreCase(forename) || label.equalsIgnoreCase(surname)) {
-                        String str = editTextValue;
-
-                        if (!str.trim().matches("[a-zA-Z ]+") || str.length() < 2) {
+                        if (!editTextValue.trim().matches("[a-zA-Z ]+") || editTextValue.length() < 2) {
                             isValid = false;
                             hasSpecialChar = true;
                             getMvpView().setFieldErrorState(et);
@@ -112,16 +109,16 @@ public class AddNewAddressPresenter<V extends AddNewAddressMvpView> extends Base
                     it.remove();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                String message = e.getMessage();
+                if (message == null) {
+                    message = e.toString();
+                }
+                Log.e("AddNewAddressPresenter", message);
             }
         }
 
         if (!isValid && isViewAttached()) {
-            if (hasSpecialChar) {
-                getMvpView().showErrorMessage(String.valueOf(R.string.special_character_error));
-            } else {
-                getMvpView().showErrorMessage("Please populate all fields");
-            }
+            getMvpView().showErrorMessage(hasSpecialChar);
             return;
         }
 

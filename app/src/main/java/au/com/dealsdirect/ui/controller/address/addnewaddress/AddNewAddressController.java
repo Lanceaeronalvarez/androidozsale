@@ -339,7 +339,15 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     }
 
     @Override
-    public void showErrorMessage(String message) {
+    public void showErrorMessage(boolean hasSpecialCharacter) {
+        String message;
+
+        if (hasSpecialCharacter) {
+            message = mActivity.getResources().getString(R.string.special_character_error);
+        } else {
+            message = mActivity.getResources().getString(R.string.please_populate_all_fields);
+        }
+
 
         CustomAlertDialog.showCustomAlertDialog(
                 mActivity,
