@@ -22,10 +22,6 @@ import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
-/**
- * Created by Paul on 6/20/17.
- */
-
 public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V> implements
         DetailsMvpPresenter<V> {
 
@@ -51,7 +47,7 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public void sendUserDetails(SetUserDetailsRequest userDetailsRequest) {
+    public void sendUserDetails(SetUserDetailsRequest userDetailsRequest, DetailsPasswordCallback detailsPasswordCallback) {
 
         userDetailsRequest.setLanguageID(getDataManager().getLanguageId());
         doApiCallForResponse(getDataManager().getSaveUserDetailsApiCall(userDetailsRequest), new AppApiCallback() {
@@ -65,6 +61,7 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
                     try {
                         JSONObject jsonObject = new JSONObject(((ANError) t).getErrorBody());
                         getMvpView().onError(jsonObject.getString("detail"));
+                        detailsPasswordCallback.onEvent(false);
                     } catch (Exception ignored) {
                     }
                 }
@@ -75,6 +72,7 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
                 super.onSuccess(response);
 
                 getMvpView().saveUserDetailsSuccess();
+                detailsPasswordCallback.onEvent(true);
 
             }
         });

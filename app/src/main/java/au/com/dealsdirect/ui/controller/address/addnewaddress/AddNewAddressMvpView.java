@@ -13,5 +13,5 @@ public interface AddNewAddressMvpView extends MvpView {
 
     void setFieldErrorState(View view);
 
-    void showErrorMessage(String message);
+    void showErrorMessage(boolean hasSpecialCharacter);
 }

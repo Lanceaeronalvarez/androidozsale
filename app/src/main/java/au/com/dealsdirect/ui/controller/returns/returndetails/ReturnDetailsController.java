@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.returns.returndetails;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -139,6 +140,8 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
 
     private boolean someImagesWereNotUploaded = false;
 
+    private ProgressDialog progressDialog = null;
+
     private final HashMap<String, Boolean> hasSetSatisfaction = new HashMap<>();
 
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia = null;
@@ -146,7 +149,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     private final ReturnDetailsListener returnDetailsListener = new ReturnDetailsListener() {
         @Override
         public void getImageFromDirectory(boolean uploadImage) {
-             ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+            ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
                     registerActivityResultLauncher(TAG, new ActivityResultContracts.PickVisualMedia(), uri -> {
                         if (uri == null) {
                             return;
@@ -371,6 +374,10 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     @Override
     public void onDestroyView(View view) {
         mPresenter.onDetach();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+        progressDialog = null;
         super.onDestroyView(view);
     }
 
@@ -679,10 +686,27 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
             }
             return;
         }
-        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(mActivity, true);
+        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(new ImageUploadUtil.UploadFileToServer.ProgressDialogProvider() {
+            @Override
+            public ProgressDialog getProgressDialog(boolean newObject) {
+                if (newObject) {
+                    progressDialog = new ProgressDialog(getApplicationContext());
+                }
+                return progressDialog;
+            }
+
+            @Override
+            public void onDismiss() {
+                progressDialog = null;
+            }
+        });
         uploadFileToServer.delegate = (imageUrl, imagePosition) -> {
             if (imageUrl != null) {
-                getImageUrl(ImageUploadUtil.convertStringUrltoJSON(imageUrl));
+                try {
+                    getImageUrl(ImageUploadUtil.convertStringUrltoJSON(imageUrl));
+                } catch (Exception e) {
+                    someImagesWereNotUploaded = true;
+                }
             } else {
                 someImagesWereNotUploaded = true;
             }

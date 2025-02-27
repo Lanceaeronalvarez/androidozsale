@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.window.layout.WindowLayoutInfo;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -1328,6 +1329,14 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             if (mBannersAdapter != null) {
                 mBannersAdapter.stopHorizontalViewHolders();
             }
+        }
+    }
+
+    @Override
+    public void onWindowLayoutChanged(WindowLayoutInfo windowLayoutInfo) {
+        super.onWindowLayoutChanged(windowLayoutInfo);
+        if (mLayoutManager != null) {
+            mLayoutManager.requestLayout();
         }
     }
 

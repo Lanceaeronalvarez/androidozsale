@@ -372,7 +372,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 return saleItemProduct;
             }
 
-            public Map<String, String>  getUtmKeys() {
+            public Map<String, String> getUtmKeys() {
                 return utmKeys;
             }
         }
@@ -2731,9 +2731,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                         @Override
                         public void onAnimationCancel(Animator animation) {
                             super.onAnimationCancel(animation);
-                            ViewGroup.LayoutParams layoutParams = mBottomSpacer.getLayoutParams();
-                            layoutParams.height = mCTALayout.getMeasuredHeight();
-                            mBottomSpacer.setLayoutParams(layoutParams);
+                            if (mBottomSpacer != null) {
+                                ViewGroup.LayoutParams layoutParams = mBottomSpacer.getLayoutParams();
+                                layoutParams.height = mCTALayout.getMeasuredHeight();
+                                mBottomSpacer.setLayoutParams(layoutParams);
+                            }
 
                             isCTALayoutAnimating = false;
                         }
@@ -2741,9 +2743,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            ViewGroup.LayoutParams layoutParams = mBottomSpacer.getLayoutParams();
-                            layoutParams.height = mCTALayout.getMeasuredHeight();
-                            mBottomSpacer.setLayoutParams(layoutParams);
+                            if (mBottomSpacer != null) {
+                                ViewGroup.LayoutParams layoutParams = mBottomSpacer.getLayoutParams();
+                                layoutParams.height = mCTALayout.getMeasuredHeight();
+                                mBottomSpacer.setLayoutParams(layoutParams);
+                            }
 
                             isCTALayoutAnimating = false;
                         }
@@ -2755,14 +2759,18 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                         @Override
                         public void onAnimationCancel(Animator animation) {
                             super.onAnimationCancel(animation);
-                            viewToFade.setVisibility(View.GONE);
+                            if (isViewAttached()) {
+                                viewToFade.setVisibility(View.GONE);
+                            }
                             isCTALayoutAnimating = false;
                         }
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            viewToFade.setVisibility(View.GONE);
+                            if (isViewAttached()) {
+                                viewToFade.setVisibility(View.GONE);
+                            }
                             isCTALayoutAnimating = false;
                         }
                     });

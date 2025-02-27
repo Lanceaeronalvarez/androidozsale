@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -117,6 +118,9 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
             }
             holder.itemView.setOnClickListener(view -> {
                 final int pos = holder.getBindingAdapterPosition();
+                if (pos < 0 || pos >= mData.size()) {
+                    return;
+                }
                 mSaleFilterAdapterClickListener.onCategoryClicked(mData.get(pos), pos);
             });
         } else {
@@ -251,6 +255,9 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
 
                 holder.filterCheckbox.setOnClickListener(v -> {
                     final int pos = holder.getBindingAdapterPosition();
+                    if (pos < 0 || pos >= mCategoryItems.size() || pos >= mCategoryLevel.size()) {
+                        return;
+                    }
                     final String catKey = mCategoryItems.get(pos).getKey();
                     if (holder.filterCheckbox.isChecked()) {
                         mSelectedCategoryKeys.add(mCategoryItems.get(pos).getKey());
@@ -277,6 +284,9 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
 
                 holder.saleFilterTile.setOnClickListener(view -> {
                     final int pos = holder.getBindingAdapterPosition();
+                    if (pos < 0 || pos >= mCategoryItems.size()) {
+                        return;
+                    }
                     holder.filterChevron.setImageResource(R.drawable.ic_chevron_up);
                     for (GetCategoryTreeResponse child : mCategoryItems.get(pos).getChildren()) {
                         if (mSubCategoriesToShow.contains(child.getKey())) {
@@ -335,6 +345,9 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
     }
 
     private List<String> categoriesToShowOrHide(int position, boolean isAdd) {
+        if (position < 0 || position >= mCategoryItems.size()) {
+            return Collections.emptyList();
+        }
         List<String> mNewSelectedCategoryKeys = new ArrayList<>();
         if (isAdd) {
             mSaleFilterAdapterClickListener.onAddCategoryFilter(mCategoryItems.get(position).getKey(), mCategoryItems.get(position).getName());

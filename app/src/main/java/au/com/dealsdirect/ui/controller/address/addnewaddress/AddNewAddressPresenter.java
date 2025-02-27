@@ -1,8 +1,10 @@
 package au.com.dealsdirect.ui.controller.address.addnewaddress;
 
-import androidx.appcompat.widget.AppCompatSpinner;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+
+import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.androidnetworking.error.ANError;
 import com.google.gson.JsonObject;
@@ -16,10 +18,8 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
-import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -29,7 +29,7 @@ import timber.log.Timber;
  * Created by smartwave on 20/06/2017.
  */
 
-public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends BasePresenter<V> implements
+public class AddNewAddressPresenter<V extends AddNewAddressMvpView> extends BasePresenter<V> implements
         AddNewAddressMvpPresenter<V> {
 
     @Inject
@@ -40,14 +40,17 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
     @Override
     public void addNewAddress(HashMap<DecorationInfoList, View> viewMap) {
         boolean isValid = true;
+        boolean hasSpecialChar = false;
         JsonObject jsonAddress = new JsonObject();
-        Iterator it = viewMap.entrySet().iterator();
+        Iterator<Map.Entry<DecorationInfoList, View>> it = viewMap.entrySet().iterator();
         String postcode = "postcode";
+        String forename = "forename";
+        String surname = "surname";
         while (it.hasNext()) {
             try {
-                Map.Entry pair = (Map.Entry) it.next();
+                Map.Entry<DecorationInfoList, View> pair = it.next();
 
-                DecorationInfoList info = (DecorationInfoList) pair.getKey();
+                DecorationInfoList info = pair.getKey();
 
                 if (pair.getValue() instanceof EditText) {
                     EditText et = (EditText) pair.getValue();
@@ -75,6 +78,14 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
                         }
                         return;
                     }
+                    //Validate Name field
+                    if (info.getValidate() != null && label.equalsIgnoreCase(forename) || label.equalsIgnoreCase(surname)) {
+                        if (!editTextValue.trim().matches("[a-zA-Z ]+") || editTextValue.length() < 2) {
+                            isValid = false;
+                            hasSpecialChar = true;
+                            getMvpView().setFieldErrorState(et);
+                        }
+                    }
                     Timber.d("ADDRESS", "Key: " + label + " ScheduledPlan: " + editTextValue);
                 } else if (pair.getValue() instanceof AppCompatSpinner) {
                     AppCompatSpinner spinner = (AppCompatSpinner) pair.getValue();
@@ -98,12 +109,16 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
                     it.remove();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                String message = e.getMessage();
+                if (message == null) {
+                    message = e.toString();
+                }
+                Log.e("AddNewAddressPresenter", message);
             }
         }
 
         if (!isValid && isViewAttached()) {
-            getMvpView().showErrorMessage("Please populate all fields");
+            getMvpView().showErrorMessage(hasSpecialChar);
             return;
         }
 

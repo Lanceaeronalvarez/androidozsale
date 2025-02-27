@@ -524,7 +524,7 @@ public class ViewContactHistoryController extends BaseController implements View
             }
         }
 
-        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(mActivity, false);
+        uploadFileToServer = new ImageUploadUtil.UploadFileToServer();
         uploadFileToServer.delegate = this;
         uploadFileToServer.execute(mAttachmentId,
                 mImageFileHashMap.get(imageCount), mPresenter.getUserAgent(), imageCount,
@@ -551,7 +551,11 @@ public class ViewContactHistoryController extends BaseController implements View
         if (imageUrl == null) {
             onError("Image may not be uploaded.");
         }
-        getImageUrl(ImageUploadUtil.convertStringUrltoJSON(imageUrl));
+        try {
+            getImageUrl(ImageUploadUtil.convertStringUrltoJSON(imageUrl));
+        } catch (Exception e) {
+            onError("Image may not be uploaded.");
+        }
 
         if (mImageRecyclerView != null) {
             ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder vh = (ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder)

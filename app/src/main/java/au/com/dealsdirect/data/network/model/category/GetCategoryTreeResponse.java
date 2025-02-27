@@ -40,6 +40,9 @@ public class GetCategoryTreeResponse {
     @SerializedName("brands")
     @Expose
     private List<Brand> brands;
+    @SerializedName("textColor")
+    @Expose
+    private String textColor;
 
     public GetCategoryTreeResponse() {
 
@@ -119,6 +122,14 @@ public class GetCategoryTreeResponse {
 
     public List<Brand> getBrands() {
         return brands;
+    }
+
+    public String getTextColor() {
+        return textColor;
+    }
+
+    public void setTextColor(String textColor) {
+        this.textColor = textColor;
     }
 
     public void traverseTree(TreeTraversalBlock block, Object option) {

@@ -52,19 +52,23 @@
 
                     <TextView
                         fontPath="@string/font_app_semibold"
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/my_details_entry_label_width"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.35"
                         android:padding="@dimen/padding_default"
                         android:text="@string/first_name"
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_caption1" />
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/controller_details_firstname_wrapper"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.65"
-                        app:hintEnabled="false">
+                        app:hintEnabled="false"
+                        app:errorEnabled="true"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeColor="@color/white"
+                        app:boxBackgroundMode="outline">
 
                         <EditText
                             android:id="@+id/controller_details_text_firstname"
@@ -90,19 +94,22 @@
 
                     <TextView
                         fontPath="@string/font_app_semibold"
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/my_details_entry_label_width"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.35"
                         android:padding="@dimen/padding_default"
                         android:text="@string/surname"
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_caption1" />
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/controller_details_lastname_wrapper"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.65"
-                        app:hintEnabled="false">
+                        app:hintEnabled="false"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeColor="@color/white"
+                        app:boxBackgroundMode="outline">
 
 
                         <EditText
@@ -127,9 +134,8 @@
 
                     <TextView
                         fontPath="@string/font_app_semibold"
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/my_details_entry_label_width"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.35"
                         android:padding="@dimen/padding_default"
                         android:text="@string/date_of_birth"
                         android:textColor="@color/text_medium"
@@ -197,9 +203,8 @@
 
                     <TextView
                         fontPath="@string/font_app_semibold"
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/my_details_entry_label_width"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.35"
                         android:padding="@dimen/padding_default"
                         android:text="@string/email_address"
                         android:textColor="@color/text_medium"
@@ -234,9 +239,8 @@
 
                     <TextView
                         fontPath="@string/font_app_semibold"
-                        android:layout_width="0dp"
+                        android:layout_width="@dimen/my_details_entry_label_width"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.35"
                         android:padding="@dimen/padding_default"
                         android:text="@string/password"
                         android:textColor="@color/text_medium"
@@ -245,7 +249,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.65"
+                        android:layout_weight="0.55"
                         app:hintEnabled="false">
 
                         <EditText
@@ -257,6 +261,20 @@
                             android:textSize="@dimen/text_size_caption1" />
 
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:id="@+id/change_password_button"
+                        fontPath="@string/font_app_bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_small"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/bg_black_rounded"
+                        android:padding="@dimen/margin_small"
+                        android:text="Change"
+                        android:textAlignment="center"
+                        android:textColor="@color/white" />
+
                 </LinearLayout>
 
 
@@ -267,7 +285,8 @@
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         fontPath="@string/font_app_semibold"
@@ -304,7 +323,8 @@
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         fontPath="@string/font_app_semibold"
@@ -334,6 +354,16 @@
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/controller_details_reset_password"
+                    fontPath="@string/font_app_semibold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_default"
+                    android:text="@string/reset_password_underline"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_caption1" />
+
                 <LinearLayout
                     android:id="@+id/controller_details_categories_container"
                     android:layout_width="match_parent"
@@ -354,11 +384,10 @@
                         android:textSize="@dimen/text_size_caption1" />
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/controller_details_checkbox_recycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/controller_details_checkbox_recycler"
-                        android:isScrollContainer="false"
-                        />
+                        android:isScrollContainer="false" />
 
                 </LinearLayout>
 
@@ -401,15 +430,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/button_height_regular"
                     android:layout_marginLeft="@dimen/padding_default"
-                    android:layout_marginBottom="@dimen/marginBottom_10"
                     android:layout_marginTop="@dimen/marginBottom_10"
+                    android:layout_marginBottom="@dimen/marginBottom_10"
+                    android:background="@color/transparent"
                     android:paddingLeft="@dimen/padding_default"
                     android:paddingRight="@dimen/padding_default"
                     android:text="Unsubscribe"
-                    android:textStyle="italic"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/text_size_caption1"
-                    android:background="@color/transparent"
-                    android:textColor="@color/black" />
+                    android:textStyle="italic" />
 
                 <Button
                     android:id="@+id/controller_account_deletion_button"
@@ -418,26 +447,26 @@
                     android:layout_height="@dimen/button_height_regular"
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="@dimen/padding_default"
+                    android:background="@color/transparent"
+                    android:drawableStart="@drawable/account_deletion_icon"
+                    android:drawablePadding="@dimen/marginBottom_10"
                     android:paddingLeft="@dimen/padding_default"
                     android:paddingRight="@dimen/padding_default"
                     android:text="Request Account and Data Deletion"
-                    android:textSize="@dimen/text_size_caption1"
-                    android:background="@color/transparent"
                     android:textColor="@color/beige"
-                    android:drawableStart="@drawable/account_deletion_icon"
-                    android:drawablePadding="@dimen/marginBottom_10"/>
+                    android:textSize="@dimen/text_size_caption1" />
 
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
+            android:id="@+id/controller_details_button_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
-            android:orientation="vertical"
-            android:id="@+id/controller_details_button_layout">
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/controller_details_button"
@@ -449,23 +478,23 @@
                 android:layout_marginTop="@dimen/padding_default"
                 android:layout_marginEnd="@dimen/padding_default"
                 android:layout_marginBottom="@dimen/padding_default"
-                android:text="Update Preferences"
-                android:textSize="@dimen/text_size_headline2"
                 android:background="@color/fluorescent_blue"
-                android:textColor="@color/black"/>
+                android:text="Update Preferences"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_headline2" />
             <!--        android:text="@string/save_changes"-->
 
             <TextView
                 android:id="@+id/controller_success_message"
+                fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                fontPath="@string/font_app_bold"
-                android:padding="@dimen/margin_small"
                 android:layout_alignParentBottom="true"
+                android:padding="@dimen/margin_small"
+                android:text="Thanks, your preferences have been updated"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:text="Thanks, your preferences have been updated"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
 
     </RelativeLayout>

@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.returns.newreturn;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -113,6 +114,8 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     private final ArrayList<ImageUtils.ImageLink> mImageUriArray = new ArrayList<>();
 
     private boolean someImagesWereNotUploaded = false;
+
+    private ProgressDialog progressDialog = null;
 
     private final ReturnDetailsListener returnDetailsListener = new ReturnDetailsListener() {
         @Override
@@ -285,6 +288,10 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     public void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
         hideKeyboard();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+        progressDialog = null;
         super.onDestroyView(view);
     }
 
@@ -377,10 +384,27 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
             }
             return;
         }
-        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(mActivity, true);
+        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(new ImageUploadUtil.UploadFileToServer.ProgressDialogProvider() {
+            @Override
+            public ProgressDialog getProgressDialog(boolean newObject) {
+                if (newObject) {
+                    progressDialog = new ProgressDialog(getApplicationContext());
+                }
+                return progressDialog;
+            }
+
+            @Override
+            public void onDismiss() {
+                progressDialog = null;
+            }
+        });
         uploadFileToServer.delegate = (imageUrl, imagePosition) -> {
             if (imageUrl != null) {
-                getImageUrl(ImageUploadUtil.convertStringUrltoJSON(imageUrl));
+                try {
+                    getImageUrl(ImageUploadUtil.convertStringUrltoJSON(imageUrl));
+                } catch (Exception e) {
+                    someImagesWereNotUploaded = true;
+                }
             } else {
                 someImagesWereNotUploaded = true;
             }

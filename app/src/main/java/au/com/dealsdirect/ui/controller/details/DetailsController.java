@@ -1,9 +1,12 @@
 package au.com.dealsdirect.ui.controller.details;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +35,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -40,6 +48,7 @@ import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.userdetails.UpdateUserEmailSubscriptionRequest;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.account.AccountDeletionConfirmationDialog;
+import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -47,6 +56,9 @@ import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.LoadingDialogType;
 import butterknife.BindView;
 import butterknife.OnClick;
+import nu.aaro.gustav.passwordstrengthmeter.PasswordStrengthCalculator;
+import nu.aaro.gustav.passwordstrengthmeter.PasswordStrengthLevel;
+import nu.aaro.gustav.passwordstrengthmeter.PasswordStrengthMeter;
 
 public class DetailsController extends BasePullToRefreshController implements DetailsMvpView, PreferenceCategoriesClickListener {
 
@@ -70,8 +82,14 @@ public class DetailsController extends BasePullToRefreshController implements De
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mSaveUserDetailsButton;
 
+    @BindView(R.id.controller_details_firstname_wrapper)
+    TextInputLayout mFirstNameTextWrapper;
+
     @BindView(R.id.controller_details_text_firstname)
     EditText mFirstNameText;
+
+    @BindView(R.id.controller_details_lastname_wrapper)
+    TextInputLayout mLastNameTextWrapper;
 
     @BindView(R.id.controller_details_text_lastname)
     EditText mLastNameText;
@@ -261,6 +279,48 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         mPresenter.getEmailSubscriptionTemplates();
         mPresenter.loadUser(setUserDetailsRequest);
+
+        mFirstNameText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (hasSpecialCharactersFirstName()) {
+                    mFirstNameTextWrapper.setError(getString(R.string.special_character_error));
+                } else if (isNameDuplicate()) {
+                    mFirstNameTextWrapper.setError(getString(R.string.duplicate_name_error));
+                } else {
+                    mFirstNameTextWrapper.setError(null);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        mLastNameText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (hasSpecialCharactersLastName()) {
+                    mLastNameTextWrapper.setError(getString(R.string.special_character_error));
+                } else if (isNameDuplicate()) {
+                    mLastNameTextWrapper.setError(getString(R.string.duplicate_name_error));
+                } else {
+                    mLastNameTextWrapper.setError(null);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
     @Override
@@ -443,37 +503,238 @@ public class DetailsController extends BasePullToRefreshController implements De
         }
 
         if (isThereAnyChangesInUserDetails()) {
-            if (mPasswordText.getText().toString().isEmpty() || mPasswordText.getText().toString() == "") {
-                CustomAlertDialog.showCustomAlertDialog(mActivity,
-                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        getString(R.string.controller_user_details_enter_password));
-                return;
+
+            AlertDialog dialogBuilder = new AlertDialog.Builder(mActivity).create();
+            LayoutInflater inflater = mActivity.getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.confirm_password_dialog, null);
+
+            final EditText dialogConfirmPasswordText = (EditText) dialogView.findViewById(R.id.confirm_password_edit_text);
+            final TextView dialogConfirmChangesButton = (TextView) dialogView.findViewById(R.id.confirm_changes_text);
+            final TextView dialogCloseButton = (TextView) dialogView.findViewById(R.id.close_text);
+            final TextView confirmPasswordErrorText = (TextView) dialogView.findViewById(R.id.confirm_password_error_text);
+            final TextView forgotPasswordText = (TextView) dialogView.findViewById(R.id.forgot_password_text);
+
+            dialogConfirmChangesButton.setOnClickListener(v -> {
+
+                if (dialogConfirmPasswordText.getText().toString().isEmpty() || dialogConfirmPasswordText.getText().toString() == "") {
+                    CustomAlertDialog.showCustomAlertDialog(mActivity,
+                            CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                            getString(R.string.controller_user_details_enter_password));
+                    return;
+                }
+
+                String firstname = getFieldValue(mFirstNameText);
+                String lastname = getFieldValue(mLastNameText);
+                boolean gender = getFieldValueOfGender();
+                String email = getFieldValue(mEmailAddressText);
+                String dateOfBirth = getFieldValueOfDateOfBirth();
+                String password = getFieldValue(dialogConfirmPasswordText);
+
+                mPresenter.sendUserDetails(createUserDetailRequest(email, firstname, lastname, dateOfBirth,
+                                gender, email, password, "", ""),
+                        new DetailsPasswordCallback() {
+                            @Override
+                            public void onEvent(boolean success) {
+                                if (success) {
+                                    dialogBuilder.dismiss();
+                                } else {
+                                    confirmPasswordErrorText.setVisibility(View.VISIBLE);
+                                    confirmPasswordErrorText.setText("Incorrect Password");
+                                }
+                            }
+                        });
+
+            });
+
+            dialogCloseButton.setOnClickListener(v -> {
+                dialogBuilder.dismiss();
+            });
+
+            forgotPasswordText.setOnClickListener(v -> {
+                dialogBuilder.dismiss();
+                getRouter().pushController(RouterTransaction.with(ForgotPasswordController.newInstance())
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
+            });
+
+            dialogBuilder.setView(dialogView);
+            dialogBuilder.show();
+
+        } else if (isEmailSubscriptionPreferenceChanged()) {
+            updateEmailSubscriptionPreference(currentUserDetails.getEmail());
+        }
+    }
+
+    @OnClick(R.id.controller_details_reset_password)
+    public void onClickResetPassword() {
+        getRouter().pushController(RouterTransaction.with(ForgotPasswordController.newInstance())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    @OnClick(R.id.change_password_button)
+    public void onClickChangePassword() {
+        AlertDialog dialogBuilder = new AlertDialog.Builder(mActivity).create();
+        LayoutInflater inflater = mActivity.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.change_password_dialog, null);
+
+        final EditText dialogCurrentPasswordText = (EditText) dialogView.findViewById(R.id.current_password_edit_text);
+        final EditText dialogNewPasswordText = (EditText) dialogView.findViewById(R.id.new_password_edit_text);
+        final EditText dialogConfirmPasswordText = (EditText) dialogView.findViewById(R.id.confirm_password_edit_text);
+        final TextView dialogConfirmChangesButton = (TextView) dialogView.findViewById(R.id.confirm_changes_text);
+        final TextView dialogCloseButton = (TextView) dialogView.findViewById(R.id.close_text);
+        final TextView currentPasswordErrorText = (TextView) dialogView.findViewById(R.id.current_password_error_text);
+        final TextView newPasswordErrorText = (TextView) dialogView.findViewById(R.id.new_password_error_text);
+        final TextView confirmPasswordErrorText = (TextView) dialogView.findViewById(R.id.confirm_password_error_text);
+        final TextView forgotPasswordText = (TextView) dialogView.findViewById(R.id.forgot_password_text);
+        PasswordStrengthMeter meter = (PasswordStrengthMeter) dialogView.findViewById(R.id.passwordInputMeter);
+
+        meter.setStrengthLevels(new PasswordStrengthLevel[]{
+                new PasswordStrengthLevel("Weak", android.R.color.darker_gray), // level 0
+                new PasswordStrengthLevel("Weak", android.R.color.holo_red_dark), // level 1
+                new PasswordStrengthLevel("Good", android.R.color.holo_orange_dark), // level 2
+                new PasswordStrengthLevel("Good", android.R.color.holo_orange_dark), // level 3
+                new PasswordStrengthLevel("Strong", android.R.color.holo_green_dark), // level 4
+                new PasswordStrengthLevel("Strong", android.R.color.holo_green_dark)}); // level 5
+
+        meter.setEditText(dialogNewPasswordText);
+        meter.setPasswordStrengthCalculator(new PasswordStrengthCalculator() {
+            @Override
+            public int calculatePasswordSecurityLevel(String password) {
+                // Do some calculation and return an int corresponding to the "points" or "level" the user password got
+                Pattern pattern;
+                final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+                pattern = Pattern.compile(PASSWORD_PATTERN);
+
+                if (password.length() >= 8 && password.matches("[a-zA-Z ]+")) {
+                    return 1;
+                } else if (password.length() >= 8 && password.matches("[a-zA-Z0-9 ]+")) {
+                    return 3;
+                } else if (pattern.matcher(password).matches()) {
+                    return 5;
+                } else {
+                    return 1;
+                }
+
             }
+
+            @Override
+            public int getMinimumLength() {
+                // Define the minimum length of a password. Anything below this should always yield a score of 0
+                return 8;
+            }
+
+            @Override
+            public boolean passwordAccepted(int level) {
+                // Define whether or not the level is an accepted level or not.
+                return level > 1;
+            }
+
+            @Override
+            public void onPasswordAccepted(String password) {
+                // Called when the password entered meets your requirements of length and strength levels
+            }
+        });
+        dialogNewPasswordText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                meter.setVisibility(View.VISIBLE);
+                if (dialogNewPasswordText.getText().toString().equals(dialogConfirmPasswordText.getText().toString())) {
+                    newPasswordErrorText.setVisibility(View.GONE);
+                    confirmPasswordErrorText.setVisibility(View.GONE);
+                } else {
+                    newPasswordErrorText.setVisibility(View.VISIBLE);
+                    confirmPasswordErrorText.setVisibility(View.VISIBLE);
+                    newPasswordErrorText.setText("Password does not match");
+                    confirmPasswordErrorText.setText("Password does not match");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        dialogConfirmPasswordText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (dialogConfirmPasswordText.getText().toString().equals(dialogNewPasswordText.getText().toString())) {
+                    newPasswordErrorText.setVisibility(View.GONE);
+                    confirmPasswordErrorText.setVisibility(View.GONE);
+                } else {
+                    newPasswordErrorText.setVisibility(View.VISIBLE);
+                    confirmPasswordErrorText.setVisibility(View.VISIBLE);
+                    newPasswordErrorText.setText("Password does not match");
+                    confirmPasswordErrorText.setText("Password does not match");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        dialogConfirmChangesButton.setOnClickListener(v -> {
 
             String firstname = getFieldValue(mFirstNameText);
             String lastname = getFieldValue(mLastNameText);
             boolean gender = getFieldValueOfGender();
             String email = getFieldValue(mEmailAddressText);
             String dateOfBirth = getFieldValueOfDateOfBirth();
-            String password = getFieldValue(mConfirmPasswordText);
-            String newpassword = getFieldValue(mNewPasswordText);
-            String confirmpassword = getFieldValue(mConfirmPasswordText);
+            String password = getFieldValue(dialogCurrentPasswordText);
+            String newpassword = getFieldValue(dialogNewPasswordText);
+            String confirmpassword = getFieldValue(dialogConfirmPasswordText);
 
-            if (newpassword.isEmpty()) {
-                mPresenter.sendUserDetails(createUserDetailRequest(email, firstname, lastname, dateOfBirth,
-                        gender, email, password, "", ""));
-            } else {
-                if (newpassword.equals(confirmpassword)) {
-                    mPresenter.sendUserDetails(createUserDetailRequest(email, firstname, lastname, dateOfBirth,
-                            gender, email, password, newpassword, confirmpassword));
-                } else {
-                    CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, mActivity.getString(R.string.password_does_not_match));
-                }
+            if (dialogConfirmPasswordText.getText().toString().isEmpty() || dialogConfirmPasswordText.getText().toString() == "") {
+                CustomAlertDialog.showCustomAlertDialog(mActivity,
+                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        getString(R.string.controller_user_details_enter_password));
+                return;
             }
-        } else if (isEmailSubscriptionPreferenceChanged()) {
-            updateEmailSubscriptionPreference(currentUserDetails.getEmail());
-        }
+
+            if (newpassword.equals(confirmpassword)) {
+                mPresenter.sendUserDetails(createUserDetailRequest(email, firstname, lastname, dateOfBirth,
+                        gender, email, password, newpassword, confirmpassword), new DetailsPasswordCallback() {
+                    @Override
+                    public void onEvent(boolean success) {
+                        if (success) {
+                            dialogBuilder.dismiss();
+                        } else {
+                            confirmPasswordErrorText.setVisibility(View.VISIBLE);
+                            currentPasswordErrorText.setText("Incorrect Password");
+                        }
+                    }
+                });
+            } else {
+                CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, mActivity.getString(R.string.password_does_not_match));
+            }
+
+        });
+
+        dialogCloseButton.setOnClickListener(v -> {
+            dialogBuilder.dismiss();
+        });
+
+        forgotPasswordText.setOnClickListener(v -> {
+            dialogBuilder.dismiss();
+            getRouter().pushController(RouterTransaction.with(ForgotPasswordController.newInstance())
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        });
+
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.show();
+
     }
+
 
     @OnClick(R.id.partial_toolbar_left_view)
     public void onBackClick() {
@@ -498,6 +759,20 @@ public class DetailsController extends BasePullToRefreshController implements De
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
         userDetailsId = null;
         mPresenter.loadUser(setUserDetailsRequest);
+    }
+
+    private boolean hasSpecialCharactersFirstName() {
+        return !mFirstNameText.getText().toString().trim().matches("[a-zA-Z ]+")
+                || mFirstNameText.getText().toString().trim().length() < 2;
+    }
+
+    private boolean hasSpecialCharactersLastName() {
+        return !mLastNameText.getText().toString().trim().matches("[a-zA-Z ]+") ||
+                mLastNameText.getText().toString().trim().length() < 2;
+    }
+
+    private boolean isNameDuplicate() {
+        return mFirstNameText.getText().toString().trim().equalsIgnoreCase(mLastNameText.getText().toString().trim());
     }
 
     private void updateDateOfBirthField() {
@@ -593,7 +868,7 @@ public class DetailsController extends BasePullToRefreshController implements De
     }
 
     private String getFieldValueOfDateOfBirth() {
-        return dateOfBirth == null ? null : serverDateFormat.format(dateOfBirth);
+        return dateOfBirth == null ? "" : serverDateFormat.format(dateOfBirth);
     }
 
     private boolean getFieldValueOfGender() {

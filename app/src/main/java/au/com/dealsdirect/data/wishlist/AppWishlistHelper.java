@@ -24,12 +24,11 @@ public class AppWishlistHelper implements WishlistHelper {
 
     private boolean doesCheckoutHaveWishlistItem = false;
 
-    private ArrayList<WishlistObject> wishlist = new ArrayList<>();
-    private int oldCount = -1;
+    private final ArrayList<WishlistObject> wishlist = new ArrayList<>();
 
-    private HashMap<String, WishlistChangeDelayedCallback> delayedCallbacks = new HashMap<>();
+    private final HashMap<String, WishlistChangeDelayedCallback> delayedCallbacks = new HashMap<>();
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Inject
     public AppWishlistHelper() {
@@ -38,14 +37,14 @@ public class AppWishlistHelper implements WishlistHelper {
 
     @Override
     public void setWishlist(List<WishlistObject> wishlist) {
-        if (wishlist == null) {
+        synchronized (this.wishlist) {
             this.wishlist.clear();
-        } else {
-            this.wishlist = new ArrayList<>(wishlist.size());
-            for (int i = 0; i < wishlist.size(); i++) {
-                final WishlistObject item = wishlist.get(i);
-                if (isWishlistObjectValid(item)) {
-                    this.wishlist.add(item);
+            if (wishlist != null) {
+                for (int i = 0; i < wishlist.size(); i++) {
+                    final WishlistObject item = wishlist.get(i);
+                    if (isWishlistObjectValid(item)) {
+                        this.wishlist.add(item);
+                    }
                 }
             }
         }
@@ -54,7 +53,9 @@ public class AppWishlistHelper implements WishlistHelper {
 
     @Override
     public List<WishlistObject> getWishlist() {
-        return new ArrayList<>(wishlist);
+        synchronized (wishlist) {
+            return new ArrayList<>(wishlist);
+        }
     }
 
     @Override
@@ -62,7 +63,9 @@ public class AppWishlistHelper implements WishlistHelper {
         if (!isWishlistObjectValid(object)) {
             return;
         }
-        wishlist.add(object);
+        synchronized (wishlist) {
+            wishlist.add(object);
+        }
         updateWishlistCount();
         addOrCancelDelayedCallback(object.getProductId(), delayedCallback);
         startDelayedCallback();
@@ -74,14 +77,16 @@ public class AppWishlistHelper implements WishlistHelper {
             return;
         }
 
-        int i = 0;
-        while (i < wishlist.size()) {
-            final WishlistObject item = wishlist.get(i);
-            final String otherProductId = item != null ? item.getProductId() : null;
-            if (productId.equals(otherProductId)) {
-                wishlist.remove(i);
-            } else {
-                i++;
+        synchronized (wishlist) {
+            int i = 0;
+            while (i < wishlist.size()) {
+                final WishlistObject item = wishlist.get(i);
+                final String otherProductId = item != null ? item.getProductId() : null;
+                if (productId.equals(otherProductId)) {
+                    wishlist.remove(i);
+                } else {
+                    i++;
+                }
             }
         }
         updateWishlistCount();
@@ -120,14 +125,16 @@ public class AppWishlistHelper implements WishlistHelper {
         if (productId == null || productId.isEmpty()) {
             return false;
         }
-        for (int i = 0; i < wishlist.size(); i++) {
-            final WishlistObject item = wishlist.get(i);
-            final String otherProductId = item != null ? item.getProductId() : null;
-            if (productId.equals(otherProductId)) {
-                return true;
+        synchronized (wishlist) {
+            for (int i = 0; i < wishlist.size(); i++) {
+                final WishlistObject item = wishlist.get(i);
+                final String otherProductId = item != null ? item.getProductId() : null;
+                if (productId.equals(otherProductId)) {
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -147,9 +154,10 @@ public class AppWishlistHelper implements WishlistHelper {
 
     @Override
     public void updateWishlistCount() {
-        if (wishlistChangeListener != null) {
-            oldCount = wishlist.size();
-            wishlistChangeListener.wishlistCountChanged(wishlist.size());
+        synchronized (wishlist) {
+            if (wishlistChangeListener != null) {
+                wishlistChangeListener.wishlistCountChanged(wishlist.size());
+            }
         }
     }
 

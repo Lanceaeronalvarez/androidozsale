@@ -45,6 +45,7 @@ import androidx.core.util.Pair;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.window.layout.WindowLayoutInfo;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
@@ -62,6 +63,7 @@ import com.paginate.Paginate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -1262,6 +1264,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
+    public void onWindowLayoutChanged(WindowLayoutInfo windowLayoutInfo) {
+        super.onWindowLayoutChanged(windowLayoutInfo);
+        if (mGridLayoutManager != null) {
+            mGridLayoutManager.requestLayout();
+        }
+    }
+
+    @Override
     protected void setUp(View view) {
 
         mSaleItemsRemainingTimeText.setVisibility(View.GONE);
@@ -1973,7 +1983,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 }
                 searchOperationType = null;
                 mGenieCategory = null;
-                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
+                mPresenter.loadSaleItems(createSaleItemsRequest(
+                        mSearchFilterMvpView == null ? Collections.emptySet() : mSearchFilterMvpView.getCategoryKeys(),
+                        0,
+                        mChipFilters));
                 if (mAppBar != null) {
                     mAppBar.setExpanded(true, true);
                 }

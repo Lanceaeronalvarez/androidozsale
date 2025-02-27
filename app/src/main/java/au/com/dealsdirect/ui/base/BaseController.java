@@ -19,6 +19,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.window.layout.WindowLayoutInfo;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
@@ -238,6 +239,9 @@ public abstract class BaseController
         return isAttached();
     }
 
+    public void onWindowLayoutChanged(WindowLayoutInfo windowLayoutInfo) {
+
+    }
 
     public void onOrientationChanged(Configuration newConfiguration) {
 

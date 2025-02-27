@@ -2,8 +2,10 @@ package au.com.dealsdirect.ui.controller.address.addnewaddress;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -131,6 +135,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
             case "numeric":
                 EditText editTextValue = (EditText) dynamicView.findViewById(R.id.row_add_address_value);
                 TextView textViewLabel = (TextView) dynamicView.findViewById(R.id.row_add_address_label);
+                TextView textViewError = (TextView) dynamicView.findViewById(R.id.row_add_address_error_text);
 
                 editTextValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
                 textViewLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
@@ -158,6 +163,107 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                 //Add asterisk to required fields
                 if (infoList.getValidate() != null && infoList.getValidate().equalsIgnoreCase("*")) {
                     textViewLabel.setText(textViewLabel.getText() + "*");
+                }
+
+                //validate using regex
+                if (infoList.getName().equalsIgnoreCase("forename")) {
+                    editTextValue.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            Iterator it = mViewMap.entrySet().iterator();
+
+                            while (it.hasNext()) {
+                                try {
+                                    Map.Entry pair = (Map.Entry) it.next();
+                                    DecorationInfoList info = (DecorationInfoList) pair.getKey();
+
+                                    if (pair.getValue() instanceof EditText) {
+                                        EditText et = (EditText) pair.getValue();
+                                        String editTextLastNameValue = et.getText().toString();
+                                        String label = info.getName().toLowerCase();
+
+                                        if (!editTextValue.getText().toString().trim().matches("[a-zA-Z ]+") || editTextValue.getText().toString().length() < 2) {
+                                            textViewError.setText(getString(R.string.special_character_error));
+                                            textViewError.setVisibility(View.VISIBLE);
+                                        } else {
+                                            if (label.equalsIgnoreCase("surname")) {
+                                                String str = editTextLastNameValue;
+                                                if (str.equalsIgnoreCase(editTextValue.getText().toString().trim())) {
+                                                    textViewError.setText(getString(R.string.duplicate_name_error));
+                                                    textViewError.setVisibility(View.VISIBLE);
+                                                } else {
+                                                    textViewError.setVisibility(View.GONE);
+                                                }
+                                            }
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                        }
+
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                        }
+                    });
+                }
+
+                if (infoList.getName().equalsIgnoreCase("surname")) {
+                    editTextValue.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            Iterator it = mViewMap.entrySet().iterator();
+
+                            while (it.hasNext()) {
+                                try {
+                                    Map.Entry pair = (Map.Entry) it.next();
+                                    DecorationInfoList info = (DecorationInfoList) pair.getKey();
+
+                                    if (pair.getValue() instanceof EditText) {
+                                        EditText et = (EditText) pair.getValue();
+                                        String editTextLastNameValue = et.getText().toString();
+                                        String label = info.getName().toLowerCase();
+
+                                        if (!editTextValue.getText().toString().trim().matches("[a-zA-Z ]+") || editTextValue.getText().toString().length() < 2) {
+                                            textViewError.setText(getString(R.string.special_character_error));
+                                            textViewError.setVisibility(View.VISIBLE);
+                                        } else {
+                                            if (label.equalsIgnoreCase("forename")) {
+                                                String str = editTextLastNameValue;
+                                                if (str.equalsIgnoreCase(editTextValue.getText().toString().trim())) {
+                                                    textViewError.setText(getString(R.string.duplicate_name_error));
+                                                    textViewError.setVisibility(View.VISIBLE);
+                                                } else {
+                                                    textViewError.setVisibility(View.GONE);
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                        }
+                    });
                 }
 
                 dynamicView.setOnClickListener(v -> KeyboardUtils.showSoftInput(editTextValue, mActivity));
@@ -233,7 +339,15 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     }
 
     @Override
-    public void showErrorMessage(String message) {
+    public void showErrorMessage(boolean hasSpecialCharacter) {
+        String message;
+
+        if (hasSpecialCharacter) {
+            message = mActivity.getResources().getString(R.string.special_character_error);
+        } else {
+            message = mActivity.getResources().getString(R.string.please_populate_all_fields);
+        }
+
 
         CustomAlertDialog.showCustomAlertDialog(
                 mActivity,

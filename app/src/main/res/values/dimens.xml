@@ -372,4 +372,7 @@
 
     <dimen name="lpay_button_logo_margin">6dp</dimen>
     <dimen name="genoa_button_logo_margin">8dp</dimen>
+
+    <dimen name="my_details_entry_label_width">150dp</dimen>
+
 </resources>

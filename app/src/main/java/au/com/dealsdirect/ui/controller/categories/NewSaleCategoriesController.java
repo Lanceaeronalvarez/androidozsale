@@ -50,9 +50,6 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CommonUtils;
 import butterknife.BindView;
 
-/**
- * Created by MTC on 2019-12-05.
- */
 public class NewSaleCategoriesController extends BaseController
         implements CategoriesMvpView, NewSaleCategoryClickListener {
 
@@ -198,11 +195,14 @@ public class NewSaleCategoriesController extends BaseController
         List<GetCategoryTreeResponse> customNodeTypes = new ArrayList<>();
 
         for (GetCategoryTreeResponse category : mCategories) {
-            if (category.getNodeType().equals("url")) {
+            final String nodeType = category.getNodeType();
+            if (nodeType == null) {
+                customNodeTypes.add(category);
+            } else if (nodeType.equals("url")) {
                 urlNodeTypes.add(category);
-            } else if (category.getNodeType().equals("usual") || category.getNodeType().equals("undefined")) {
+            } else if (nodeType.equals("usual") || nodeType.equals("undefined")) {
                 usualUndefinedNodeTypes.add(category);
-            } else if (category.getNodeType().equals("fixed")) {
+            } else if (nodeType.equals("fixed")) {
                 fixedNodeTypes.add(category);
             } else {
                 customNodeTypes.add(category);
@@ -269,7 +269,7 @@ public class NewSaleCategoriesController extends BaseController
     private void setupCategories() {
         if (mCategories != null) {
 
-            mCategoryAdapter = new NewSaleCategoryAdapter(mActivity, mCategories, this, mCategoryMap);
+            mCategoryAdapter = new NewSaleCategoryAdapter(mCategories, this);
 
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
             mRecyclerView.setAdapter(mCategoryAdapter);
@@ -436,7 +436,8 @@ public class NewSaleCategoriesController extends BaseController
             if (split.length > 0) {
                 String mainKey = split[0];
                 for (GetCategoryTreeResponse category : mCategories) {
-                    if (category.getKey().equals(mainKey)) {
+                    final String categoryKey = category.getKey();
+                    if (categoryKey != null && categoryKey.equals(mainKey)) {
                         return Lists.newArrayList(category);
                     }
                 }
@@ -543,7 +544,7 @@ public class NewSaleCategoriesController extends BaseController
             mToolbarLeftOptionButton.setVisibility(
                     CommonUtils.positionOfControllerInRouterBackstack(getRouter(), this) > 0 ?
                             View.VISIBLE : View.GONE);
-            mCategoryAdapter = new NewSaleCategoryAdapter(mActivity, mCategories, this, mCategoryMap);
+            mCategoryAdapter = new NewSaleCategoryAdapter(mCategories, this);
         } else if (mLevel == 1) {
             mToolbarTextView.setText(mCategoryName);
             mSeeAllButtonText.setText(allText + mCategoryName);
@@ -554,7 +555,7 @@ public class NewSaleCategoriesController extends BaseController
             } else {
                 mSeeAllButton.setVisibility(View.GONE);
             }
-            mCategoryAdapter = new NewSaleCategoryAdapter(mActivity, mSubCategories, this, mCategoryMap);
+            mCategoryAdapter = new NewSaleCategoryAdapter(mSubCategories, this);
         } else if (mLevel == 2) {
             mToolbarTextView.setText(mSubCategoryName);
             mSeeAllButtonText.setText(allText + mSubCategoryName);
@@ -565,7 +566,7 @@ public class NewSaleCategoriesController extends BaseController
             } else {
                 mSeeAllButton.setVisibility(View.GONE);
             }
-            mCategoryAdapter = new NewSaleCategoryAdapter(mActivity, mSubCategoriesChildren, this, mCategoryMap);
+            mCategoryAdapter = new NewSaleCategoryAdapter(mSubCategoriesChildren, this);
         }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         mRecyclerView.setAdapter(mCategoryAdapter);

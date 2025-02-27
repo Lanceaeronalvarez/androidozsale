@@ -77,7 +77,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.65"
-                        app:hintEnabled="false">
+                        app:hintEnabled="false"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeColor="@color/white"
+                        app:boxBackgroundMode="outline">
 
                         <EditText
                             android:id="@+id/controller_register_forename_field"
@@ -113,7 +116,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.65"
-                        app:hintEnabled="false">
+                        app:hintEnabled="false"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeColor="@color/white"
+                        app:boxBackgroundMode="outline">
 
                         <EditText
                             android:id="@+id/controller_register_surname_field"

@@ -85,7 +85,11 @@ public class DetailsPresenterTest {
 
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
 
-        mPresenter.sendUserDetails(setUserDetailsRequest);
+        mPresenter.sendUserDetails(setUserDetailsRequest, new DetailsPasswordCallback() {
+            @Override
+            public void onEvent() {
+            }
+        });
         mTestScheduler.triggerActions();
 
         verify(mMockDetailsView).saveUserDetailsSuccess();
