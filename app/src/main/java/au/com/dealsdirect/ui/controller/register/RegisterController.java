@@ -34,6 +34,7 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
+import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
@@ -148,6 +149,9 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @BindView(R.id.register_base_container)
     ViewGroup mBaseContainer;
 
+    @BindView(R.id.register_voucher_text)
+    TextView mRegisterVoucher;
+
 
     private String mRegisterMethod = NO_ACTION;
     private boolean isRegisterSuccess = false;
@@ -205,6 +209,11 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 //        mVcoButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
 //                View.GONE);
         mVcoButton.setVisibility(View.GONE);
+
+        if(BuildConfig.FLAVOR.equals("ozsaleRC") || BuildConfig.FLAVOR.equals("ozsaleTest")
+        || BuildConfig.FLAVOR.equals("nzsaleRC") || BuildConfig.FLAVOR.equals("nzsaleTest")){
+            mRegisterVoucher.setVisibility(View.VISIBLE);
+        }
 
         if (getResources().getBoolean(R.bool.is_ozsale_app)) {
             if (mLeftButton != null) {
