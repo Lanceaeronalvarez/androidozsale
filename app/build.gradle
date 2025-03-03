@@ -590,8 +590,8 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.databinding:databinding-runtime:8.7.2'
-    implementation 'androidx.databinding:databinding-adapters:8.7.2'
+    implementation 'androidx.databinding:databinding-runtime:8.8.2'
+    implementation 'androidx.databinding:databinding-adapters:8.8.2'
 
     // android support libraries
     implementation 'androidx.appcompat:appcompat:1.7.0'
@@ -603,14 +603,14 @@ dependencies {
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.2.0'
     implementation 'androidx.activity:activity:1.9.3'
 
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
 
     // font
     implementation "io.github.inflationx:calligraphy3:$rootProject.calligraphyVersion"
     implementation "io.github.inflationx:viewpump:$rootProject.viewPumpVersion"
 
     // network
-    implementation "com.amitshekhar.android:rx2-android-networking:$rootProject.rx2FastAndroidNetworking"
+    implementation "com.github.amitshekhariitbhu.Fast-Android-Networking:rx2-android-networking:$rootProject.rx2FastAndroidNetworking"
 
     // parser
     implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
@@ -622,7 +622,7 @@ dependencies {
     implementation "com.github.franmontiel:PersistentCookieJar:$rootProject.cookieJarVersion"
 
     // debug database
-    debugImplementation "com.amitshekhar.android:debug-db:$rootProject.debugDBVersion"
+    debugImplementation "com.github.amitshekhariitbhu.Android-Debug-Database:debug-db:$rootProject.debugDBVersion"
 
     // dependency injection
     implementation "com.google.dagger:dagger:$rootProject.dagger2Version"
@@ -640,9 +640,6 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
 
-    // swipe view
-    implementation "com.mindorks:placeholderview:$rootProject.placeholderviewVersion"
-
     // logger
     implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
 
@@ -656,12 +653,8 @@ dependencies {
 
     // advanced recyclerview
     implementation('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.11.0@aar')
-    // flow layout
-    implementation "com.hyman:flowlayout-lib:1.1.2"
     // photo view
     implementation "com.github.chrisbanes:PhotoView:$rootProject.photoViewVersion"
-    // bottom navigation
-    implementation 'com.aurelhubert:ahbottomnavigation:2.3.4'
     // circle indicator
     implementation 'me.relex:circleindicator:1.2.2@aar'
 
@@ -670,9 +663,6 @@ dependencies {
     implementation "com.github.zjupure:webpdecoder:2.6.${GLIDE_VERSION}"
     implementation "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
     annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
-
-    // picker
-    implementation "com.shawnlin:number-picker:$rootProject.numberPickerVersion"
 
     // braintree
     implementation "com.braintreepayments.api:card:$rootProject.braintreeVersion"
@@ -686,9 +676,6 @@ dependencies {
 
     // GCM
     implementation "com.google.android.gms:play-services-gcm:$rootProject.gcmVersion"
-
-    // Crystal Range Seekbar
-    implementation "com.crystal:crystalrangeseekbar:$rootProject.crystalRangeSeekbarVersion"
 
     //viewpager indicator
     implementation 'me.relex:circleindicator:1.2.2@aar'
@@ -712,11 +699,11 @@ dependencies {
     implementation 'com.newrelic.agent.android:android-agent:7.5.0'
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:33.6.0')
+    implementation platform('com.google.firebase:firebase-bom:33.10.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.google.firebase:firebase-messaging:24.1.0'
-    implementation 'com.google.firebase:firebase-crashlytics:19.2.1'
+    implementation 'com.google.firebase:firebase-crashlytics:19.4.1'
 
     //VISA CHECKOUT
     implementation 'com.braintreepayments.api:visa-checkout:3.0.0'
@@ -750,6 +737,11 @@ dependencies {
     implementation project(path: ':CardForm')
     implementation project(path: ':ptr-lib')
     implementation project(path: ':lib')
+    implementation project(path: ':FlowLayout')
+    implementation project(path: ':NumberPicker')
+    implementation project(path: ':crystal-range-seekbar')
+    implementation project(path: ':ahbottomnavigation')
+
 
 
 }

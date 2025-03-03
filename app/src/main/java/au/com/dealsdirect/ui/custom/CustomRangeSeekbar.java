@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
 
-
 public class CustomRangeSeekbar extends CrystalRangeSeekbar {
 
     private LinearLayout minPriceMovingLayout;

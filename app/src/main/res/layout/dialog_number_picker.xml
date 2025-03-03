@@ -22,7 +22,6 @@
         app:np_dividerColor="#ABA9A2"
         app:np_dividerThickness="0.5dp"
         app:np_min="0"
-        app:np_selectedTextSize="@dimen/text_size_headline3"
         app:np_textSize="@dimen/text_size_headline3"
         app:np_wrapSelectorWheel="true" />
 
