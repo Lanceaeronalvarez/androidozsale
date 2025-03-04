@@ -10,3 +10,15 @@
 [submodule "RecyclerViewPager"]
 	path = RecyclerViewPager
 	url = https://github.com/swph-mobile/RecyclerViewPager
+[submodule "crystal-range-seekbar"]
+	path = crystal-range-seekbar
+	url = https://github.com/swph-mobile/crystal-range-seekbar
+[submodule "NumberPicker"]
+	path = NumberPicker
+	url = https://github.com/swph-mobile/NumberPicker
+[submodule "ahbottomnavigation"]
+	path = ahbottomnavigation
+	url = https://github.com/swph-mobile/ahbottomnavigation
+[submodule "FlowLayout"]
+	path = FlowLayout
+	url = https://github.com/swph-mobile/FlowLayout

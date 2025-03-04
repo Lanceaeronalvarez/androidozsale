@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.controller.salefilter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -308,13 +307,19 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                     }
                 }
                 holder.filterCheckbox.setOnClickListener(view -> {
+                    final int pos = holder.getBindingAdapterPosition();
+
+                    // removeAllSort() actually changes recyclerview's adapter with a new one,
+                    // unbinding this viewholder
+                    // that means after this line, getBindingAdapterPosition() would return -1
+                    // getting the binding adapter position before this line is important
                     mSaleFilterAdapterClickListener.removeAllSort();
+
                     if (!holder.filterCheckbox.isChecked()) {
                         mSaleFilterAdapterClickListener.removeAllSort();
                     } else {
-                        addChip(holder.getBindingAdapterPosition());
+                        addChip(pos);
                     }
-                    notifyDataSetChanged();
                 });
             } else {
 
@@ -338,6 +343,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                     } else {
                         removeChip(pos);
                     }
+                    mSaleFilterAdapterClickListener.updateSeeAllProducts();
                 });
             }
         }
