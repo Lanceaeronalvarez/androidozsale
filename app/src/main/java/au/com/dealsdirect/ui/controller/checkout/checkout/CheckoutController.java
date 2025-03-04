@@ -918,8 +918,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 mPaypalCreditButton.setVisibility(View.GONE);
             } else {
                 showPaymentButtons();
-                mPaypalButton.setVisibility(View.GONE);
                 mPaypalCreditButton.setVisibility(View.GONE);
+                mPaypalButton.setVisibility(View.VISIBLE);
             }
 
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).setText(paymentMethod.getPaymentType());
@@ -1422,15 +1422,18 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.PAYPAL.getValue());
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
-        if (mActivity.isBraintreeInitialized()) {
-            //If no selected payment method displayed, call paypal
-            if (mActivity.getPaymentMethodSelected() == null) {
-                mActivity.startPaypalPayment();
-            } else {
-                PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
-                mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-            }
-        }
+        mActivity.startPaypalPayment();
+
+//        if (mActivity.isBraintreeInitialized()) {
+//            //If no selected payment method displayed, call paypal
+//
+//            if (mActivity.getPaymentMethodSelected() == null) {
+//                mActivity.startPaypalPayment();
+//            } else {
+//                PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
+//                mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+//            }
+//        }
     }
 
     private void onPaypalCreditButtonClick() {
