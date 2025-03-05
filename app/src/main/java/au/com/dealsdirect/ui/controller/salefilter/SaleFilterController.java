@@ -628,12 +628,11 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
                 mShowCategory,
                 mBrandsWithTotal);
 
+        mSearchItemsList.addAll(mSelectedFilters);
+        mFilterAdapter.setSearchItemsList(mSearchItemsList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         mRecyclerView.setAdapter(mFilterAdapter);
         mRecyclerView.setMotionEventSplittingEnabled(false);
-        mSearchItemsList.addAll(mSelectedFilters);
-        mFilterAdapter.setSearchItemsList(mSearchItemsList);
-        mFilterAdapter.notifyDataSetChanged();
     }
 
     @Override
