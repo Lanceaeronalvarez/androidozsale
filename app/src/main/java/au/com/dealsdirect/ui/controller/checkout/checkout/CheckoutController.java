@@ -216,6 +216,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     View mButtonHolder;
     @BindView(R.id.partial_checkout_button_pay)
     Button mPayButton;
+    @BindView(R.id.controller_checkout_button_pay)
+    Button mPayButtonCheckout;
     @BindView(R.id.partial_checkout_button_g_pay_container)
     View mGPayButtonContainer;
     @BindView(R.id.partial_checkout_button_g_pay)
@@ -487,6 +489,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (mActivity != null) {
             mActivity.getMainController().showBottomNav();
         }
+
+        mPayButton.setVisibility(View.GONE);
 
         mTitleTextView.setText(R.string.checkout_page_toolbar_title);
 
@@ -1798,7 +1802,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private List<View> getAllButtons() {
         return new ArrayList<View>() {{
-            add(mPayButton);
+            add(mPayButtonCheckout);
             add(mPaypalButton);
             add(mPaypalCreditButton);
             add(mMasterpassButton);
@@ -1812,14 +1816,14 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             String paymentType = mActivity.getPaymentMethodSelected().getPaymentType();
             if (!paymentType.equalsIgnoreCase(CARD_PAYPAL) ||
                     !paymentType.equalsIgnoreCase(CARD_MASTERPASS)) {
-                buttons.add(mPayButton);
+                buttons.add(mPayButtonCheckout);
             }
             if (paymentType.equalsIgnoreCase(CARD_PAYPAL) && mPresenter.isPaypalEnabled()) {
                 buttons.add(mPaypalButton);
             }
         } else {
             //no selected payment Method
-            buttons.add(mPayButton);
+            buttons.add(mPayButtonCheckout);
             if (mPresenter.isPaypalEnabled()) buttons.add(mPaypalButton);
             if (mPresenter.isVcoEnabled()) buttons.add(mVcoButton);
             if (!isOurPaySelectDeliveryMethod() && mPresenter.isMasterPassEnabled()) {
@@ -1914,6 +1918,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         mClickListeners = new CompositeDisposable();
         mClickListeners.add(RxView.clicks(mPayButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onPayButtonClick()));
+        mClickListeners.add(RxView.clicks(mPayButtonCheckout)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> onPayButtonClick()));
