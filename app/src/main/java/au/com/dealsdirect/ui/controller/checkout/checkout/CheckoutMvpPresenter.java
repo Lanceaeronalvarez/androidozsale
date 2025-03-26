@@ -73,4 +73,6 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     }
 
     void getPricingInfoText(String seoIdentifier);
+
+    void loadRecentlyViewedItems();
 }
