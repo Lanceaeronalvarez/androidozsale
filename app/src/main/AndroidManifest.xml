@@ -12,6 +12,10 @@
             <action android:name="android.intent.action.PICK" />
             <data android:mimeType="*/*" />
         </intent>
+        <intent>
+            <action android:name="android.intent.action.SENDTO"/>
+            <data android:scheme="mailto" android:host="*" />
+        </intent>
     </queries>
 
     <uses-permission android:name="android.permission.INTERNET" />

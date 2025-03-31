@@ -541,7 +541,7 @@
     <string name="please_fill_up_personalisation_details">Please fill up personalisation details</string>
     <string name="max_characters">Max characters:&#160;</string>
     <string name="this_is_a_required_field">* - This is a required field</string>
-
+    <string name="account_information_sell_on">"Sell On "</string>
 
     <string name="voucher_used">Used Vouchers</string>
     <string name="login_with_facebook">Login with Facebook</string>
@@ -1037,6 +1037,8 @@
 
     <string name="payment_methods">Payment Methods</string>
     <string name="payment_method_details">We accept the following. Simply select your preferred payment method at checkout.</string>
+
+    <string name="auseller_email">auseller@mysale.com</string>
 
     <string name="signup_modal_text1">Sign up &amp; save $10\n+ win a <b>$500 voucher!</b></string>
     <string name="signup_modal_text2">Sign up now and instantly score a $10 voucher. Plus, automatically enter a draw to win a $500 voucher!</string>
