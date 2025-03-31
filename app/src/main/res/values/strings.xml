@@ -1038,6 +1038,11 @@
     <string name="payment_methods">Payment Methods</string>
     <string name="payment_method_details">We accept the following. Simply select your preferred payment method at checkout.</string>
 
+    <string name="notifications_use_this_code">Use this code before it expires!</string>
+    <string name="notifications_use_these_codes">Use these codes before they expire!</string>
+    <string name="go_to_vouchers">Go to Vouchers</string>
+    <string name="copy_code">Copy Code</string>
+
     <string name="auseller_email">auseller@mysale.com</string>
 
     <string name="signup_modal_text1">Sign up &amp; save $10\n+ win a <b>$500 voucher!</b></string>

@@ -15,6 +15,8 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetLeaderboardBannerRequest;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.notification.GetNotificationsRequest;
+import au.com.dealsdirect.data.network.model.notification.GetNotificationsResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.priceinfo.PricingInfoLoaderHelper;
@@ -377,6 +379,27 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
             }
 
             getMvpView().showPricingInfoText(rrpText, totalPercentOff, originalPrice, combinedPricingInfoText);
+        });
+    }
+
+    @Override
+    public void getNotifications() {
+        GetNotificationsRequest request = new GetNotificationsRequest();
+        String loginTicket = getDataManager().getLoginTicket();
+        String[] split = loginTicket.split("\\.");
+        if (split.length > 0) {
+            request.setUserId(split[0]);
+        } else {
+            request.setUserId("");
+        }
+        doApiCallForResponse(getDataManager().getNotifications(request), new AppApiCallback() {
+            @Override
+            public void onSuccess(List<?> response) {
+                super.onSuccess(response);
+                if (response != null && isViewAttached()) {
+                    getMvpView().showNotifications((List<GetNotificationsResponse>) response);
+                }
+            }
         });
     }
 }

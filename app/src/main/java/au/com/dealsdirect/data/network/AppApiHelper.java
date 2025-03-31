@@ -109,6 +109,8 @@ import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderRequest;
 import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderResponse;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
+import au.com.dealsdirect.data.network.model.notification.GetNotificationsRequest;
+import au.com.dealsdirect.data.network.model.notification.GetNotificationsResponse;
 import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
@@ -1755,6 +1757,15 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request, true))
                 .build()
                 .getJSONObjectObservable();
+    }
+
+    @Override
+    public Observable<List<GetNotificationsResponse>> getNotifications(GetNotificationsRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callGetNotifications())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request, true))
+                .build()
+                .getObjectListObservable(GetNotificationsResponse.class);
     }
 }
 

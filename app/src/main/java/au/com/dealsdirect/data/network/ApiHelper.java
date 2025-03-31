@@ -103,6 +103,8 @@ import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderRequest;
 import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderResponse;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
+import au.com.dealsdirect.data.network.model.notification.GetNotificationsRequest;
+import au.com.dealsdirect.data.network.model.notification.GetNotificationsResponse;
 import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
@@ -553,5 +555,8 @@ public interface ApiHelper {
     Observable<ZipPayCreateNzOrderResponse> callCreateZipPayNzOrder(ZipPayCreateNzOrderRequest request);
 
     Observable<JSONObject> callConfirmZipPayNzOrder(ZipPayConfirmNzOrderRequest request);
+
+    // Notification
+    Observable<List<GetNotificationsResponse>> getNotifications(GetNotificationsRequest request);
 
 }

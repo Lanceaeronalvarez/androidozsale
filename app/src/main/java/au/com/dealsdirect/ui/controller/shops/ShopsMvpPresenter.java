@@ -52,4 +52,6 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
     interface WishlistDelayedCallback {
         void performDelayedAction();
     }
+
+    void getNotifications();
 }

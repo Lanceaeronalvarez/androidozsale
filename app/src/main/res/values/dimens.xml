@@ -375,4 +375,7 @@
 
     <dimen name="my_details_entry_label_width">150dp</dimen>
 
+    <dimen name="notification_bar_height">110dp</dimen>
+    <dimen name="notification_ticket_width">213dp</dimen>
+    <dimen name="notification_ticket_height">115dp</dimen>
 </resources>

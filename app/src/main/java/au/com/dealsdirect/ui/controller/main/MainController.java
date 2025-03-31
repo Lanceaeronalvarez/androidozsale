@@ -1704,6 +1704,17 @@ public class MainController extends BaseController implements MainMvpView {
         this.willGoToShopInsteadOfCategories = willGoToShopInsteadOfCategories;
     }
 
+    public AccountController getAccountController() {
+        if (getAccountRouter() == null) {
+            return null;
+        }
+        Controller controller = getAccountRouter().getControllerWithTag(AccountController.TAG);
+        if (controller instanceof AccountController) {
+            return (AccountController) controller;
+        }
+        return null;
+    }
+
     public void showTNC() {
         setBottomNavigationItem(ACCOUNT_INDEX);
         setViewPagerItem(ACCOUNT_INDEX);
