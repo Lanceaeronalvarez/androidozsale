@@ -59,7 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_large"
-                    android:text="Sign up now and instantly score a $10 voucher. Plus, automatically enter a draw to win a $500 voucher!"
+                    android:text="@string/register_voucher"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:visibility="gone"/>
