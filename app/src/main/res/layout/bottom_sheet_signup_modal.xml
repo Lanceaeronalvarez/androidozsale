@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottomSheetLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:orientation="vertical"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+
+    <View
+        android:id="@+id/bottom_sheet_dimming_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000" />
+
+    <RelativeLayout
+        android:id="@+id/bottom_sheet_signup_modal_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_bottom_sheet_dialog">
+
+        <ImageButton
+            android:id="@+id/bottom_sheet_signup_modal_close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:background="@color/transparent"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="4dp"
+            android:src="@drawable/bg_encircled_x_button" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                fontPath="@string/font_app_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:gravity="left"
+                android:text="@string/signup_modal_text1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_headline3" />
+
+            <TextView
+                fontPath="@string/font_app_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:gravity="left"
+                android:text="@string/signup_modal_text2"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_caption1" />
+
+            <Button
+                android:id="@+id/bottom_sheet_signup_modal_button"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:background="@drawable/bg_aqua_button"
+                android:paddingLeft="@dimen/margin_small"
+                android:paddingRight="@dimen/margin_small"
+                android:text="Subscribe Now!"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_caption1" />
+
+            <TextView
+                android:id="@+id/bottom_sheet_signup_modal_tnc_text"
+                fontPath="@string/font_app_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:gravity="left"
+                android:text="@string/signup_modal_text3"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_caption3" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

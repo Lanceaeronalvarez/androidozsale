@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.main;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -46,6 +47,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.account.AccountController;
+import au.com.dealsdirect.ui.controller.account.model.AccountOption;
 import au.com.dealsdirect.ui.controller.brands.TopBrandsController;
 import au.com.dealsdirect.ui.controller.categories.NewSaleCategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -84,10 +86,14 @@ public class MainController extends BaseController implements MainMvpView {
     private static final String KEY_HAS_SAVED_INSTANCE = "KEY_HAS_SAVED_INSTANCE";
 
     private static final long INDICATOR_ANIMATION_DURATION = 250;
+    private static final long BOTTOM_NAVIGATION_ANIMATION_DURATION = 250;
 
     private static final boolean WILL_ANIMATE_INDICATOR = true;
 
     private final Set<ObjectAnimator> indicatorAnimators = new HashSet<>();
+    private ValueAnimator bottomNavAnimator = null;
+
+    private boolean isBottomNavHidden = false;
 
     private int wishlistCount = 0;
 
@@ -577,6 +583,7 @@ public class MainController extends BaseController implements MainMvpView {
 
         Controller accountController = ControllerFactory.getInstance(GateKeeper.Destination.ACCOUNT);
         router.setRoot(RouterTransaction.with(accountController)
+                .tag(AccountController.TAG)
                 .popChangeHandler(new HorizontalChangeHandler())
                 .pushChangeHandler(new HorizontalChangeHandler()));
     }
@@ -808,20 +815,138 @@ public class MainController extends BaseController implements MainMvpView {
         if (mBottomNavigationView != null) {
             mBottomNavigationView.setVisibility(View.GONE);
             mBottomNavigationUpperLine.setVisibility(View.GONE);
+            mBottomNavigationContainer.setVisibility(View.GONE);
             mNavIndicatorView.setVisibility(View.GONE);
             mHomeButton.setVisibility(View.GONE);
+            isBottomNavHidden = true;
         }
     }
 
+    public void hideBottomNav(boolean isAnimated) {
+        if (!isAnimated) {
+            hideBottomNav();
+        }
+
+        if (bottomNavAnimator != null) {
+            bottomNavAnimator.cancel();
+            bottomNavAnimator = null;
+        }
+
+        if (isBottomNavHidden) {
+            return;
+        }
+
+        final int height = (int) mActivity.getResources().getDimension(R.dimen.bottom_nav_height);
+
+        final ValueAnimator animator = ValueAnimator.ofInt(height, 1);
+        animator.setDuration(BOTTOM_NAVIGATION_ANIMATION_DURATION);
+        animator.addUpdateListener(animation -> {
+            final int value = (int) animation.getAnimatedValue();
+            ViewGroup.LayoutParams layoutParams = mBottomNavigationView.getLayoutParams();
+            layoutParams.height = value;
+            mBottomNavigationView.setLayoutParams(layoutParams);
+        });
+        animator.addListener(new Animator.AnimatorListener() {
+            private void resetHeight() {
+                ViewGroup.LayoutParams layoutParams = mBottomNavigationView.getLayoutParams();
+                layoutParams.height = height;
+                mBottomNavigationView.setLayoutParams(layoutParams);
+            }
+
+            @Override
+            public void onAnimationStart(@NonNull Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(@NonNull Animator animator) {
+                hideBottomNav();
+                resetHeight();
+            }
+
+            @Override
+            public void onAnimationCancel(@NonNull Animator animator) {
+                hideBottomNav();
+                resetHeight();
+            }
+
+            @Override
+            public void onAnimationRepeat(@NonNull Animator animator) {
+
+            }
+        });
+        bottomNavAnimator = animator;
+        animator.start();
+    }
+
     public void showBottomNav() {
-        if (mBottomNavigationView != null && mBottomNavigationView.getVisibility() == View.GONE) {
+        if (mBottomNavigationView != null) {
             mBottomNavigationView.setVisibility(View.VISIBLE);
             mBottomNavigationView.bringToFront();
             mBottomNavigationUpperLine.setVisibility(View.VISIBLE);
             mBottomNavigationContainer.setVisibility(View.VISIBLE);
             mNavIndicatorView.setVisibility(View.VISIBLE);
+            mHomeButton.setVisibility(View.VISIBLE);
             resetIndicators(mBottomNavigationView.getCurrentItem());
+            isBottomNavHidden = false;
         }
+    }
+
+    public void showBottomNav(boolean isAnimated) {
+        if (!isAnimated) {
+            showBottomNav();
+        }
+
+        if (bottomNavAnimator != null) {
+            bottomNavAnimator.cancel();
+            bottomNavAnimator = null;
+        }
+
+        if (!isBottomNavHidden) {
+            return;
+        }
+
+        showBottomNav();
+
+        final int height = (int) mActivity.getResources().getDimension(R.dimen.bottom_nav_height);
+
+        final ValueAnimator animator = ValueAnimator.ofInt(1, height);
+        animator.setDuration(BOTTOM_NAVIGATION_ANIMATION_DURATION);
+        animator.addUpdateListener(animation -> {
+            final int value = (int) animation.getAnimatedValue();
+            ViewGroup.LayoutParams layoutParams = mBottomNavigationView.getLayoutParams();
+            layoutParams.height = value;
+            mBottomNavigationView.setLayoutParams(layoutParams);
+        });
+        animator.addListener(new Animator.AnimatorListener() {
+            private void resetHeight() {
+                ViewGroup.LayoutParams layoutParams = mBottomNavigationView.getLayoutParams();
+                layoutParams.height = height;
+                mBottomNavigationView.setLayoutParams(layoutParams);
+            }
+
+            @Override
+            public void onAnimationStart(@NonNull Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(@NonNull Animator animator) {
+                resetHeight();
+            }
+
+            @Override
+            public void onAnimationCancel(@NonNull Animator animator) {
+                resetHeight();
+            }
+
+            @Override
+            public void onAnimationRepeat(@NonNull Animator animator) {
+
+            }
+        });
+        bottomNavAnimator = animator;
+        animator.start();
     }
 
     public void setChosenCategoryItemKey(String key) {
@@ -1577,5 +1702,20 @@ public class MainController extends BaseController implements MainMvpView {
 
     public void setWillGoToShopInsteadOfCategories(boolean willGoToShopInsteadOfCategories) {
         this.willGoToShopInsteadOfCategories = willGoToShopInsteadOfCategories;
+    }
+
+    public void showTNC() {
+        setBottomNavigationItem(ACCOUNT_INDEX);
+        setViewPagerItem(ACCOUNT_INDEX);
+        final Router router = getAccountRouter();
+        router.popToTag(AccountController.TAG);
+        final Controller controller = router.getControllerWithTag(AccountController.TAG);
+        if (controller instanceof AccountController) {
+            if (!mPresenter.isTablet()) {
+                router.popToTag(AccountController.TAG);
+            }
+            ((AccountController) controller).showLegalities(BundleKeys.TEMPLATE_KEY_TNC, AccountOption.TERMSANDCONDITIONS);
+        }
+        resetSecureFlag(getCurrentControllerOnRouter(router));
     }
 }

@@ -1038,4 +1038,7 @@
     <string name="payment_methods">Payment Methods</string>
     <string name="payment_method_details">We accept the following. Simply select your preferred payment method at checkout.</string>
 
+    <string name="signup_modal_text1">Sign up &amp; save $10\n+ win a <b>$500 voucher!</b></string>
+    <string name="signup_modal_text2">Sign up now and instantly score a $10 voucher. Plus, automatically enter a draw to win a $500 voucher!</string>
+    <string name="signup_modal_text3"><u>Terms and conditions apply</u>. Vouchers valid on purchases of $50 or more. $500 giveaway is limited to new accounts only. New accounts are entered into the $500 draw for their first month only.</string>
 </resources>

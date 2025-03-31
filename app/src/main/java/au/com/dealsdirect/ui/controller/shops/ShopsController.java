@@ -10,6 +10,8 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +46,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse.LinkOptions;
@@ -60,6 +63,8 @@ import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.enums.FeatureUsageEventType;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
+import au.com.dealsdirect.ui.controller.main.MainController;
+import au.com.dealsdirect.ui.controller.main.SignUpModalBottomPopupAdapter;
 import au.com.dealsdirect.ui.controller.saleitemdetails.HorizontalScrollingItemsAdapter;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -70,6 +75,7 @@ import au.com.dealsdirect.ui.controller.shops.adapter.ResettableDimensions;
 import au.com.dealsdirect.ui.controller.trendingbrands.TrendingBrandsWidgetHelper;
 import au.com.dealsdirect.ui.custom.BottomPopupView;
 import au.com.dealsdirect.ui.custom.BottomPopupWebViewContentAdapter;
+import au.com.dealsdirect.ui.custom.DimmedBottomPopupView;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
@@ -369,6 +375,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mShopPtrLayout.setPtrHandler(null);
         mShopAppBarLayout.removeOnOffsetChangedListener(this);
         mIsDeeplink = false;
+        dismissSignUpModal();
         hideLoading();
         super.onDetach(view);
     }
@@ -419,6 +426,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         if (mBannersAdapter != null) {
             mBannersAdapter.stopHorizontalViewHolders();
         }
+
+        dismissSignUpModal();
     }
 
     @Override
@@ -500,12 +509,18 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         shopsControllerBannerRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                if (mActivity.getMainController().getHomeViewPager().getCurrentItem() == MainController.SHOP_INDEX) {
+                    if (currentBottomPopupView != null &&
+                            currentBottomPopupView.getAdapter() instanceof SignUpModalBottomPopupAdapter) {
+                        mActivity.getMainController().showBottomNav(true);
+                    }
+                }
             }
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 mIsRecyclerViewScrollIdle = newState == 0;
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && mShopAppBarLayout != null) {
@@ -1329,6 +1344,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             if (mBannersAdapter != null) {
                 mBannersAdapter.stopHorizontalViewHolders();
             }
+            dismissSignUpModal();
         }
     }
 
@@ -1538,5 +1554,80 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             return true;
         });
         currentBottomPopupView.show(true);
+    }
+
+    public void showSignUpModal() {
+        if (currentBottomPopupView != null) {
+            currentBottomPopupView.dismiss(true);
+        }
+
+        final SignUpModalBottomPopupAdapter adapter = new SignUpModalBottomPopupAdapter();
+        final DimmedBottomPopupView dimmedBottomPopupView = new DimmedBottomPopupView(shopCoordinatorLayout, adapter, adapter);
+        dimmedBottomPopupView.setOnBackgroundClickedListener(() -> dimmedBottomPopupView.hideDimming(true));
+
+        currentBottomPopupView = dimmedBottomPopupView;
+        currentBottomPopupView.setListener(new BottomPopupView.BottomPopupViewListener() {
+            @Override
+            public void willShow() {
+
+            }
+
+            @Override
+            public void onShow() {
+                mActivity.getMainController().hideBottomNav(true);
+
+            }
+
+            @Override
+            public void willDismiss() {
+
+            }
+
+            @Override
+            public void onDismiss() {
+
+            }
+        });
+
+        adapter.setOnCloseClickListener(() -> {
+            currentBottomPopupView.dismiss(true);
+            mActivity.getMainController().showBottomNav(true);
+        });
+        adapter.setOnSubscribeClickListener(() -> {
+            currentBottomPopupView.dismiss(true);
+            mActivity.showLoginController(getRouter(), new AuthHandler() {
+                @Override
+                public void success() {
+                    mActivity.callGCMRegisterSubscriber();
+                    mActivity.getMainController().resetShopRouter();
+                    mActivity.getMainController().resetCategoriesRouter();
+                    mActivity.getMainController().resetAccountRouter();
+                    mActivity.getMainController().resetWishlistRouter();
+                    mActivity.getMainController().resetBrandsRouter();
+                }
+
+                @Override
+                public void error() {
+
+                }
+            });
+        });
+        adapter.setOnTNCClickListener(() -> {
+            currentBottomPopupView.dismiss(true);
+            mActivity.getMainController().showBottomNav(true);
+            mActivity.getMainController().showTNC();
+        });
+
+        currentBottomPopupView.show(true);
+    }
+
+    public void dismissSignUpModal() {
+        if (currentBottomPopupView == null ||
+                !(currentBottomPopupView.getAdapter() instanceof SignUpModalBottomPopupAdapter)) {
+            return;
+        }
+
+        mActivity.getMainController().showBottomNav(true);
+        currentBottomPopupView.dismiss(true);
     }
 }

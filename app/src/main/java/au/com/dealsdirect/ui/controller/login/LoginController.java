@@ -119,7 +119,7 @@ public class LoginController extends BaseController implements LoginMvpView {
         if (mPresenter.isTablet()) {
             mActivity.getMainController().setNavigationBarEnabled(false);
         } else {
-            mActivity.getMainController().hideBottomNav();
+            mActivity.getMainController().hideBottomNav(true);
         }
 
         super.onAttach(view);
@@ -136,7 +136,7 @@ public class LoginController extends BaseController implements LoginMvpView {
         if (mPresenter.isTablet()) {
             mActivity.getMainController().setNavigationBarEnabled(false);
         } else {
-            mActivity.getMainController().hideBottomNav();
+            mActivity.getMainController().hideBottomNav(true);
         }
     }
 
@@ -233,7 +233,7 @@ public class LoginController extends BaseController implements LoginMvpView {
         if (mPresenter.isTablet()) {
             mActivity.getMainController().setNavigationBarEnabled(true);
         } else {
-            mActivity.getMainController().showBottomNav();
+            mActivity.getMainController().showBottomNav(true);
         }
 
         mActivity.getMainController().goToPreviousContainerFromLogin(mActivity.isAuthorized());

@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -186,6 +187,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private GA4EventParams.GA4PurchaseParams ga4PurchaseParams = null;
 
     private Uri deeplinkUriToProcess = null;
+
+    private boolean hasShownSignupModal = false;
 
     private final Consumer<WindowLayoutInfo> layoutChangedCallback = windowLayoutInfo -> MainActivity.this.runOnUiThread(() -> {
         final Controller controller = getMainController().getCurrentController();
@@ -1181,6 +1184,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
         if (isAuthorized()) {
             mMainController.updateBasketItemsQuantity();
+        } else if (!hasShownSignupModal){
+            new Handler(getMainLooper()).post(() -> {
+                Controller controller = mMainController.getShopRouter().getControllerWithTag(ShopsController.TAG);
+                if (controller instanceof ShopsController) {
+                    ((ShopsController) controller).showSignUpModal();
+                    hasShownSignupModal = true;
+                }
+
+            });
         }
         if (deeplinkUriToProcess != null) {
             mMainController.processDeeplinkUri(deeplinkUriToProcess);

@@ -192,7 +192,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         if (mPresenter.isTablet()) {
             mActivity.getMainController().setNavigationBarEnabled(false);
         } else {
-            mActivity.getMainController().hideBottomNav();
+            mActivity.getMainController().hideBottomNav(true);
         }
     }
 
@@ -331,7 +331,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @Override
     protected void onAttach(@NonNull View view) {
         if (!mPresenter.isTablet()) {
-            mActivity.getMainController().hideBottomNav();
+            mActivity.getMainController().hideBottomNav(true);
         }
         super.onAttach(view);
     }
@@ -362,7 +362,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         if (mPresenter.isTablet()) {
             mActivity.getMainController().setNavigationBarEnabled(true);
         } else {
-            mActivity.getMainController().showBottomNav();
+            mActivity.getMainController().showBottomNav(true);
         }
         mActivity.getMainController().goToPreviousContainerFromLogin(mActivity.isAuthorized());
 

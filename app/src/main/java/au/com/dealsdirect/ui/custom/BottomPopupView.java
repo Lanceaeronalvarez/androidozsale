@@ -5,14 +5,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+
 public class BottomPopupView {
 
-    private final ViewGroup parent;
-    private final RelativeLayout container;
-    private final View content;
-    private final BottomPopupViewAdapter adapter;
+    protected final ViewGroup parent;
+    protected final RelativeLayout container;
+    protected final View content;
+    protected final BottomPopupViewAdapter adapter;
 
-    private BottomPopupViewListener listener = null;
+    protected BottomPopupViewListener listener = null;
 
     public BottomPopupView(ViewGroup parent, BottomPopupViewAdapter adapter) {
         this.parent = parent;
@@ -45,7 +47,7 @@ public class BottomPopupView {
         container.addView(content);
     }
 
-    private void addViewToParent() {
+    protected void addViewToParent() {
         if (container.getParent() != null) {
             return;
         }
@@ -53,7 +55,7 @@ public class BottomPopupView {
         parent.invalidate();
     }
 
-    private void removeViewFromParent() {
+    protected void removeViewFromParent() {
         if (container.getParent() == null) {
             return;
         }
@@ -74,22 +76,22 @@ public class BottomPopupView {
                     .translationY(0)
                     .setListener(new Animator.AnimatorListener() {
                         @Override
-                        public void onAnimationStart(Animator animation) {
+                        public void onAnimationStart(@NonNull Animator animation) {
 
                         }
 
                         @Override
-                        public void onAnimationEnd(Animator animation) {
+                        public void onAnimationEnd(@NonNull Animator animation) {
                             show();
                         }
 
                         @Override
-                        public void onAnimationCancel(Animator animation) {
+                        public void onAnimationCancel(@NonNull Animator animation) {
                             show();
                         }
 
                         @Override
-                        public void onAnimationRepeat(Animator animation) {
+                        public void onAnimationRepeat(@NonNull Animator animation) {
 
                         }
                     });
@@ -115,22 +117,22 @@ public class BottomPopupView {
                     .translationY(content.getMeasuredHeight())
                     .setListener(new Animator.AnimatorListener() {
                         @Override
-                        public void onAnimationStart(Animator animation) {
+                        public void onAnimationStart(@NonNull Animator animation) {
 
                         }
 
                         @Override
-                        public void onAnimationEnd(Animator animation) {
+                        public void onAnimationEnd(@NonNull Animator animation) {
                             dismiss();
                         }
 
                         @Override
-                        public void onAnimationCancel(Animator animation) {
+                        public void onAnimationCancel(@NonNull Animator animation) {
                             dismiss();
                         }
 
                         @Override
-                        public void onAnimationRepeat(Animator animation) {
+                        public void onAnimationRepeat(@NonNull Animator animation) {
 
                         }
                     });
