@@ -355,7 +355,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private BottomPopupView currentBottomPopupView = null;
 
     private int lastBestSellerItemPosition = -1;
-    private HorizontalRecyclerItemsViewHolder bestSellersViewHolder = null;
+    private HorizontalRecyclerItemsViewHolder widgetAreaHorizontalRecyclerItemsViewHolder = null;
     private BestSellersWidgetHelper bestSellersWidgetHelper = null;
     private RecentlyViewedWidgetHelper recentlyViewedWidgetHelper = null;
 
@@ -467,8 +467,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void onDetach(View view) {
         hideLoading();
 
-        if (bestSellersViewHolder != null) {
-            bestSellersViewHolder.onViewRemoved();
+        if (widgetAreaHorizontalRecyclerItemsViewHolder != null) {
+            widgetAreaHorizontalRecyclerItemsViewHolder.onViewRemoved();
         }
 
         super.onDetach(view);
@@ -1744,9 +1744,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mCheckoutContainer.setVisibility(View.GONE);
         mPresenter.resetIsCartAlreadyLoaded();
 
-        if(mPresenter.checkIsLoggedIn()){
+        if (mPresenter.checkIsLoggedIn()) {
             mPresenter.loadRecentlyViewedItems();
-        }else{
+        } else {
             mPresenter.loadBestSellers("");
         }
 
@@ -2439,8 +2439,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         }
 
         if (getBestSellerResponses == null || getBestSellerResponses.isEmpty()) {
-            if (bestSellersViewHolder != null && mWidgetArea.indexOfChild(bestSellersViewHolder.itemView) < 0) {
-                mWidgetArea.removeView(bestSellersViewHolder.itemView);
+            if (widgetAreaHorizontalRecyclerItemsViewHolder != null && mWidgetArea.indexOfChild(widgetAreaHorizontalRecyclerItemsViewHolder.itemView) < 0) {
+                mWidgetArea.removeView(widgetAreaHorizontalRecyclerItemsViewHolder.itemView);
             }
             return;
         }
@@ -2491,14 +2491,14 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         });
 
         final int orientation = ScreenUtils.getOrientation(mActivity);
-        if (bestSellersViewHolder != null) {
-            mWidgetArea.removeView(bestSellersViewHolder.itemView);
+        if (widgetAreaHorizontalRecyclerItemsViewHolder != null) {
+            mWidgetArea.removeView(widgetAreaHorizontalRecyclerItemsViewHolder.itemView);
         }
         bestSellersWidgetHelper = new BestSellersWidgetHelper(adapter, mActivity, mPresenter.isTablet());
-        bestSellersViewHolder = bestSellersWidgetHelper.createViewHolder(mWidgetArea, orientation);
-        mWidgetArea.addView(bestSellersViewHolder.itemView);
-        bestSellersViewHolder.onViewBound();
-        bestSellersWidgetHelper.onBindViewHolder(bestSellersViewHolder, orientation);
+        widgetAreaHorizontalRecyclerItemsViewHolder = bestSellersWidgetHelper.createViewHolder(mWidgetArea, orientation);
+        mWidgetArea.addView(widgetAreaHorizontalRecyclerItemsViewHolder.itemView);
+        widgetAreaHorizontalRecyclerItemsViewHolder.onViewBound();
+        bestSellersWidgetHelper.onBindViewHolder(widgetAreaHorizontalRecyclerItemsViewHolder, orientation);
     }
 
     @Override
@@ -2530,8 +2530,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         }
 
         if (response == null || response.isEmpty()) {
-            if (bestSellersViewHolder != null && mWidgetArea.indexOfChild(bestSellersViewHolder.itemView) < 0) {
-                mWidgetArea.removeView(bestSellersViewHolder.itemView);
+            if (widgetAreaHorizontalRecyclerItemsViewHolder != null && mWidgetArea.indexOfChild(widgetAreaHorizontalRecyclerItemsViewHolder.itemView) < 0) {
+                mWidgetArea.removeView(widgetAreaHorizontalRecyclerItemsViewHolder.itemView);
             }
             return;
         }
@@ -2582,14 +2582,14 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         });
 
         final int orientation = ScreenUtils.getOrientation(mActivity);
-        if (bestSellersViewHolder != null) {
-            mWidgetArea.removeView(bestSellersViewHolder.itemView);
+        if (widgetAreaHorizontalRecyclerItemsViewHolder != null) {
+            mWidgetArea.removeView(widgetAreaHorizontalRecyclerItemsViewHolder.itemView);
         }
         recentlyViewedWidgetHelper = new RecentlyViewedWidgetHelper(adapter, mActivity, mPresenter.isTablet());
-        bestSellersViewHolder = recentlyViewedWidgetHelper.createViewHolder(mWidgetArea, orientation);
-        mWidgetArea.addView(bestSellersViewHolder.itemView);
-        bestSellersViewHolder.onViewBound();
-        recentlyViewedWidgetHelper.onBindViewHolder(bestSellersViewHolder, orientation);
+        widgetAreaHorizontalRecyclerItemsViewHolder = recentlyViewedWidgetHelper.createViewHolder(mWidgetArea, orientation);
+        mWidgetArea.addView(widgetAreaHorizontalRecyclerItemsViewHolder.itemView);
+        widgetAreaHorizontalRecyclerItemsViewHolder.onViewBound();
+        recentlyViewedWidgetHelper.onBindViewHolder(widgetAreaHorizontalRecyclerItemsViewHolder, orientation);
     }
 
     private void showItemPricingInfoView(String pricingInfoText) {
