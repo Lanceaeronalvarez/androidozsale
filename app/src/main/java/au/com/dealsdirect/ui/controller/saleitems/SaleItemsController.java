@@ -2248,7 +2248,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         getSaleItemsRequest.setSorting("");
         getSaleItemsRequest.setPageNumber(pageNumber);
-        getSaleItemsRequest.setQuery(mSearchQuery);
+        if (categoryKey != null && !categoryKey.isEmpty()) {
+            getSaleItemsRequest.setQuery(mSearchQuery == null || mSearchQuery.isEmpty() ? "a" : mSearchQuery);
+        } else {
+            getSaleItemsRequest.setQuery(mSearchQuery);
+        }
         getSaleItemsRequest.setPageSize("50");
 
         if (mSaleId != null && !mSaleId.isEmpty()) {
@@ -2282,7 +2286,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (chipsList == null) {
             getSaleItemsRequest.setHasFilters(false);
         } else {
-            if (chipsList.size() != 0) {
+            if (!chipsList.isEmpty()) {
                 ArrayList<String> brandNameFacetFilters = new ArrayList<>();
                 ArrayList<String> colorFacetFilters = new ArrayList<>();
                 ArrayList<String> sizesFacetFilters = new ArrayList<>();
