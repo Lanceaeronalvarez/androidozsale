@@ -401,14 +401,16 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                 getMvpView().hideLPayPanel();
             }
 
-            if (getDataManager().isKlarnaEnabled() &&
-                    mappedValues.getAvailablePaymentOptions() != null &&
-                    mappedValues.getAvailablePaymentOptions().contains(CheckoutDetailsMapper.PaymentOption.KLARNA)
-            ) {
-                getMvpView().showKlarnaPanel(getDataManager().getTemplateTextsRepository().getKlarnaDescription());
-            } else {
-                getMvpView().hideKlarnaPanel();
-            }
+//            Always show Klarna.
+//            if (getDataManager().isKlarnaEnabled() &&
+//                    mappedValues.getAvailablePaymentOptions() != null &&
+//                    mappedValues.getAvailablePaymentOptions().contains(CheckoutDetailsMapper.PaymentOption.KLARNA)
+//            ) {
+//                getMvpView().showKlarnaPanel(getDataManager().getTemplateTextsRepository().getKlarnaDescription());
+//            } else {
+//                getMvpView().hideKlarnaPanel();
+//            }
+            getMvpView().showKlarnaPanel(getDataManager().getTemplateTextsRepository().getKlarnaDescription());
 
             if (getDataManager().isZipPayEnabled() &&
                     mappedValues.getAvailablePaymentOptions() != null &&
