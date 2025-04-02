@@ -400,8 +400,15 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             } else {
                 getMvpView().hideLPayPanel();
             }
-            
-            getMvpView().showKlarnaPanel(getDataManager().getTemplateTextsRepository().getKlarnaDescription());
+
+            if (getDataManager().isKlarnaEnabled() &&
+                    mappedValues.getAvailablePaymentOptions() != null &&
+                    mappedValues.getAvailablePaymentOptions().contains(CheckoutDetailsMapper.PaymentOption.KLARNA)
+            ) {
+                getMvpView().showKlarnaPanel(getDataManager().getTemplateTextsRepository().getKlarnaDescription());
+            } else {
+                getMvpView().hideKlarnaPanel();
+            }
 
             if (getDataManager().isZipPayEnabled() &&
                     mappedValues.getAvailablePaymentOptions() != null &&
