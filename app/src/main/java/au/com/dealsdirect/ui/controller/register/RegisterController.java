@@ -210,8 +210,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 //                View.GONE);
         mVcoButton.setVisibility(View.GONE);
 
-        if(BuildConfig.FLAVOR.equals("ozsaleRC") || BuildConfig.FLAVOR.equals("ozsaleTest")
-        || BuildConfig.FLAVOR.equals("nzsaleRC") || BuildConfig.FLAVOR.equals("nzsaleTest")){
+        if(getResources().getBoolean(R.bool.is_registration_voucher_visible)){
             mRegisterVoucher.setVisibility(View.VISIBLE);
         }
 
