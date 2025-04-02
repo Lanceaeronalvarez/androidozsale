@@ -258,6 +258,7 @@
     <string name="registration_success">Registration Successful!</string>
     <string name="logged_in">Logged In</string>
     <string name="please_fill_up_all_the_fields">Please fill up all the fields</string>
+    <string name="register_voucher">Sign up now and instantly score a $10 voucher. Plus, automatically enter a draw to win a $500 voucher!</string>
 
     <!--USER DETAILS STRINGS-->
     <string name="date_of_birth">Date of Birth</string>
