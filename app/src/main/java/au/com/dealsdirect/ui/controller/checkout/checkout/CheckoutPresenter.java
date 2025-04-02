@@ -20,6 +20,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Shipment;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.priceinfo.PricingInfoLoaderHelper;
 import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
@@ -671,6 +672,39 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             }
 
             getMvpView().showPricingInfoText(rrpText, totalPercentOff, originalPrice, combinedPricingInfoText);
+        });
+    }
+
+    @Override
+    public void loadRecentlyViewedItems() {
+        doApiCallForResponse(getDataManager().callRecentlyViewedItems(), new AppApiCallback() {
+            @Override
+            public void onSuccess(List<?> object) {
+                super.onSuccess(object);
+
+                if (!isViewAttached()) {
+                    return;
+                }
+                List<RecentlyViewedItemResponse> response = (List<RecentlyViewedItemResponse>) object;
+                getMvpView().showRecentlyViewedItems(response);
+
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
+
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
+
+                if (!isViewAttached()) {
+                    return;
+                }
+                getMvpView().onError(throwable.getMessage());
+            }
         });
     }
 }
