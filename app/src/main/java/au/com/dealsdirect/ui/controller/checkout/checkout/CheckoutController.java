@@ -1426,7 +1426,15 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.PAYPAL.getValue());
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
-        mActivity.startPaypalPayment();
+        if (mActivity.isBraintreeInitialized()) {
+            //If no selected payment method displayed, call paypal
+            if (mActivity.getPaymentMethodSelected() == null) {
+                mActivity.startPaypalPayment();
+            } else {
+                PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
+                mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+            }
+        }
         
     }
 
