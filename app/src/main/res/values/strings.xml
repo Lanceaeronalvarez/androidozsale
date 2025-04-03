@@ -319,6 +319,7 @@
     <string name="payment_method">payment method</string>
     <string name="payment_options">PAYMENT OPTIONS</string>
     <string name="add_new_payment_method">add new payment method</string>
+    <string name="use_another_card">Use another card</string>
     <string name="voucher">Voucher</string>
     <string name="tax">Tax</string>
     <string name="add_voucher_code">add voucher code</string>
