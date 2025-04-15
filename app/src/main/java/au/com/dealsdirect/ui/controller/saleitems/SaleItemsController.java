@@ -1488,12 +1488,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             addCategoryKeyChipFromCategorySearch();
         }
 
-        if (mSourceType == SourceType.SHOP_SEARCH && mTitle != "Search" && mTitle != "") {
+        if (mSourceType == SourceType.SHOP_SEARCH) {
             mSelectedFilterList.add(new SearchChipModel(BundleKeys.BRANDS_FACETFILTER_NAME, mTitle.trim(), ""));
-            addChipGroupFilterChip();
             mFilterCount.setVisibility(View.VISIBLE);
             mFilterCountText.setVisibility(View.VISIBLE);
             mFilterCountText.setText("1");
+        }
+        if (mSourceType != SourceType.WISHLIST) {
+            addChipGroupFilterChip();
         }
 
         mPresenter.loadLeaderboardBanner();
@@ -2746,6 +2748,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     void addChipGroupFilterChip() {
+        if (!isViewBound() || mChipGroup == null) {
+            return;
+        }
         for (String category : mSelectedCategoryKeys) {
             Chip chip = (Chip) mActivity.getLayoutInflater().inflate(R.layout.single_chip_layout, mChipGroup, false);
             chip.setText(category.substring(category.lastIndexOf(">") + 1));
