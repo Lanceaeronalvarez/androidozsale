@@ -206,25 +206,22 @@ public class ImageUploadUtil {
 
         public AsyncResponse delegate = null;
         int imageCount = 0;
-        private final ProgressDialogProvider progressDialogProvider;
+        private final ProgressIndicatorProvider progressIndicatorProvider;
 
         public UploadFileToServer() {
-            this.progressDialogProvider = null;
+            this.progressIndicatorProvider = null;
         }
 
-        public UploadFileToServer(ProgressDialogProvider progressDialogProvider) {
-            this.progressDialogProvider = progressDialogProvider;
+        public UploadFileToServer(ProgressIndicatorProvider progressIndicatorProvider) {
+            this.progressIndicatorProvider = progressIndicatorProvider;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-            if (progressDialogProvider != null) {
-                final ProgressDialog progressDialog = progressDialogProvider.getProgressDialog(true);
-                progressDialog.setMessage("Loading...");
-                progressDialog.show();
-                progressDialog.setCanceledOnTouchOutside(false);
+            if (progressIndicatorProvider != null) {
+                progressIndicatorProvider.showProgressIndicator();
             }
         }
 
@@ -251,21 +248,16 @@ public class ImageUploadUtil {
         protected void onPostExecute(String result) {
             // view response from server
             AppLogger.d("Response from server: " + result);
-            if (progressDialogProvider != null) {
-                final ProgressDialog progressDialog = progressDialogProvider.getProgressDialog(false);
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                }
-                progressDialogProvider.onDismiss();
+            if (progressIndicatorProvider != null) {
+                progressIndicatorProvider.hideProgressIndicator();
             }
             delegate.asyncExecutionFinished(result, imageCount);
             super.onPostExecute(result);
         }
 
-        public interface ProgressDialogProvider {
-            ProgressDialog getProgressDialog(boolean newObject);
-
-            void onDismiss();
+        public interface ProgressIndicatorProvider {
+            void showProgressIndicator();
+            void hideProgressIndicator();
         }
     }
 

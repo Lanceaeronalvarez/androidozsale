@@ -115,8 +115,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
     private boolean someImagesWereNotUploaded = false;
 
-    private ProgressDialog progressDialog = null;
-
     private final ReturnDetailsListener returnDetailsListener = new ReturnDetailsListener() {
         @Override
         public void getImageFromDirectory(boolean uploadImage) {
@@ -288,10 +286,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     public void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
         hideKeyboard();
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
-        progressDialog = null;
         super.onDestroyView(view);
     }
 
@@ -384,18 +378,19 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
             }
             return;
         }
-        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(new ImageUploadUtil.UploadFileToServer.ProgressDialogProvider() {
+        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(new ImageUploadUtil.UploadFileToServer.ProgressIndicatorProvider() {
             @Override
-            public ProgressDialog getProgressDialog(boolean newObject) {
-                if (newObject) {
-                    progressDialog = new ProgressDialog(getApplicationContext());
+            public void showProgressIndicator() {
+                if (mActivity != null) {
+                    mActivity.showLoading(LoadingDialogType.NOLOGO);
                 }
-                return progressDialog;
             }
 
             @Override
-            public void onDismiss() {
-                progressDialog = null;
+            public void hideProgressIndicator() {
+                if (mActivity != null) {
+                    mActivity.hideLoading();
+                }
             }
         });
         uploadFileToServer.delegate = (imageUrl, imagePosition) -> {
