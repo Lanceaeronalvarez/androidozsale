@@ -2204,7 +2204,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
         if (mShouldRefreshFacets) {
             mChipFilters = new HashSet<>();
-            mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);
+            if (mSearchFilterMvpView == null) {
+                setupSearchFilters();
+            } else {
+                mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);
+            }
         } else {
             mChipFilters = chipsList != null ? chipsList : new HashSet<>();
         }
