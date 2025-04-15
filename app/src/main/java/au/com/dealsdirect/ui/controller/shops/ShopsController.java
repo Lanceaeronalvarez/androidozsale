@@ -14,8 +14,6 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -330,6 +328,31 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         }
     };
 
+    private ShowShopBannersParameters delayedShowShopBannerCallParameters = null;
+
+    private static class ShowShopBannersParameters {
+        private final GetBannerResponse getBannerResponses;
+        private final String categoryID;
+        private final boolean isFromCache;
+
+        public ShowShopBannersParameters(GetBannerResponse getBannerResponses, String categoryID, boolean isFromCache) {
+            this.getBannerResponses = getBannerResponses;
+            this.categoryID = categoryID;
+            this.isFromCache = isFromCache;
+        }
+    }
+
+    private void callDelayedShowShopBanners() {
+        if (delayedShowShopBannerCallParameters != null) {
+            showShopBanners(
+                    delayedShowShopBannerCallParameters.getBannerResponses,
+                    delayedShowShopBannerCallParameters.categoryID,
+                    delayedShowShopBannerCallParameters.isFromCache
+            );
+            delayedShowShopBannerCallParameters = null;
+        }
+    }
+
     @Override
     protected void onAttach(@NonNull View view) {
         mPresenter.onAttach(this);
@@ -385,6 +408,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mActivity.getProfiler().setStartLogTime(DataCollector.EventParameters.CustomEventType.CV_SALEBANNERS.getValue());
         setUp(view);
         mShopPtrLayout.setEnabled(mActivity.getResources().getBoolean(R.bool.is_pull_to_refresh_enabled));
+        callDelayedShowShopBanners();
     }
 
     @Override
@@ -783,6 +807,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     @Override
     public void showShopBanners(GetBannerResponse getBannerResponses, String categoryID, boolean isFromCache) {
+        if (!isViewBound()) {
+            delayedShowShopBannerCallParameters = new ShowShopBannersParameters(
+                    getBannerResponses, categoryID, isFromCache
+            );
+            return;
+        }
 
         if (mCategoryID != null && categoryID != null && !mCategoryID.equals(categoryID)) {
             return;
