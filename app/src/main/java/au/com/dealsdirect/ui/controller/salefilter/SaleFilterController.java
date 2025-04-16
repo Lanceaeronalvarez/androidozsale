@@ -192,7 +192,7 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
     String mFilterType = "";
     int mSaleItemCount = 0;
     private String mCategoryKey;
-    private String mSourceType;
+    private String mSourceType = "";
     private boolean mRemoveCategoryKeyFromCategory = false;
     SearchFilterMvpRepository mRepository;
     private static final int DEFAULT_PRICE_THRESHOLD = 200;
