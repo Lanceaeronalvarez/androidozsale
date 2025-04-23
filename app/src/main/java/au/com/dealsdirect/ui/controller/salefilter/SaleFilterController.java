@@ -192,7 +192,7 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
     String mFilterType = "";
     int mSaleItemCount = 0;
     private String mCategoryKey;
-    private String mSourceType = "";
+    private String mSourceType;
     private boolean mRemoveCategoryKeyFromCategory = false;
     SearchFilterMvpRepository mRepository;
     private static final int DEFAULT_PRICE_THRESHOLD = 200;
@@ -244,6 +244,22 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         controller.mSourceType = sourceType;
 
         return controller;
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BundleKeys.SOURCE_TYPE, mSourceType);
+        outState.putString(BundleKeys.CATEGORY_KEY, mCategoryKey);
+        outState.putStringArrayList(BundleKeys.FILTER_CATEGORIES, mCategories);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mSourceType = savedInstanceState.getString(BundleKeys.SOURCE_TYPE);
+        mCategoryKey = savedInstanceState.getString(BundleKeys.CATEGORY_KEY);
+        mCategories = savedInstanceState.getStringArrayList(BundleKeys.FILTER_CATEGORIES);
     }
 
     @Override
