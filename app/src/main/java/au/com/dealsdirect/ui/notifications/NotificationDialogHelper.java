@@ -159,6 +159,9 @@ public class NotificationDialogHelper {
 
     public void show() {
         dialog.show();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
     }
 
     public void dismiss() {
