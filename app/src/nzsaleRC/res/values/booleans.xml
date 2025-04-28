@@ -20,5 +20,5 @@
     <bool name="is_gift_card_terms_and_conditions_visible">false</bool>
     <bool name="is_gift_card_category_visible">true</bool>
 
-    <bool name="is_registration_voucher_visible">true</bool>
+    <bool name="is_registration_voucher_visible">false</bool>
 </resources>
