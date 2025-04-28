@@ -1184,7 +1184,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
         if (isAuthorized()) {
             mMainController.updateBasketItemsQuantity();
-        } else if (!hasShownSignupModal){
+        } else if (!hasShownSignupModal && getResources().getBoolean(R.bool.will_show_signup_modal)){
             new Handler(getMainLooper()).post(() -> {
                 Controller controller = mMainController.getShopRouter().getControllerWithTag(ShopsController.TAG);
                 if (controller instanceof ShopsController) {

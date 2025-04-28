@@ -36,4 +36,6 @@
     <bool name="is_gift_card_category_visible">false</bool>
 
     <bool name="is_registration_voucher_visible">false</bool>
+
+    <bool name="will_show_signup_modal">false</bool>
 </resources>
