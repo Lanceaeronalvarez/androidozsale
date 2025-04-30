@@ -2696,11 +2696,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mFilterCount.setVisibility(View.VISIBLE);
             mFilterCountText.setVisibility(View.VISIBLE);
             mFilterCountText.setText(String.valueOf(mSelectedFilterList.size() + mSelectedCategoryKeys.size()));
+            boolean sortFilterActive = false;
             for (SearchChipModel chip : mSelectedFilterList) {
                 if (chip.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)) {
                     int updatedFilterCount = mSelectedFilterList.size() - 1;
                     mSortCount.setVisibility(View.VISIBLE);
                     mSortCountText.setVisibility(View.VISIBLE);
+                    sortFilterActive = true;
                     if (updatedFilterCount == 0 && mSelectedCategoryKeys.size() == 0) {
                         mFilterCount.setVisibility(View.GONE);
                         mFilterCountText.setVisibility(View.GONE);
@@ -2720,7 +2722,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         if (updatedFilterCount == 0 && mSelectedFilterList.size() == 0) {
                             mFilterCount.setVisibility(View.GONE);
                             mFilterCountText.setVisibility(View.GONE);
-                        } else if (updatedFilterCount == 0 && mSelectedFilterList.size() == 1 && mSortCount.getVisibility() == View.VISIBLE) {
+                            mSortCount.setVisibility(View.GONE);
+                            mSortCountText.setVisibility(View.GONE);
+                        } else if (updatedFilterCount == 0 && mSelectedFilterList.size() == 1 && sortFilterActive) {
                             mFilterCount.setVisibility(View.GONE);
                             mFilterCountText.setVisibility(View.GONE);
                         } else {
