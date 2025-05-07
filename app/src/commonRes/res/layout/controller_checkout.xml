@@ -104,7 +104,7 @@
                     android:layout_marginLeft="@dimen/padding_default"
                     android:layout_marginTop="@dimen/padding_default"
                     android:layout_marginRight="@dimen/padding_default"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <include layout="@layout/partial_checkout_age_restriction" />
 

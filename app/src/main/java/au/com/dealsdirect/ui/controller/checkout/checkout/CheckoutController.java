@@ -494,8 +494,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mActivity.getMainController().showBottomNav();
         }
 
-        mPayButton.setVisibility(View.GONE);
-
         mTitleTextView.setText(R.string.checkout_page_toolbar_title);
 
         if (!mPresenter.isTablet() || !getBoolean(R.bool.master_detail_enabled)) {
@@ -921,7 +919,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
                 mMasterpassButton.setVisibility(View.GONE);
                 mVcoButton.setVisibility(View.GONE);
-                mPayButton.setVisibility(View.GONE);
                 mPaypalButton.setVisibility(View.VISIBLE);
                 mPaypalCreditButton.setVisibility(View.GONE);
             } else {
@@ -1809,7 +1806,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private List<View> getAllButtons() {
         return new ArrayList<View>() {{
-            add(mPayButtonCheckout);
+            add(mPayButton);
             add(mPaypalButton);
             add(mPaypalCreditButton);
             add(mMasterpassButton);
@@ -1823,14 +1820,14 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             String paymentType = mActivity.getPaymentMethodSelected().getPaymentType();
             if (!paymentType.equalsIgnoreCase(CARD_PAYPAL) ||
                     !paymentType.equalsIgnoreCase(CARD_MASTERPASS)) {
-                buttons.add(mPayButtonCheckout);
+                buttons.add(mPayButton);
             }
             if (paymentType.equalsIgnoreCase(CARD_PAYPAL) && mPresenter.isPaypalEnabled()) {
                 buttons.add(mPaypalButton);
             }
         } else {
             //no selected payment Method
-            buttons.add(mPayButtonCheckout);
+            buttons.add(mPayButton);
             if (mPresenter.isPaypalEnabled()) buttons.add(mPaypalButton);
             if (mPresenter.isVcoEnabled()) buttons.add(mVcoButton);
             if (!isOurPaySelectDeliveryMethod() && mPresenter.isMasterPassEnabled()) {
