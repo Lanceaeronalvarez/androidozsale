@@ -16,8 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
-        android:background="@drawable/bg_button_rounded"
-        android:backgroundTint="#9fe0bf"
+        android:background="@drawable/bg_notification_bar_background"
         android:gravity="center"
         android:padding="@dimen/margin_small">
 
@@ -37,8 +36,7 @@
             android:id="@+id/notifications_bar_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_button_rounded"
-            android:backgroundTint="#3BB879"
+            android:background="@drawable/bg_notification_bar_button"
             android:padding="@dimen/margin_tiny"
             android:text="View"
             android:textAllCaps="false"
