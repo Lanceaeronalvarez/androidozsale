@@ -40,6 +40,20 @@
 
                 <include layout="@layout/partial_checkout_button" />
 
+                <Button
+                    android:id="@+id/controller_checkout_button_pay"
+                    style="@style/DDButtonPayCart"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height_regular"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="@string/pay"
+                    android:textSize="@dimen/text_size_headline2"
+                    android:layout_marginLeft="@dimen/padding_default"
+                    android:layout_marginTop="@dimen/padding_default"
+                    android:layout_marginRight="@dimen/padding_default"
+                    android:visibility="gone" />
+
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
