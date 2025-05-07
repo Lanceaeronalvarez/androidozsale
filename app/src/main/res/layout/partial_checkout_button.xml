@@ -22,6 +22,30 @@
             android:paddingRight="@dimen/padding_default"
             android:visibility="visible">
 
+            <RelativeLayout
+                android:id="@+id/partial_checkout_button_g_pay_container"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:paddingLeft="-3dp"
+                android:paddingRight="-3dp"
+                android:paddingBottom="8dp"
+                android:visibility="visible">
+
+                <include
+                    android:id="@+id/partial_checkout_button_g_pay"
+                    layout="@layout/buy_with_googlepay_button" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/partial_checkout_button_pay"
+                style="@style/DDButtonPayCart"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height_regular"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="@string/pay"
+                android:textSize="@dimen/text_size_headline2"
+                android:visibility="visible" />
 
             <RelativeLayout
                 android:id="@+id/partial_checkout_button_g_pay_container"
