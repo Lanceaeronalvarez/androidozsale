@@ -294,6 +294,10 @@ public class NewSaleCategoriesController extends BaseController
         } else if (mLevel == 2) {
             mSubCategoryName = categoryName;
             mSubCategoriesChildren = includeAllInChildren(getCategoryTreeResponse);
+            if(getCategoryTreeResponse.getChildren().isEmpty() || getCategoryTreeResponse.getChildren() == null){
+                mLevel = 1;
+                showSaleItems(getCategoryTreeResponse.getKey(), new HashSet<>());
+            }
         } else if (mLevel > 2) {
             mLevel = 2;
             showSaleItems(getCategoryTreeResponse.getKey(), new HashSet<>());
