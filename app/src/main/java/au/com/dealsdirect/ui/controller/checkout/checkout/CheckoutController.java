@@ -653,7 +653,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void showMyPayDetails(CheckoutDetailsMapper mappedValues, Ourpay ourpay) {
 
         if (mappedValues != null) {
-            mOurpayHolder.setVisibility(View.VISIBLE);
+            mOurpayHolder.setVisibility(View.GONE);
             mOurpay = ourpay;
             final PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
 
