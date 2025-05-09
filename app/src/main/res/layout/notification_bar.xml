@@ -18,7 +18,7 @@
         android:layout_gravity="center"
         android:background="@drawable/bg_notification_bar_background"
         android:gravity="center"
-        android:padding="@dimen/margin_small">
+        android:padding="@dimen/notification_bar_inner_padding">
 
         <TextView
             android:id="@+id/notifications_bar_description"
@@ -35,7 +35,7 @@
         <Button
             android:id="@+id/notifications_bar_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:background="@drawable/bg_notification_bar_button"
             android:padding="@dimen/margin_tiny"
             android:text="View"
