@@ -742,6 +742,11 @@ public class AccountController extends BaseController implements AccountMvpView,
 
         DataCollector.logEvent(Events.FeatureUsageEvent, eventParameters);
     }
+
+    @Override
+    public Router getDetailRouter() {
+        return mAccountDetailRouter;
+    }
 }
 
          

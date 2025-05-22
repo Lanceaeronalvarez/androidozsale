@@ -731,4 +731,9 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
         DataCollector.logEvent(Events.WishlistEvent, parameters);
     }
+
+    @Override
+    public Router getDetailRouter() {
+        return mCheckoutDetailRouter;
+    }
 }

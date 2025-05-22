@@ -239,6 +239,11 @@ public abstract class BaseController
         return isAttached();
     }
 
+    @Override
+    public Router getDetailRouter() {
+        return null;
+    }
+
     public void onWindowLayoutChanged(WindowLayoutInfo windowLayoutInfo) {
 
     }
