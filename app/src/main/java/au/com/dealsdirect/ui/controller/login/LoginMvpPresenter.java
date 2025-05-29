@@ -10,4 +10,6 @@ import au.com.dealsdirect.ui.base.AuthenticationMvpPresenter;
 public interface LoginMvpPresenter<V extends LoginMvpView> extends AuthenticationMvpPresenter<V> {
 
     void loginViaEmail(String username, String password, String recaptchaToken);
+
+    boolean isFacebookLoginEnabled();
 }

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -89,6 +90,9 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @BindView(R.id.login_base_container)
     ViewGroup mBaseContainer;
+
+    @BindView(R.id.controller_login_fb_layout)
+    RelativeLayout mfbLoginButton;
 
     private String mLoginMethod = NO_ACTION;
     private boolean isLoginSuccess = false;
@@ -167,6 +171,8 @@ public class LoginController extends BaseController implements LoginMvpView {
 
         mToolbar.setVisibility(shouldToolbarBeVisible ? View.VISIBLE : View.GONE);
         mToolbarTitle.setText(mActivity.getResources().getString(R.string.login_title));
+
+        mfbLoginButton.setVisibility(mPresenter.isFacebookLoginEnabled() ? View.VISIBLE : View.GONE);
 
         mLoginButton.setOnClickListener(view1 -> {
             startLogin();

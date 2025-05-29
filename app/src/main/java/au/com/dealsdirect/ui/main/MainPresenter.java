@@ -235,6 +235,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             getDataManager().setFollowUsFbLink(responseValue.getFollowUsFacebookLink());
                             getDataManager().setFollowUsTwitterLink(responseValue.getFollowUsTwitterLink());
                             getDataManager().setImageServerUrl(responseValue.getImageServerUrl());
+                            getDataManager().setFacebookLoginEnabled(responseValue.getFacebookLoginEnabled());
                         }
                     }
 

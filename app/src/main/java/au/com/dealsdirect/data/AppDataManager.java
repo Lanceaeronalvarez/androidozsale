@@ -2141,6 +2141,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setFacebookLoginEnabled(boolean facebookLoginEnabled) {
+        mPreferencesHelper.setFacebookLoginEnabled(facebookLoginEnabled);
+    }
+
+    @Override
+    public boolean getFacebookLoginEnabled() {
+        return mPreferencesHelper.getFacebookLoginEnabled();
+    }
+
+    @Override
     public void cacheRrpText(String id, String rrpText) {
         mPricingInfoCacheHelper.cacheRrpText(id, rrpText);
     }
