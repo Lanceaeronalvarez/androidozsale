@@ -63,9 +63,11 @@ public class HorizontalScrollingNotificationAdapter extends RecyclerView.Adapter
             upperText.append(PriceUtils.getPriceStringValue(item.getDiscountLeft()));
             upperText.append(" OFF");
             upperText.setSpan(new StyleSpan(Typeface.BOLD), 0, upperText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            upperText.append("\n");
         }
         if (item.getPromoCode() != null) {
+            if (upperText.length() > 0) {
+                upperText.append("\n");
+            }
             upperText.append(item.getPromoCode());
         } else {
             upperText.setSpan(new RelativeSizeSpan(2f), 0, upperText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -90,7 +92,6 @@ public class HorizontalScrollingNotificationAdapter extends RecyclerView.Adapter
                 matcher.region(regionEnd, lowerText.length());
             }
         } while (!matcher.hitEnd());
-        lowerText.append(lowerText);
 
         NotificationTicketViewHolder notificationTicketViewHolder = (NotificationTicketViewHolder) holder;
         notificationTicketViewHolder.upperText.setText(upperText);

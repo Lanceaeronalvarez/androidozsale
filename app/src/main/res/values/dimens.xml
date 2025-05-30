@@ -379,4 +379,5 @@
     <dimen name="notification_bar_inner_padding">7dp</dimen>
     <dimen name="notification_ticket_width">213dp</dimen>
     <dimen name="notification_ticket_height">115dp</dimen>
+    <dimen name="notification_ticket_lower_text_size">10dp</dimen>
 </resources>
