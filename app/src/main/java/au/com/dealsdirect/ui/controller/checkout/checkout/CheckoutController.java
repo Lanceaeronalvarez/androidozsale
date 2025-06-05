@@ -1432,8 +1432,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             if (mActivity.getPaymentMethodSelected() == null) {
                 mActivity.startPaypalPayment();
             } else {
-                PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
-                mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                if(mActivity.getPaymentMethodSelected().getProviderType().equals(PaymentInfo.TYPE_STRIPE)){
+                    mActivity.startPaypalPayment();
+                }else{
+                    PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
+                    mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                }
             }
         }
         
