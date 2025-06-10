@@ -590,126 +590,125 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.databinding:databinding-runtime:8.8.2'
-    implementation 'androidx.databinding:databinding-adapters:8.8.2'
+    implementation 'androidx.databinding:databinding-runtime:8.10.1'
+    implementation 'androidx.databinding:databinding-adapters:8.10.1'
 
     // android support libraries
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
-    implementation 'androidx.window:window-java:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
+    implementation 'androidx.window:window-java:1.4.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.2.0'
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.2.0'
-    implementation 'androidx.activity:activity:1.9.3'
+    implementation 'androidx.activity:activity:1.10.1'
 
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
 
     // font
-    implementation "io.github.inflationx:calligraphy3:$rootProject.calligraphyVersion"
-    implementation "io.github.inflationx:viewpump:$rootProject.viewPumpVersion"
+    implementation "io.github.inflationx:calligraphy3:3.1.1"
+    implementation "io.github.inflationx:viewpump:2.0.3"
 
     // network
-    implementation "com.github.amitshekhariitbhu.Fast-Android-Networking:rx2-android-networking:$rootProject.rx2FastAndroidNetworking"
+    implementation "com.github.amitshekhariitbhu.Fast-Android-Networking:rx2-android-networking:1.0.4"
 
     // parser
-    implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
+    implementation "com.google.code.gson:gson:2.11.0"
 
     // database
-    implementation "org.greenrobot:greendao:$rootProject.greenDaoVersion"
+    implementation "org.greenrobot:greendao:3.2.2"
 
     //cookie jar
-    implementation "com.github.franmontiel:PersistentCookieJar:$rootProject.cookieJarVersion"
+    implementation "com.github.franmontiel:PersistentCookieJar:v1.0.1"
 
     // debug database
-    debugImplementation "com.github.amitshekhariitbhu.Android-Debug-Database:debug-db:$rootProject.debugDBVersion"
+    debugImplementation "com.github.amitshekhariitbhu.Android-Debug-Database:debug-db:1.0.7"
 
     // dependency injection
-    implementation "com.google.dagger:dagger:$rootProject.dagger2Version"
-    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+    implementation "com.google.dagger:dagger:2.51.1"
+    annotationProcessor "com.google.dagger:dagger-compiler:2.51.1"
     compileOnly 'javax.annotation:jsr250-api:1.0'
     implementation 'javax.inject:javax.inject:1'
 
     // reactive
-    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version"
-    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.21"
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
     // code generator for view
     //noinspection AnnotationProcessorOnCompilePath
-    implementation "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
+    implementation "com.jakewharton:butterknife:10.2.3"
+    annotationProcessor "com.jakewharton:butterknife-compiler:10.2.3"
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
 
     // logger
-    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
+    implementation "com.jakewharton.timber:timber:4.5.1"
 
     // conductor
-    implementation "com.bluelinelabs:conductor:$rootProject.conductorVersion"
-    implementation "com.bluelinelabs:conductor-androidx-transition:$rootProject.conductorVersion"
-    implementation "com.bluelinelabs:conductor-viewpager:$rootProject.conductorVersion"
+    implementation "com.bluelinelabs:conductor:3.2.0"
+    implementation "com.bluelinelabs:conductor-androidx-transition:3.2.0"
+    implementation "com.bluelinelabs:conductor-viewpager:3.2.0"
 
     // paginate
-    implementation "com.github.markomilos:paginate:$rootProject.paginateVersion"
+    implementation "com.github.markomilos:paginate:0.5.1"
 
     // advanced recyclerview
     implementation('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.11.0@aar')
     // photo view
-    implementation "com.github.chrisbanes:PhotoView:$rootProject.photoViewVersion"
+    implementation "com.github.chrisbanes:PhotoView:2.0.0"
     // circle indicator
     implementation 'me.relex:circleindicator:1.2.2@aar'
 
     // glide
-    def GLIDE_VERSION = "4.16.0"
-    implementation "com.github.zjupure:webpdecoder:2.6.${GLIDE_VERSION}"
-    implementation "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
-    annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
+    implementation "com.github.zjupure:webpdecoder:2.7.4.16.0"
+    implementation "com.github.bumptech.glide:glide:4.16.0"
+    annotationProcessor "com.github.bumptech.glide:compiler:4.16.0"
 
     // braintree
-    implementation "com.braintreepayments.api:card:$rootProject.braintreeVersion"
-    implementation "com.braintreepayments.api:three-d-secure:$rootProject.braintreeVersion"
-    implementation "com.braintreepayments.api:paypal:$rootProject.braintreeVersion"
-    implementation "com.braintreepayments.api:data-collector:$rootProject.braintreeVersion"
+    implementation "com.braintreepayments.api:card:4.49.1"
+    implementation "com.braintreepayments.api:three-d-secure:4.49.1"
+    implementation "com.braintreepayments.api:paypal:4.49.1"
+    implementation "com.braintreepayments.api:data-collector:4.49.1"
 
     // facebook
-    implementation "com.facebook.android:facebook-android-sdk:$rootProject.facebookVersion"
-    implementation "com.facebook.android:facebook-login:$rootProject.facebookVersion"
+    implementation "com.facebook.android:facebook-android-sdk:17.0.0"
+    implementation "com.facebook.android:facebook-login:17.0.0"
 
     // GCM
-    implementation "com.google.android.gms:play-services-gcm:$rootProject.gcmVersion"
+    implementation "com.google.android.gms:play-services-gcm:17.0.0"
 
     //viewpager indicator
     implementation 'me.relex:circleindicator:1.2.2@aar'
 
     // sticky headers
-    implementation "com.timehop.stickyheadersrecyclerview:library:$rootProject.stickyHeadersVersion"
+    implementation "com.timehop.stickyheadersrecyclerview:library:0.4.3@aar"
 
     // dependencies for local unit tests
-    testImplementation "junit:junit:$rootProject.ext.junitVersion"
-    testImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
-    testAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
-    testImplementation 'org.json:json:20180813'
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.mockito:mockito-core:5.12.0"
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:2.51.1"
+    testImplementation 'org.json:json:20220924'
 
     // UI Testing
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.6.1'
-    androidTestImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
-    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+    androidTestImplementation "org.mockito:mockito-core:5.12.0"
+    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:2.51.1"
 
     // NR
     implementation 'com.newrelic.agent.android:android-agent:7.5.0'
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:33.10.0')
-    implementation 'com.google.firebase:firebase-analytics'
+    implementation platform('com.google.firebase:firebase-bom:33.15.0')
+    implementation 'com.google.firebase:firebase-analytics:22.4.0'
     implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-messaging:24.1.0'
-    implementation 'com.google.firebase:firebase-crashlytics:19.4.1'
+    implementation 'com.google.firebase:firebase-messaging:24.1.1'
+    implementation 'com.google.firebase:firebase-crashlytics:19.4.4'
 
     //VISA CHECKOUT
     implementation 'com.braintreepayments.api:visa-checkout:3.0.0'
     implementation 'com.visa.checkout:visacheckout-android-sdk-6.6.1@aar'
 
-    implementation 'com.squareup.okio:okio:2.2.2'
+    implementation 'com.squareup.okio:okio:3.4.0'
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation group: 'de.greenrobot', name: 'eventbus', version: '2.4.1'
 
@@ -721,7 +720,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-wallet:19.4.0'
 
     // guava
-    implementation "com.google.guava:guava:$rootProject.guavaVersion"
+    implementation "com.google.guava:guava:31.1-android"
 
     // klarna
     implementation 'com.klarna.mobile:sdk:2.6.20'
