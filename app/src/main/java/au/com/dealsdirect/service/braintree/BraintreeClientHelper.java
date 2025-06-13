@@ -155,8 +155,6 @@ public class BraintreeClientHelper {
 
     private void tokenizePayPalAccountWithVault() {
         PayPalVaultRequest request = new PayPalVaultRequest();
-        request.setShouldOfferCredit(true);
-        request.setBillingAgreementDescription("test");
 
         mPayPalClient.tokenizePayPalAccount(activity, request);
     }
