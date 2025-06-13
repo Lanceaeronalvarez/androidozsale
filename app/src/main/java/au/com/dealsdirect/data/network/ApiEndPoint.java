@@ -26,6 +26,7 @@ public final class ApiEndPoint {
         SETTING,
         EVENTING,
         ATTACHMENTS,
+        CUSTOMER,
         MYACCOUNT,
         RECENTLY
     }
@@ -80,6 +81,9 @@ public final class ApiEndPoint {
                 break;
             case ATTACHMENTS:
                 microServiceUrl = "api/shop/files/" + version + "/files/";
+                break;
+            case CUSTOMER:
+                microServiceUrl = "api/shop/customer/" + version + "/customer/";
                 break;
             case LEGACY:
                 microServiceUrl = "papi/public/v" + LEGACY_API_VERSION + "/";
@@ -849,6 +853,10 @@ public final class ApiEndPoint {
 
     public static String getBuyboxTemplateTexts() {
         return getFormattedUrl(ApiService.SETTING, "settings/accounts/" + ACCOUNT_ID_DELIMETER + "/templates?templateTypes=3", ApiUrlVersion.v2.apiVersion());
+    }
+
+    public static String callGetNotifications() {
+        return getFormattedUrl(ApiService.CUSTOMER, "accounts/" + ACCOUNT_ID_DELIMETER + "/notifications", ApiUrlVersion.v2.apiVersion());
     }
 
     private ApiEndPoint() {

@@ -186,4 +186,8 @@ public class BundleKeys {
     public static final String KEY_HAS_SAVED_INSTANCE = "KEY_HAS_SAVED_INSTANCE";
     public static final String SHOP_KEY_HAS_SAVED_INSTANCE = "SHOP_KEY_HAS_SAVED_INSTANCE";
 
+    //Filter
+    public static final String CATEGORY_KEY = "CATEGORY_KEY";
+    public static final String SOURCE_TYPE = "SOURCE_TYPE";
+    public static final String FILTER_CATEGORIES = "FILTER_CATEGORIES";
 }

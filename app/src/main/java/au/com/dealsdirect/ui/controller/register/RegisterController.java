@@ -34,6 +34,7 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
+import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
@@ -148,6 +149,9 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @BindView(R.id.register_base_container)
     ViewGroup mBaseContainer;
 
+    @BindView(R.id.register_voucher_text)
+    TextView mRegisterVoucher;
+
 
     private String mRegisterMethod = NO_ACTION;
     private boolean isRegisterSuccess = false;
@@ -192,7 +196,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         if (mPresenter.isTablet()) {
             mActivity.getMainController().setNavigationBarEnabled(false);
         } else {
-            mActivity.getMainController().hideBottomNav();
+            mActivity.getMainController().hideBottomNav(true);
         }
     }
 
@@ -205,6 +209,10 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 //        mVcoButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
 //                View.GONE);
         mVcoButton.setVisibility(View.GONE);
+
+        if(getResources().getBoolean(R.bool.is_registration_voucher_visible)){
+            mRegisterVoucher.setVisibility(View.VISIBLE);
+        }
 
         if (getResources().getBoolean(R.bool.is_ozsale_app)) {
             if (mLeftButton != null) {
@@ -331,7 +339,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @Override
     protected void onAttach(@NonNull View view) {
         if (!mPresenter.isTablet()) {
-            mActivity.getMainController().hideBottomNav();
+            mActivity.getMainController().hideBottomNav(true);
         }
         super.onAttach(view);
     }
@@ -362,7 +370,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         if (mPresenter.isTablet()) {
             mActivity.getMainController().setNavigationBarEnabled(true);
         } else {
-            mActivity.getMainController().showBottomNav();
+            mActivity.getMainController().showBottomNav(true);
         }
         mActivity.getMainController().goToPreviousContainerFromLogin(mActivity.isAuthorized());
 

@@ -5,6 +5,10 @@ import static au.com.dealsdirect.service.datacollection.core.DataCollector.Event
 import static au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter.BannerStyle;
 import static au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter.BannerViewType;
 
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
@@ -33,6 +37,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -44,6 +49,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse.LinkOptions;
@@ -51,6 +57,8 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
+import au.com.dealsdirect.data.network.model.notification.GetNotificationsResponse;
+import au.com.dealsdirect.data.network.model.notification.GetNotificationsType;
 import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
@@ -60,6 +68,8 @@ import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.enums.FeatureUsageEventType;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
+import au.com.dealsdirect.ui.controller.main.MainController;
+import au.com.dealsdirect.ui.controller.main.SignUpModalBottomPopupAdapter;
 import au.com.dealsdirect.ui.controller.saleitemdetails.HorizontalScrollingItemsAdapter;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -70,8 +80,11 @@ import au.com.dealsdirect.ui.controller.shops.adapter.ResettableDimensions;
 import au.com.dealsdirect.ui.controller.trendingbrands.TrendingBrandsWidgetHelper;
 import au.com.dealsdirect.ui.custom.BottomPopupView;
 import au.com.dealsdirect.ui.custom.BottomPopupWebViewContentAdapter;
+import au.com.dealsdirect.ui.custom.DimmedBottomPopupView;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
+import au.com.dealsdirect.ui.notifications.NotificationBarHelper;
+import au.com.dealsdirect.ui.notifications.NotificationDialogHelper;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -143,6 +156,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @BindView(R.id.controller_sale_items_appbar)
     AppBarLayout mShopAppBarLayout;
 
+    @BindView(R.id.controller_shop_notification_area)
+    ViewGroup notificationArea;
+
+    @BindView(R.id.notifications_bar_view)
+    ViewGroup notificationBarView;
+
     private BannersAdapter mBannersAdapter = null;
     private ResettableDimensions mResettableDimensionsAdapter = null;
     private Paginate.Callbacks mPaginateCallbacks;
@@ -186,6 +205,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private boolean mIsChangeInProgress = false;
 
     private int lastBestSellerItemPosition = -1;
+
+    private NotificationBarHelper notificationBarHelper = null;
 
     private final BannersAdapterHelper bannersAdapterHelper = new BannersAdapterHelper() {
         @Override
@@ -307,6 +328,31 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         }
     };
 
+    private ShowShopBannersParameters delayedShowShopBannerCallParameters = null;
+
+    private static class ShowShopBannersParameters {
+        private final GetBannerResponse getBannerResponses;
+        private final String categoryID;
+        private final boolean isFromCache;
+
+        public ShowShopBannersParameters(GetBannerResponse getBannerResponses, String categoryID, boolean isFromCache) {
+            this.getBannerResponses = getBannerResponses;
+            this.categoryID = categoryID;
+            this.isFromCache = isFromCache;
+        }
+    }
+
+    private void callDelayedShowShopBanners() {
+        if (delayedShowShopBannerCallParameters != null) {
+            showShopBanners(
+                    delayedShowShopBannerCallParameters.getBannerResponses,
+                    delayedShowShopBannerCallParameters.categoryID,
+                    delayedShowShopBannerCallParameters.isFromCache
+            );
+            delayedShowShopBannerCallParameters = null;
+        }
+    }
+
     @Override
     protected void onAttach(@NonNull View view) {
         mPresenter.onAttach(this);
@@ -362,6 +408,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mActivity.getProfiler().setStartLogTime(DataCollector.EventParameters.CustomEventType.CV_SALEBANNERS.getValue());
         setUp(view);
         mShopPtrLayout.setEnabled(mActivity.getResources().getBoolean(R.bool.is_pull_to_refresh_enabled));
+        callDelayedShowShopBanners();
     }
 
     @Override
@@ -369,6 +416,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mShopPtrLayout.setPtrHandler(null);
         mShopAppBarLayout.removeOnOffsetChangedListener(this);
         mIsDeeplink = false;
+        dismissSignUpModal();
         hideLoading();
         super.onDetach(view);
     }
@@ -419,6 +467,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         if (mBannersAdapter != null) {
             mBannersAdapter.stopHorizontalViewHolders();
         }
+
+        dismissSignUpModal();
     }
 
     @Override
@@ -430,6 +480,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             loadSponsoredBanners();
             loadTrendingBrands();
             loadBestSellers();
+            loadNotifications();
             mActivity.getMainController().setSavedCurrentItem();
         }
 
@@ -500,12 +551,18 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         shopsControllerBannerRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                if (mActivity.getMainController().getHomeViewPager().getCurrentItem() == MainController.SHOP_INDEX) {
+                    if (currentBottomPopupView != null &&
+                            currentBottomPopupView.getAdapter() instanceof SignUpModalBottomPopupAdapter) {
+                        mActivity.getMainController().showBottomNav(true);
+                    }
+                }
             }
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 mIsRecyclerViewScrollIdle = newState == 0;
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && mShopAppBarLayout != null) {
@@ -536,6 +593,44 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         goToSalesFromCategories(mCategoryID, mCategoryKey);
 
         mPresenter.loadLeaderboardBanner(mCategoryID);
+
+        notificationBarHelper = new NotificationBarHelper(notificationBarView);
+        notificationBarHelper.setDialogButtonSelectors(new HashMap<GetNotificationsType, NotificationDialogHelper.ButtonSelector>() {{
+            put(GetNotificationsType.YouHavePromoCode, new NotificationDialogHelper.ButtonSelector() {
+                @Override
+                public void onClick(NotificationDialogHelper dialogHelper, GetNotificationsResponse notification) {
+                    final ClipboardManager clipboardManager = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+                    final ClipData clipData = ClipData.newPlainText("promocode", notification.getPromoCode());
+                    clipboardManager.setPrimaryClip(clipData);
+                    dialogHelper.dismiss();
+                    new AlertDialog.Builder(mActivity)
+                            .setMessage("Copied code to clipboard!")
+                            .setPositiveButton("OK", null)
+                            .show();
+                }
+
+                @NonNull
+                @Override
+                public String getButtonText() {
+                    return mActivity.getResources().getString(R.string.copy_code);
+                }
+            });
+            put(GetNotificationsType.YouHaveUnExpiredVoucher, new NotificationDialogHelper.ButtonSelector() {
+                @Override
+                public void onClick(NotificationDialogHelper dialogHelper, GetNotificationsResponse notification) {
+                    dialogHelper.dismiss();
+                    mActivity.getMainController().showAccountController();
+                    mActivity.getMainController().getAccountController().showMyVouchers();
+                }
+
+                @NonNull
+                @Override
+                public String getButtonText() {
+                    return mActivity.getResources().getString(R.string.go_to_vouchers);
+                }
+            });
+        }});
+        notificationBarView.setVisibility(View.GONE);
     }
 
     private void setupBannersView() {
@@ -712,6 +807,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     @Override
     public void showShopBanners(GetBannerResponse getBannerResponses, String categoryID, boolean isFromCache) {
+        if (!isViewBound()) {
+            delayedShowShopBannerCallParameters = new ShowShopBannersParameters(
+                    getBannerResponses, categoryID, isFromCache
+            );
+            return;
+        }
 
         if (mCategoryID != null && categoryID != null && !mCategoryID.equals(categoryID)) {
             return;
@@ -978,6 +1079,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             loadSponsoredBanners();
             loadTrendingBrands();
             loadBestSellers();
+            loadNotifications();
         }
         resetBannerLayout();
         if (mShopAppBarLayout != null) {
@@ -1092,6 +1194,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         loadSponsoredBanners();
         loadTrendingBrands();
         loadBestSellers();
+        loadNotifications();
     }
 
     private void resetShopsBanners(String categoryID) {
@@ -1136,6 +1239,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         loadSponsoredBanners();
         loadTrendingBrands();
         loadBestSellers();
+        loadNotifications();
     }
 
     public void clearHorizontalBanners() {
@@ -1235,6 +1339,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         loadSponsoredBanners();
         loadTrendingBrands();
         loadBestSellers();
+        loadNotifications();
     }
 
     private GetBannerRequest createBannerRequest(String categoryId, int bannerOffset, int bannerLimit) {
@@ -1302,6 +1407,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         loadSponsoredBanners();
         loadTrendingBrands();
         loadBestSellers();
+        loadNotifications();
     }
 
     @Override
@@ -1329,6 +1435,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             if (mBannersAdapter != null) {
                 mBannersAdapter.stopHorizontalViewHolders();
             }
+            dismissSignUpModal();
         }
     }
 
@@ -1423,6 +1530,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         loadSponsoredBanners();
         loadTrendingBrands();
         loadBestSellers();
+        loadNotifications();
     }
 
     public boolean isFromCategories() {
@@ -1538,5 +1646,92 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             return true;
         });
         currentBottomPopupView.show(true);
+    }
+
+    private void loadNotifications() {
+        if (notificationBarHelper != null) {
+            notificationBarHelper.setNotifications(Collections.emptyList(), true);
+        }
+        mPresenter.getNotifications();
+    }
+
+    @Override
+    public void showNotifications(List<GetNotificationsResponse> notifications) {
+        notificationBarHelper.setNotifications(notifications, true);
+    }
+
+    public void showSignUpModal() {
+        if (currentBottomPopupView != null) {
+            currentBottomPopupView.dismiss(true);
+        }
+
+        final SignUpModalBottomPopupAdapter adapter = new SignUpModalBottomPopupAdapter();
+        final DimmedBottomPopupView dimmedBottomPopupView = new DimmedBottomPopupView(shopCoordinatorLayout, adapter, adapter);
+        dimmedBottomPopupView.setOnBackgroundClickedListener(() -> dimmedBottomPopupView.hideDimming(true));
+
+        currentBottomPopupView = dimmedBottomPopupView;
+        currentBottomPopupView.setListener(new BottomPopupView.BottomPopupViewListener() {
+            @Override
+            public void willShow() {
+
+            }
+
+            @Override
+            public void onShow() {
+                mActivity.getMainController().hideBottomNav(true);
+
+            }
+
+            @Override
+            public void willDismiss() {
+
+            }
+
+            @Override
+            public void onDismiss() {
+
+            }
+        });
+
+        adapter.setOnCloseClickListener(() -> {
+            currentBottomPopupView.dismiss(true);
+            mActivity.getMainController().showBottomNav(true);
+        });
+        adapter.setOnSubscribeClickListener(() -> {
+            currentBottomPopupView.dismiss(true);
+            mActivity.showLoginController(getRouter(), new AuthHandler() {
+                @Override
+                public void success() {
+                    mActivity.callGCMRegisterSubscriber();
+                    mActivity.getMainController().resetShopRouter();
+                    mActivity.getMainController().resetCategoriesRouter();
+                    mActivity.getMainController().resetAccountRouter();
+                    mActivity.getMainController().resetWishlistRouter();
+                    mActivity.getMainController().resetBrandsRouter();
+                }
+
+                @Override
+                public void error() {
+
+                }
+            });
+        });
+        adapter.setOnTNCClickListener(() -> {
+            currentBottomPopupView.dismiss(true);
+            mActivity.getMainController().showBottomNav(true);
+            mActivity.getMainController().showTNC();
+        });
+
+        currentBottomPopupView.show(true);
+    }
+
+    public void dismissSignUpModal() {
+        if (currentBottomPopupView == null ||
+                !(currentBottomPopupView.getAdapter() instanceof SignUpModalBottomPopupAdapter)) {
+            return;
+        }
+
+        mActivity.getMainController().showBottomNav(true);
+        currentBottomPopupView.dismiss(true);
     }
 }

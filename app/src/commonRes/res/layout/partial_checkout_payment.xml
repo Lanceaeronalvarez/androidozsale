@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="9"
-                android:text="@string/add_new_payment_method"
+                android:text="@string/use_another_card"
                 android:textColor="@color/row_checkout_text_light_color"
                 android:textSize="@dimen/text_size_body" />
 

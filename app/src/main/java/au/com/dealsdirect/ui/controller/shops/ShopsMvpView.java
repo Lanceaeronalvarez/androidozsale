@@ -8,6 +8,7 @@ import java.util.List;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.notification.GetNotificationsResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -32,4 +33,6 @@ public interface ShopsMvpView extends MvpView {
     void showLeaderboardBanner(GetBannerResponse response);
 
     void showPricingInfoText(String rrpText, Double totalPercentOff, Double originalPrice, String combinedPricingInfoText);
+
+    void showNotifications(List<GetNotificationsResponse> notifications);
 }

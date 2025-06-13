@@ -2,6 +2,8 @@ package au.com.dealsdirect.ui.base;
 
 import androidx.annotation.StringRes;
 
+import com.bluelinelabs.conductor.Router;
+
 import au.com.dealsdirect.utils.LoadingDialogType;
 
 /**
@@ -40,4 +42,6 @@ public interface MvpView {
     boolean isViewAttached();
 
     void showLoadingDelayed(int delay);
+
+    Router getDetailRouter();
 }

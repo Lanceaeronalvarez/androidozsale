@@ -1488,12 +1488,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             addCategoryKeyChipFromCategorySearch();
         }
 
-        if (mSourceType == SourceType.SHOP_SEARCH && mTitle != "Search" && mTitle != "") {
+        if (mSourceType == SourceType.SHOP_SEARCH) {
             mSelectedFilterList.add(new SearchChipModel(BundleKeys.BRANDS_FACETFILTER_NAME, mTitle.trim(), ""));
-            addChipGroupFilterChip();
             mFilterCount.setVisibility(View.VISIBLE);
             mFilterCountText.setVisibility(View.VISIBLE);
             mFilterCountText.setText("1");
+        }
+        if (mSourceType != SourceType.WISHLIST) {
+            addChipGroupFilterChip();
         }
 
         mPresenter.loadLeaderboardBanner();
@@ -2204,7 +2206,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
         if (mShouldRefreshFacets) {
             mChipFilters = new HashSet<>();
-            mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);
+            if (mSearchFilterMvpView == null) {
+                setupSearchFilters();
+            } else {
+                mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);
+            }
         } else {
             mChipFilters = chipsList != null ? chipsList : new HashSet<>();
         }
@@ -2248,7 +2254,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         getSaleItemsRequest.setSorting("");
         getSaleItemsRequest.setPageNumber(pageNumber);
-        getSaleItemsRequest.setQuery(mSearchQuery);
+        if (categoryKey != null && !categoryKey.isEmpty()) {
+            getSaleItemsRequest.setQuery(mSearchQuery == null || mSearchQuery.isEmpty() ? "a" : mSearchQuery);
+        } else {
+            getSaleItemsRequest.setQuery(mSearchQuery);
+        }
         getSaleItemsRequest.setPageSize("50");
 
         if (mSaleId != null && !mSaleId.isEmpty()) {
@@ -2282,7 +2292,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (chipsList == null) {
             getSaleItemsRequest.setHasFilters(false);
         } else {
-            if (chipsList.size() != 0) {
+            if (!chipsList.isEmpty()) {
                 ArrayList<String> brandNameFacetFilters = new ArrayList<>();
                 ArrayList<String> colorFacetFilters = new ArrayList<>();
                 ArrayList<String> sizesFacetFilters = new ArrayList<>();
@@ -2738,6 +2748,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     void addChipGroupFilterChip() {
+        if (!isViewBound() || mChipGroup == null) {
+            return;
+        }
         for (String category : mSelectedCategoryKeys) {
             Chip chip = (Chip) mActivity.getLayoutInflater().inflate(R.layout.single_chip_layout, mChipGroup, false);
             chip.setText(category.substring(category.lastIndexOf(">") + 1));

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_dialog_rounded">
+
+    <TextView
+        android:id="@+id/notification_dialog_header"
+        fontPath="@string/font_app_bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_large"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Header"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size_headline2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notification_dialog_recycler_view"
+        android:layout_width="@dimen/notification_ticket_width"
+        android:layout_height="@dimen/notification_ticket_height"
+        android:layout_margin="@dimen/margin_medium"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@id/notification_dialog_page_indicator"
+        app:layout_constraintLeft_toRightOf="@id/notification_left_button"
+        app:layout_constraintRight_toLeftOf="@id/notification_right_button"
+        app:layout_constraintTop_toBottomOf="@id/notification_dialog_header"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notification_dialog_page_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/horizontal_banner_circle_indicator_height"
+        android:layout_margin="@dimen/margin_medium"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@id/notification_dialog_button"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/notification_dialog_recycler_view"/>
+
+    <Button
+        android:id="@+id/notification_dialog_button"
+        fontPath="@string/font_app_bold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_large"
+        android:background="@drawable/bg_button_rounded"
+        android:backgroundTint="#3BB879"
+        android:gravity="center"
+        android:text="Button"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_headline2"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageButton
+        android:id="@+id/notification_left_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_chevron_left_black"
+        app:layout_constraintRight_toLeftOf="@id/notification_dialog_recycler_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/notification_right_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_chevron_right_black"
+        app:layout_constraintLeft_toRightOf="@id/notification_dialog_recycler_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

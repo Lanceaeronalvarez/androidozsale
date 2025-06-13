@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -186,6 +187,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private GA4EventParams.GA4PurchaseParams ga4PurchaseParams = null;
 
     private Uri deeplinkUriToProcess = null;
+
+    private boolean hasShownSignupModal = false;
 
     private final Consumer<WindowLayoutInfo> layoutChangedCallback = windowLayoutInfo -> MainActivity.this.runOnUiThread(() -> {
         final Controller controller = getMainController().getCurrentController();
@@ -435,6 +438,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
+    public Router getDetailRouter() {
+        return null;
+    }
+
+    @Override
     public void onBackPressed() {
         if (!isActivityStateValid()) {
             return;
@@ -469,7 +477,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             getMainController().getPopUpHostRouter().handleBack();
         } else {
             Router currentRouter = getCurrentRouter();
-            if (getMainController().getHomeViewPager().getCurrentItem() == MainController.SHOP_INDEX &&
+            Controller topController = null;
+            if (currentRouter.getBackstackSize() > 0) {
+                topController = currentRouter.getBackstack().get(currentRouter.getBackstackSize() - 1).controller();
+            }
+
+            if (topController instanceof MvpView &&
+                    ((MvpView) topController).getDetailRouter() != null &&
+                    ((MvpView) topController).getDetailRouter().getBackstackSize() > 1) {
+                ((MvpView) topController).getDetailRouter().handleBack();
+            } else if (getMainController().getHomeViewPager().getCurrentItem() == MainController.SHOP_INDEX &&
                     currentRouter.getBackstackSize() <= 1) {
                 DialogUtils.showYesNoDialog(
                         this,
@@ -1181,6 +1198,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
         if (isAuthorized()) {
             mMainController.updateBasketItemsQuantity();
+        } else if (!hasShownSignupModal && getResources().getBoolean(R.bool.will_show_signup_modal)){
+            new Handler(getMainLooper()).post(() -> {
+                Controller controller = mMainController.getShopRouter().getControllerWithTag(ShopsController.TAG);
+                if (controller instanceof ShopsController) {
+                    ((ShopsController) controller).showSignUpModal();
+                    hasShownSignupModal = true;
+                }
+
+            });
         }
         if (deeplinkUriToProcess != null) {
             mMainController.processDeeplinkUri(deeplinkUriToProcess);

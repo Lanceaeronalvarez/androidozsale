@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.information;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +44,8 @@ public class InformationMenuController extends BaseController implements Informa
     View mToolbarTextViewLeft;
     @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
+    @BindView(R.id.controller_information_sell_on)
+    ViewGroup mSellOnContainer;
     @BindView(R.id.controller_information_about_us)
     ViewGroup mAboutUsContainer;
     @BindView(R.id.controller_information_terms_and_conditions)
@@ -80,6 +84,7 @@ public class InformationMenuController extends BaseController implements Informa
         mTitleTextView.setText(getString(R.string.account_information));
         mToolbarTextViewLeft.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
 
+        mSellOnContainer.setOnClickListener(v -> sellOnClicked());
         mAboutUsContainer.setOnClickListener(v -> showLegalities(BundleKeys.TEMPLATE_KEY_ABOUT_US, AccountOption.ABOUTUS));
         mTermsAndConditionsContainer.setOnClickListener(v -> showLegalities(BundleKeys.TEMPLATE_KEY_TNC, AccountOption.TERMSANDCONDITIONS));
         mPrivacyPolicyContainer.setOnClickListener(v -> showLegalities(BundleKeys.TEMPLATE_KEY_PRIVACY, AccountOption.PRIVACYPOLICY));
@@ -94,6 +99,18 @@ public class InformationMenuController extends BaseController implements Informa
     @OnClick(R.id.partial_toolbar_left_view)
     void onBackPressed() {
         mActivity.onBackPressed();
+    }
+
+    private void sellOnClicked() {
+        final String address = mActivity.getResources().getString(R.string.auseller_email);
+        final String subject = "";
+
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:" + address));
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        if (intent.resolveActivity(mActivity.getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     private void showLegalities(String key, AccountOption option) {

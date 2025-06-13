@@ -63,6 +63,7 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.ImageUploadUtil;
 import au.com.dealsdirect.utils.ImageUtils;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
@@ -139,8 +140,6 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     private final ArrayList<ImageUtils.ImageLink> mImageUriArray = new ArrayList<>();
 
     private boolean someImagesWereNotUploaded = false;
-
-    private ProgressDialog progressDialog = null;
 
     private final HashMap<String, Boolean> hasSetSatisfaction = new HashMap<>();
 
@@ -374,10 +373,6 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     @Override
     public void onDestroyView(View view) {
         mPresenter.onDetach();
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
-        progressDialog = null;
         super.onDestroyView(view);
     }
 
@@ -686,18 +681,19 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
             }
             return;
         }
-        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(new ImageUploadUtil.UploadFileToServer.ProgressDialogProvider() {
+        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(new ImageUploadUtil.UploadFileToServer.ProgressIndicatorProvider() {
             @Override
-            public ProgressDialog getProgressDialog(boolean newObject) {
-                if (newObject) {
-                    progressDialog = new ProgressDialog(getApplicationContext());
+            public void showProgressIndicator() {
+                if (mActivity != null) {
+                    mActivity.showLoading(LoadingDialogType.NOLOGO);
                 }
-                return progressDialog;
             }
 
             @Override
-            public void onDismiss() {
-                progressDialog = null;
+            public void hideProgressIndicator() {
+                if (mActivity != null) {
+                    mActivity.hideLoading();
+                }
             }
         });
         uploadFileToServer.delegate = (imageUrl, imagePosition) -> {

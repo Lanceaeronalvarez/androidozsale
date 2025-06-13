@@ -29,7 +29,7 @@
                 android:id="@+id/controller_shop_banner_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/background_default"/>
+                android:background="@color/background_default" />
         </in.srain.cube.views.ptr.PtrClassicFrameLayout>
 
         <com.google.android.material.appbar.AppBarLayout
@@ -44,37 +44,57 @@
                 android:layout_height="wrap_content"
                 android:background="@color/toolbar_skin"
                 android:fitsSystemWindows="true"
-                android:paddingBottom="@dimen/margin_small"
                 app:contentScrim="@color/toolbar_fade_in_color"
                 app:layout_scrollFlags="scroll|enterAlways">
 
-                <au.com.dealsdirect.ui.custom.SearchEditText
-                    android:id="@+id/partial_toolbar_field_title_edittext"
-                    style="@style/DDEditTextSearchBar"
-                    fontPath="@string/font_app_medium"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:clickable="true"
-                    android:drawableLeft="@drawable/ic_search_gray"
-                    android:drawablePadding="@dimen/margin_extra_small"
-                    android:hint="@string/search_tag"
-                    android:imeOptions="actionSearch"
-                    android:inputType="text"
-                    android:singleLine="true"
-                    android:textColor="@color/text_medium"
-                    android:textColorHint="@color/text_medium"
-                    android:textCursorDrawable="@drawable/bg_field_cursor"
-                    android:textSize="@dimen/text_size_body"
-                    android:visibility="visible"
-                    app:layout_collapseMode="parallax"
-                    app:layout_collapseParallaxMultiplier="0.5" />
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/margin_small">
+
+                        <au.com.dealsdirect.ui.custom.SearchEditText
+                            android:id="@+id/partial_toolbar_field_title_edittext"
+                            style="@style/DDEditTextSearchBar"
+                            fontPath="@string/font_app_medium"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                            android:layout_marginRight="@dimen/activity_horizontal_margin"
+                            android:clickable="true"
+                            android:drawableLeft="@drawable/ic_search_gray"
+                            android:drawablePadding="@dimen/margin_extra_small"
+                            android:hint="@string/search_tag"
+                            android:imeOptions="actionSearch"
+                            android:inputType="text"
+                            android:singleLine="true"
+                            android:textColor="@color/text_medium"
+                            android:textColorHint="@color/text_medium"
+                            android:textCursorDrawable="@drawable/bg_field_cursor"
+                            android:textSize="@dimen/text_size_body"
+                            android:visibility="visible"
+                            app:layout_collapseMode="parallax"
+                            app:layout_collapseParallaxMultiplier="0.5" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/controller_shop_notification_area"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/controller_sale_items_appbar"
+                        android:orientation="vertical">
+
+                        <include layout="@layout/notification_bar" />
+                    </LinearLayout>
+                </LinearLayout>
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 </LinearLayout>

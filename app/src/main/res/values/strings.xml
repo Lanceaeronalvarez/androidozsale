@@ -258,6 +258,7 @@
     <string name="registration_success">Registration Successful!</string>
     <string name="logged_in">Logged In</string>
     <string name="please_fill_up_all_the_fields">Please fill up all the fields</string>
+    <string name="register_voucher">Sign up now and instantly score a $10 voucher. Plus, automatically enter a draw to win a $500 voucher!</string>
 
     <!--USER DETAILS STRINGS-->
     <string name="date_of_birth">Date of Birth</string>
@@ -318,6 +319,7 @@
     <string name="payment_method">payment method</string>
     <string name="payment_options">PAYMENT OPTIONS</string>
     <string name="add_new_payment_method">add new payment method</string>
+    <string name="use_another_card">Use another card</string>
     <string name="voucher">Voucher</string>
     <string name="tax">Tax</string>
     <string name="add_voucher_code">add voucher code</string>
@@ -541,7 +543,7 @@
     <string name="please_fill_up_personalisation_details">Please fill up personalisation details</string>
     <string name="max_characters">Max characters:&#160;</string>
     <string name="this_is_a_required_field">* - This is a required field</string>
-
+    <string name="account_information_sell_on">"Sell On "</string>
 
     <string name="voucher_used">Used Vouchers</string>
     <string name="login_with_facebook">Login with Facebook</string>
@@ -1038,4 +1040,14 @@
     <string name="payment_methods">Payment Methods</string>
     <string name="payment_method_details">We accept the following. Simply select your preferred payment method at checkout.</string>
 
+    <string name="notifications_use_this_code">Use this code before it expires!</string>
+    <string name="notifications_use_these_codes">Use these codes before they expire!</string>
+    <string name="go_to_vouchers">Go to Vouchers</string>
+    <string name="copy_code">Copy Code</string>
+
+    <string name="auseller_email">auseller@mysale.com</string>
+
+    <string name="signup_modal_text1">Sign up &amp; save $10\n+ win a <b>$500 voucher!</b></string>
+    <string name="signup_modal_text2">Sign up now and instantly score a $10 voucher. Plus, automatically enter a draw to win a $500 voucher!</string>
+    <string name="signup_modal_text3"><u>Terms and conditions apply</u>. Vouchers valid on purchases of $50 or more. $500 giveaway is limited to new accounts only. New accounts are entered into the $500 draw for their first month only.</string>
 </resources>

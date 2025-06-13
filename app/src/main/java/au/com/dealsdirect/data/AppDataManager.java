@@ -116,6 +116,8 @@ import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderRequest;
 import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderResponse;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
+import au.com.dealsdirect.data.network.model.notification.GetNotificationsRequest;
+import au.com.dealsdirect.data.network.model.notification.GetNotificationsResponse;
 import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
@@ -2176,5 +2178,10 @@ public class AppDataManager implements DataManager {
     @Override
     public Double getCachedOriginalPrice(String id) {
         return mPricingInfoCacheHelper.getCachedOriginalPrice(id);
+    }
+
+    @Override
+    public Observable<List<GetNotificationsResponse>> getNotifications(GetNotificationsRequest request) {
+        return mApiHelper.getNotifications(request);
     }
 }

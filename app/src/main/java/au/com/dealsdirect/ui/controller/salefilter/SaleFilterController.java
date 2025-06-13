@@ -247,6 +247,22 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
     }
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BundleKeys.SOURCE_TYPE, mSourceType);
+        outState.putString(BundleKeys.CATEGORY_KEY, mCategoryKey);
+        outState.putStringArrayList(BundleKeys.FILTER_CATEGORIES, mCategories);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mSourceType = savedInstanceState.getString(BundleKeys.SOURCE_TYPE);
+        mCategoryKey = savedInstanceState.getString(BundleKeys.CATEGORY_KEY);
+        mCategories = savedInstanceState.getStringArrayList(BundleKeys.FILTER_CATEGORIES);
+    }
+
+    @Override
     protected void setUp(View view) {
         mActivity.getMainController().hideBottomNav();
         mToolbarTitle.setText("Filter");

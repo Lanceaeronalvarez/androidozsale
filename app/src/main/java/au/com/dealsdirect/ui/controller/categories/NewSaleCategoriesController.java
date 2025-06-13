@@ -507,14 +507,18 @@ public class NewSaleCategoriesController extends BaseController
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 updateRecyclerView();
-                CommonUtils.fadeInView(mLayout, null);
+                if (isViewAttached() && isViewBound() && mLayout != null) {
+                    CommonUtils.fadeInView(mLayout, null);
+                }
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
                 super.onAnimationCancel(animation);
                 updateRecyclerView();
-                CommonUtils.fadeInView(mLayout, null);
+                if (isViewAttached() && isViewBound() && mLayout != null) {
+                    CommonUtils.fadeInView(mLayout, null);
+                }
             }
         });
     }

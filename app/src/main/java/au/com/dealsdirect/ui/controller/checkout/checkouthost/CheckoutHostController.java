@@ -37,6 +37,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
@@ -52,6 +53,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutListener;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutOrderAdapter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.RecentlyViewedWidgetHelper;
 import au.com.dealsdirect.ui.controller.saleitemdetails.HorizontalScrollingItemsAdapter;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.custom.BottomPopupView;
@@ -118,8 +120,9 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     private BottomPopupView currentBottomPopupView = null;
 
     private int lastBestSellerItemPosition = -1;
-    private HorizontalRecyclerItemsViewHolder bestSellersViewHolder = null;
+    private HorizontalRecyclerItemsViewHolder widgetAreaHorizontalRecyclerItemsViewHolder = null;
     private BestSellersWidgetHelper bestSellersWidgetHelper = null;
+    private RecentlyViewedWidgetHelper recentlyViewedWidgetHelper = null;
 
 
     public static CheckoutHostController newInstance() {
@@ -568,8 +571,8 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         final List<SaleItemProduct> items = new ArrayList<>(getBestSellerResponses);
 
         if (items.isEmpty()) {
-            if (bestSellersViewHolder != null && mWidgetArea.indexOfChild(bestSellersViewHolder.itemView) < 0) {
-                mWidgetArea.removeView(bestSellersViewHolder.itemView);
+            if (widgetAreaHorizontalRecyclerItemsViewHolder != null && mWidgetArea.indexOfChild(widgetAreaHorizontalRecyclerItemsViewHolder.itemView) < 0) {
+                mWidgetArea.removeView(widgetAreaHorizontalRecyclerItemsViewHolder.itemView);
             }
             return;
         }
@@ -619,14 +622,14 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
         bestSellersWidgetHelper = new BestSellersWidgetHelper(adapter, mActivity, mPresenter.isTablet());
         final int orientation = ScreenUtils.getOrientation(mActivity);
-        if (bestSellersViewHolder == null) {
-            bestSellersViewHolder = bestSellersWidgetHelper.createViewHolder(mWidgetArea, orientation);
+        if (widgetAreaHorizontalRecyclerItemsViewHolder == null) {
+            widgetAreaHorizontalRecyclerItemsViewHolder = bestSellersWidgetHelper.createViewHolder(mWidgetArea, orientation);
         }
-        if (mWidgetArea.indexOfChild(bestSellersViewHolder.itemView) < 0) {
-            mWidgetArea.addView(bestSellersViewHolder.itemView);
+        if (mWidgetArea.indexOfChild(widgetAreaHorizontalRecyclerItemsViewHolder.itemView) < 0) {
+            mWidgetArea.addView(widgetAreaHorizontalRecyclerItemsViewHolder.itemView);
         }
-        bestSellersViewHolder.onViewBound();
-        bestSellersWidgetHelper.onBindViewHolder(bestSellersViewHolder, orientation);
+        widgetAreaHorizontalRecyclerItemsViewHolder.onViewBound();
+        bestSellersWidgetHelper.onBindViewHolder(widgetAreaHorizontalRecyclerItemsViewHolder, orientation);
     }
 
     @Override
@@ -638,6 +641,75 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         } else {
             showBottomPopupView(combinedPricingInfoText);
         }
+    }
+
+    @Override
+    public void showRecentlyViewedItems(List<RecentlyViewedItemResponse> response) {
+        if (mWidgetArea == null) {
+            return;
+        }
+
+        if (response == null || response.isEmpty()) {
+            if (widgetAreaHorizontalRecyclerItemsViewHolder != null && mWidgetArea.indexOfChild(widgetAreaHorizontalRecyclerItemsViewHolder.itemView) < 0) {
+                mWidgetArea.removeView(widgetAreaHorizontalRecyclerItemsViewHolder.itemView);
+            }
+            return;
+        }
+
+        final List<SaleItemProduct> items = new ArrayList<>(response);
+
+        HorizontalScrollingItemsAdapter adapter = new HorizontalScrollingItemsAdapter(items, true, false, true);
+        adapter.setOnItemTappedListener((item, position, size) -> {
+            lastBestSellerItemPosition = position;
+
+            SaleItemDetailsController.Parameters.FromSaleItemProduct parameters = new SaleItemDetailsController.Parameters.FromSaleItemProduct(item);
+
+            RouterTransaction routerTransaction = RouterTransaction
+                    .with(SaleItemDetailsController.newInstance(parameters));
+
+            routerTransaction = routerTransaction
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler());
+
+            getRouter().pushController(routerTransaction);
+        });
+
+        adapter.setOnPriceInfoTappedListener(item -> mPresenter.getPricingInfoText(item.getSeoIdentifier()));
+
+        adapter.setWishlistListener(new HorizontalScrollingItemsAdapter.WishlistListener() {
+            @Override
+            public void addToWishlist(SaleItemProduct item) {
+                final String productId = item.getId();
+                CheckoutMvpPresenter.WishlistDelayedCallback delayedCallback = () -> {
+                    logWishlistEvent(productId, true);
+                };
+                mPresenter.addProductToWishlist(item.getId(), item.getSeoIdentifier(), "", delayedCallback);
+            }
+
+            @Override
+            public void removeFromWishlist(SaleItemProduct item) {
+                final String productId = item.getId();
+                CheckoutMvpPresenter.WishlistDelayedCallback delayedCallback = () -> {
+                    logWishlistEvent(productId, false);
+                };
+                mPresenter.removeProductFromWishlist(item.getId(), delayedCallback);
+            }
+
+            @Override
+            public boolean isProductInWishlist(SaleItemProduct item) {
+                return mPresenter.isProductInWishlist(item.getId());
+            }
+        });
+
+        final int orientation = ScreenUtils.getOrientation(mActivity);
+        if (widgetAreaHorizontalRecyclerItemsViewHolder != null) {
+            mWidgetArea.removeView(widgetAreaHorizontalRecyclerItemsViewHolder.itemView);
+        }
+        recentlyViewedWidgetHelper = new RecentlyViewedWidgetHelper(adapter, mActivity, mPresenter.isTablet());
+        widgetAreaHorizontalRecyclerItemsViewHolder = recentlyViewedWidgetHelper.createViewHolder(mWidgetArea, orientation);
+        mWidgetArea.addView(widgetAreaHorizontalRecyclerItemsViewHolder.itemView);
+        widgetAreaHorizontalRecyclerItemsViewHolder.onViewBound();
+        recentlyViewedWidgetHelper.onBindViewHolder(widgetAreaHorizontalRecyclerItemsViewHolder, orientation);
     }
 
     private void logWishlistEvent(String productId, boolean liked) {
@@ -658,5 +730,10 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
 
         DataCollector.logEvent(Events.WishlistEvent, parameters);
+    }
+
+    @Override
+    public Router getDetailRouter() {
+        return mCheckoutDetailRouter;
     }
 }
