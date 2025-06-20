@@ -263,9 +263,7 @@ flag_error 1
 fi
 
 #Copy APK to output folder
-cp "$PROJECT_DIR"app/build/outputs/apk/"$flavorName"/release/app-"$flavorName"-release.apk "$OUTPUT_DIR"
-flag_error $?
-print_blue "\n\n\n Finished Copying APK to output directory\n"
+copy_to_output_folder
 
 if [ $error -eq 0 ]; then
 print_yellow "\n\nFINISHED AUTOMATION\n"
