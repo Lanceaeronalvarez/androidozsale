@@ -73,7 +73,6 @@ import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
@@ -83,8 +82,6 @@ import au.com.dealsdirect.service.braintree.FetchBraintreeClientTokenHandler;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
 import au.com.dealsdirect.service.event.GenieEventServiceInterface;
-import au.com.dealsdirect.service.ourpay.Ourpay;
-import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BaseController.CommonControllerChangeListener;
@@ -98,7 +95,6 @@ import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
-import au.com.dealsdirect.ui.controller.checkout.ourpay.BottomSheetOurpayOffloadDialog;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
@@ -610,13 +606,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void showCreatePaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue) {
 
         if (responseValue.isPaid()) {
-
-            if (paymentType.equals(PaymentInfo.TYPE_MYPAY)) {
-                setPaymentSuccessOurpay(responseValue);
-
-            } else if (PaymentInfo.getOurpay() != null) {
-                PaymentInfo.getOurpay().setCanUse(false);
-            }
 
             HashMap<String, Object> parameters = new HashMap<>();
             parameters.put(EventParameters.PAYMENT_METHOD_TYPE, paymentType);
@@ -1230,45 +1219,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     }
 
-    private void setPaymentSuccessOurpay(CreatePaymentTransaction.ResponseValue responseValue) {
-        Ourpay paymentSuccessOurpay = new Ourpay();
-
-        try {
-            List<GetCurrentOrderOurpay.PlannedTransaction> transactions = responseValue.getD().getValue().getPlannedTransactions();
-
-            paymentSuccessOurpay.setCanUse(true);
-            paymentSuccessOurpay.setPlannedTransactions(transactions);
-
-            double remainingAmount = 0;
-            for (int i = 0; i < transactions.size(); i++) {
-                if (transactions.get(i).getState() == 0) {
-                    remainingAmount = remainingAmount + transactions.get(i).getAmount();
-                }
-            }
-
-            paymentSuccessOurpay.setInitialAmount(remainingAmount);
-            PaymentInfo.setOurpay(paymentSuccessOurpay);
-        } catch (Exception e) {
-
-            paymentSuccessOurpay.setCanUse(false);
-            paymentSuccessOurpay.setPlannedTransactions(null);
-            paymentSuccessOurpay.setState(paymentSuccessOurpay.getState() | OurpayState.ERROR);
-        }
-
-    }
-
-    public String getMyTemplateTexts(String detailKey) {
-        return mPresenter.getStoredTemplateTexts(detailKey);
-    }
-
-    public String getShippingTemplateText() {
-        return mPresenter.getStoredShippingTemplateText();
-    }
-
-    public String getShippingTitle() {
-        return mPresenter.getShippingTitle();
-    }
-
     public CategoriesMvpView getCategoriesController() {
         if (mCategoriesView == null && getMainController() != null && getMainController().getCategoriesRouter() != null) {
             for (RouterTransaction routerTransaction : getMainController().getCategoriesRouter().getBackstack()) {
@@ -1279,10 +1229,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             }
         }
         return mCategoriesView;
-    }
-
-    public boolean getIsMyPayEnabled() {
-        return mPresenter.getIsMyPayEnabled();
     }
 
     @Override
@@ -1632,19 +1578,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         bottomSheetFragment.setTitle(title);
         bottomSheetFragment.setDescription(description);
-
-        bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
-    }
-
-    public void showOffloadOurpayDialog(View.OnClickListener onCloseButtonClickListener,
-                                        View.OnClickListener onKlarnaButtonClickListener,
-                                        View.OnClickListener onOtherPaymentsButtonClickListener) {
-        BottomSheetOurpayOffloadDialog bottomSheetFragment = new BottomSheetOurpayOffloadDialog();
-
-        bottomSheetFragment.setOnCloseButtonClickListener(onCloseButtonClickListener);
-        bottomSheetFragment.setOnKlarnaButtonClickListener(onKlarnaButtonClickListener);
-        bottomSheetFragment.setIsKlarnaVisible(onKlarnaButtonClickListener != null);
-        bottomSheetFragment.setOnOtherPaymentsButtonClickListener(onOtherPaymentsButtonClickListener);
 
         bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
     }

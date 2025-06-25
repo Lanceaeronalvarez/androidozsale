@@ -223,7 +223,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         public void onClickFreeDelivery(String deliveryThreshold, String deliveryType) {
             if (deliveryType.equalsIgnoreCase(AppConstants.THRESHOLD_RESTRICT) || deliveryType.equalsIgnoreCase(AppConstants.ORDER_PRICE_RESTRICT)) {
 
-                mActivity.showFreeShippingDialog(deliveryThreshold, mActivity.getShippingTemplateText(), mActivity.getShippingTitle());
+                mActivity.showFreeShippingDialog(deliveryThreshold, mPresenter.getShippingTemplateText(), mPresenter.getShippingTitleText());
             }
         }
 

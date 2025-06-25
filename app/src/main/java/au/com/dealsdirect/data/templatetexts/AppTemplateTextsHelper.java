@@ -30,68 +30,8 @@ public class AppTemplateTextsHelper implements TemplateTextsHelper {
         }
 
         @Override
-        public String getCheckoutMyPayPayExceedLimit() {
-            return source.getCheckoutMyPayPayExceedLimit();
-        }
-
-        @Override
-        public String getCheckoutMyPayPayInvalidPaymentMethod() {
-            return source.getCheckoutMyPayPayInvalidPaymentMethod();
-        }
-
-        @Override
-        public String getCheckoutMyPayPayOutOfRangeMobileApp() {
-            return source.getCheckoutMyPayPayOutOfRangeMobileApp();
-        }
-
-        @Override
-        public String getCheckoutMyPayPayOutUpToMobileApp() {
-            return source.getCheckoutMyPayPayOutUpToMobileApp();
-        }
-
-        @Override
-        public String getCheckoutMyPayPayUntrusted() {
-            return source.getCheckoutMyPayPayUntrusted();
-        }
-
-        @Override
-        public String getMyPayDetailsMobileApp() {
-            return source.getMyPayDetailsMobileApp();
-        }
-
-        @Override
-        public String getOurPayThankYouTextMobileApp() {
-            return source.getOurPayThankYouTextMobileApp();
-        }
-
-        @Override
-        public String getOurPayTC_text() {
-            return source.getOurPayTC_text();
-        }
-
-        @Override
-        public String getOurPayTCValidationFailed() {
-            return source.getOurPayTCValidationFailed();
-        }
-
-        @Override
         public String getPaymentSchedule() {
             return source.getPaymentSchedule();
-        }
-
-        @Override
-        public String getDeliveryOptionOPSFree() {
-            return source.getDeliveryOptionOPSFree();
-        }
-
-        @Override
-        public String getDeliveryOptionOPSTitle() {
-            return source.getDeliveryOptionOPSTitle();
-        }
-
-        @Override
-        public String getDeliveryOptionOPSDescription() {
-            return source.getDeliveryOptionOPSDescription();
         }
 
         @Override
@@ -107,31 +47,6 @@ public class AppTemplateTextsHelper implements TemplateTextsHelper {
         @Override
         public String getDeliveryOptionStandardTitle() {
             return source.getDeliveryOptionStandardTitle();
-        }
-
-        @Override
-        public String getDeliveryOptionOPSDescriptionRemaining() {
-            return source.getDeliveryOptionOPSDescriptionRemaining();
-        }
-
-        @Override
-        public String getDeliveryOptionOPSInfoBeforePurchase() {
-            return source.getDeliveryOptionOPSInfoBeforePurchase();
-        }
-
-        @Override
-        public String getDeliveryOptionOPSInfoBeforeFreeDelivery() {
-            return source.getDeliveryOptionOPSInfoBeforeFreeDelivery();
-        }
-
-        @Override
-        public String getDeliveryOptionOPSTncHeader() {
-            return source.getDeliveryOptionOPSTncHeader();
-        }
-
-        @Override
-        public String getDeliveryOptionOPSTncBody() {
-            return source.getDeliveryOptionOPSTncBody();
         }
 
         @Override
@@ -242,11 +157,6 @@ public class AppTemplateTextsHelper implements TemplateTextsHelper {
         @Override
         public String getKlarnaDescription() {
             return source.getKlarnaDescription();
-        }
-
-        @Override
-        public String getOurpayUnavailableText() {
-            return source.getOurpayUnavailableMessage();
         }
     }
 

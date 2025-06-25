@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Log;
 
 import com.mysale.genie.utility.Prefs;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
@@ -70,19 +69,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String CURRENT_PAYMENT_TOKEN = "PUBLIC_PAYMENT_TOKEN";
     private static final String CURRENT_PAYMENT_TYPE = "PUBLIC_PAYMENT_TYPE";
 
-    /* mypay */
-    private static final String PAYMENT_MYPAY_TEMPLATE_TEXTS_KEY = "settings_mypay_template_texts";
-    private static final String MYPAY_EXCEED_LIMIT = "_checkoutMyPayPayExceedLimit";
-    private static final String MYPAY_INVALID_PAYMENT_METHOD = "_checkoutMyPayPayInvalidPaymentMethod";
-    private static final String MYPAY_OUT_OF_RANGE = "_checkoutMyPayPayOutOfRangeMobileApp";
-    private static final String MYPAY_OUT_UP_TO_MOBILE_UP = "_checkoutMyPayPayOutUpToMobileApp";
-    private static final String MYPAY_UNTRUSTED = "_checkoutMyPayPayUntrusted";
-    private static final String MYPAY_DETAILS = "myPayDetailsMobileApp";
-    private static final String MYPAY_THANKYOU_TEXT = "_OurPayThankYouTextMobileApp";
-    private static final String MYPAY_TC = "_OurPayTC_text";
-    private static final String MYPAY_TC_VALIDATION_FAILED = "_OurPayTCValidationFailed";
-    private static final String MYPAY_PAYMENT_SCHEDULE = "_PaymentSchedule";
-
     /*VISA CHECKOUT*/
 
     private static final String VCO_ENABLED = "VCO_ENABLED";
@@ -90,20 +76,10 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String VCO_APIURL = "VCO_APIURL";
     private static final String VCO_PROVIDERTYPE = "VCO_PROVIDERTYPE";
 
-    //    DELIVERY OPTIONS/OURPAY SELECT
-    public static final String KEY_DELIVERYOPTION_OPS_FREE = "_Free";
-    private static final String KEY_DELIVERYOPTION_OPS_TITLE = "_DeliveryOption_OURPAYSELECT_Title";
-    private static final String KEY_DELIVERYOPTION_OPS_DESCRIPTION = "_DeliveryOption_OURPAYSELECT_Description";
+    //    DELIVERY OPTIONS
     private static final String KEY_DELIVERYOPTION_EXPRESS_TITLE = "_DeliveryOption_EXPRESS_Title";
     private static final String KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION = "_DeliveryOption_EXPRESS_Description";
     private static final String KEY_DELIVERYOPTION_STANDARD_TITLE = "_DeliveryOption_STANDARD_Title";
-    private static final String KEY_OURPAY_OPS_DESCRIPTION_REMAINING = "_Ops_description_remaining";
-    private static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE = "_Ops_info_remaining_before_purchase";
-    private static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY = "_Ops_info_remaining_before_purchase_free_delivery";
-    private static final String KEY_OURPAY_OPS_TNC_HEADER = "_OurPaySelectTermsAndConditionsHeader";
-    private static final String KEY_OURPAY_OPS_TNC_BODY = "_OurPaySelectTermsAndConditionsBody";
-
-    public static final String KEY_OURPAY_UNAVAILABLE_MESSAGE = "_OurPayUnavailableMessage";
 
     private static final String SEARCH_MAX_PRICE = "app_search_max_price";
     private static final String ACCESS_ANONYMOUS_ENABLED = "app_anonymous_enabled";
@@ -156,10 +132,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String HAS_VIEWED_PRODUCT = "HAS_VIEWED_PRODUCT";
     private static final String HAS_ADDED_TO_CART = "HAS_CLICKED_ADD_TO_CART";
     private static final String HAS_VIEWED_CART = "HAS_CLICKED_VIEW_CART";
-
-    //Ourpay
-    private static final String IS_OURPAY_ENABLED = "IS_OURPAY_ENABLED";
-    private static final String IS_OURPAY_DASHBOARD_ENABLED = "IS_OURPAY_DASHBOARD_ENABLED";
 
     //Aferpay
     private static final String IS_AFTERPAY_ENABLED = "IS_AFTERPAY_ENABLED";
@@ -427,16 +399,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
-    public void setIsOurpayEnabled(boolean val) {
-        Prefs.putBoolean(IS_OURPAY_ENABLED, val);
-    }
-
-    @Override
-    public boolean isOurpayEnabled() {
-        return Prefs.getBoolean(IS_OURPAY_ENABLED, false);
-    }
-
-    @Override
     public void setIsAfterpayEnabled(boolean val) {
         Prefs.putBoolean(PAYMENT_AFTERPAY_ENABLED, val);
     }
@@ -582,16 +544,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
-    public void setIsMyPayEnabled(boolean isMyPayEnabled) {
-        Prefs.putBoolean(PAYMENT_MYPAY_ENABLED, isMyPayEnabled);
-    }
-
-    @Override
-    public boolean getIsMyPayEnabled() {
-        return Prefs.getBoolean(PAYMENT_MYPAY_ENABLED, true);
-    }
-
-    @Override
     public void setIsVisaCheckoutEnabled(boolean isVisaCheckoutEnabled) {
         Prefs.putBoolean(VCO_ENABLED, isVisaCheckoutEnabled);
     }
@@ -682,46 +634,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
-    public void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
-        Log.d("Template", "= " + value.getOurPayTCValidationFailed() + " , " + value.getCheckoutMyPayPayInvalidPaymentMethod() + " , " + value.getMyPayDetailsMobileApp());
-        Prefs.putString(MYPAY_EXCEED_LIMIT, value.getCheckoutMyPayPayExceedLimit());
-        Prefs.putString(MYPAY_INVALID_PAYMENT_METHOD, value.getCheckoutMyPayPayInvalidPaymentMethod());
-        Prefs.putString(MYPAY_OUT_OF_RANGE, value.getCheckoutMyPayPayOutOfRangeMobileApp());
-        Prefs.putString(MYPAY_OUT_UP_TO_MOBILE_UP, value.getCheckoutMyPayPayOutUpToMobileApp());
-        Prefs.putString(MYPAY_UNTRUSTED, value.getCheckoutMyPayPayUntrusted());
-        Prefs.putString(MYPAY_DETAILS, value.getMyPayDetailsMobileApp());
-        Prefs.putString(MYPAY_THANKYOU_TEXT, value.getOurPayThankYouTextMobileApp());
-        Prefs.putString(MYPAY_TC, value.getOurPayTC_text());
-        Prefs.putString(MYPAY_TC_VALIDATION_FAILED, value.getOurPayTCValidationFailed());
-        Prefs.putString(MYPAY_PAYMENT_SCHEDULE, value.getPaymentSchedule());
-
-        Prefs.putString(KEY_OURPAY_UNAVAILABLE_MESSAGE, value.getOurpayUnavailableMessage());
-    }
-
-    @Override
     public void setDeliveryOptionsTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
-        Prefs.putString(KEY_DELIVERYOPTION_OPS_FREE, value.getDeliveryOptionOPSFree());
-        Prefs.putString(KEY_DELIVERYOPTION_OPS_TITLE, value.getDeliveryOptionOPSTitle());
-        Prefs.putString(KEY_DELIVERYOPTION_OPS_DESCRIPTION, value.getDeliveryOptionOPSDescription());
-
         Prefs.putString(KEY_DELIVERYOPTION_EXPRESS_TITLE, value.getDeliveryOptionExpressTitle());
         Prefs.putString(KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION, value.getDeliveryOptionExpressDescription());
         Prefs.putString(KEY_DELIVERYOPTION_STANDARD_TITLE, value.getDeliveryOptionStandardTitle());
-
-        Prefs.putString(KEY_OURPAY_OPS_DESCRIPTION_REMAINING, value.getDeliveryOptionOPSDescriptionRemaining());
-        Prefs.putString(KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE, value.getDeliveryOptionOPSInfoBeforePurchase());
-        Prefs.putString(KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY, value.getDeliveryOptionOPSInfoBeforeFreeDelivery());
-
-        Prefs.putString(KEY_OURPAY_OPS_TNC_HEADER, value.getDeliveryOptionOPSTncHeader());
-        Prefs.putString(KEY_OURPAY_OPS_TNC_BODY, value.getDeliveryOptionOPSTncBody());
     }
 
     @Override
-    public String getMyPayTemplateTexts(String detailKey) {
-        Log.d("Template", Prefs.getString(detailKey, ""));
-
+    public String getStoredTemplateTexts(String detailKey) {
         return Prefs.getString(detailKey, "");
-
     }
 
     @Override
@@ -956,16 +877,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public HashSet<String> getCookies() {
         return (HashSet<String>) Prefs.getStringSet(COOKIES, new HashSet<>());
-    }
-
-    @Override
-    public void setIsOurpayDashboardEnabled(boolean enabled) {
-        Prefs.putBoolean(IS_OURPAY_DASHBOARD_ENABLED, enabled);
-    }
-
-    @Override
-    public boolean getIsOurpayDashboardEnabled() {
-        return Prefs.getBoolean(IS_OURPAY_DASHBOARD_ENABLED, false);
     }
 
     @Override
@@ -1272,6 +1183,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     public void setHoursLeftToDisplayTimer(int value) {
         Prefs.putInt(HOURS_LEFT_TO_DISPLAY_TIMER, value);
     }
+
     @Override
     public int getHoursLeftToDisplayTimer() {
         return Prefs.getInt(HOURS_LEFT_TO_DISPLAY_TIMER, 48);

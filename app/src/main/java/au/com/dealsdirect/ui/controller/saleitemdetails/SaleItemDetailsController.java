@@ -116,8 +116,6 @@ import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventRecommendedField;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
-import au.com.dealsdirect.service.ourpay.Ourpay;
-import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
@@ -399,7 +397,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mSaleOldPrice;
     private String mBrandName;
     private String mSupplierId;
-    private Ourpay mOurpay;
     private List<SaleItemDetails> mSkuVariants = new ArrayList<>();
     private String mEndDate;
     private boolean mIsFreeDelivery;
@@ -475,8 +472,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ViewGroup mProductAboutContainer;
     @BindView(R.id.product_details_return_policy_container)
     ViewGroup mReturnPolicyContainer;
-    @BindView(R.id.partial_item_details_ourpay_panel_holder)
-    ViewGroup mOurpayHolder;
     @BindView(R.id.partial_item_details_afterpay_panel_holder)
     ViewGroup mAfterpayHolder;
     @BindView(R.id.controller_sale_item_detail_scrollview)
@@ -930,9 +925,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
         mProductDetailScrollView.scrollTo(0, 0);
         stretchImageView();
-        if (mOurpay != null) {
-            showMyPayDetails(null, mOurpay);
-        }
         showYouMayAlsoLike();
     }
 
@@ -1074,7 +1066,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             add(mOtherImagesRv);
             add(mProductPriceCategory);
             add(mAddToCartButton);
-            add(mOurpayHolder);
             add(mAfterpayHolder);
             add(mProductDetailBottomCard);
             add(mAddToCartOverlay);
@@ -1274,9 +1265,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (getDataManager().isKlarnaEnabled()) {
             mData.add(R.drawable.klarna_logo_bw);
         }
-        if (getDataManager().isOurpayEnabled()) {
-            mData.add(R.drawable.ourpay_method_logo);
-        }
         if (isGenoaPay) {
             mData.add(R.drawable.genoa_logo_bw);
         }
@@ -1387,9 +1375,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (includePartial) {
             updatePartialPriceDetails(saleDetail);
         }
-
-        //update Ourpay
-        mPresenter.loadOurpayData(saleDetail);
 
         //update Afterpay
         if (saleDetail.getPrice() != null) {
@@ -2076,17 +2061,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mActivity.getString(R.string.add_to_cart_failed));
     }
 
-    @Override
-    public void showMyPayDetails(SaleItemDetails value, Ourpay ourpay) {
-        if (ourpay != null) {
-            mOurpay = ourpay;
-            OurpayPanel panel = new OurpayPanel(mActivity);
-            mOurpayHolder.setVisibility(View.VISIBLE);
-            mOurpayHolder.removeAllViews();
-            mOurpayHolder.addView(panel.generatePanel(ourpay));
-        }
-    }
-
     @SuppressLint("DefaultLocale")
     @Override
     public void showAfterpayDetails(int installmentsCount, double installmentAmount, String currency) {
@@ -2201,12 +2175,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                         deliveryType.equalsIgnoreCase(AppConstants.ORDER_PRICE_RESTRICT))) {
 
             mFreeDeliveryImageView.setOnClickListener(v -> {
-                mActivity.showFreeShippingDialog(deliveryThreshold, mActivity.getShippingTemplateText(),
-                        mActivity.getShippingTitle());
+                mActivity.showFreeShippingDialog(deliveryThreshold, mPresenter.getShippingTemplateText(),
+                        mPresenter.getShippingTitleText());
             });
             getPriceBlockHelper().setFreeDeliveryOnClickListener(v -> {
-                mActivity.showFreeShippingDialog(deliveryThreshold, mActivity.getShippingTemplateText(),
-                        mActivity.getShippingTitle());
+                mActivity.showFreeShippingDialog(deliveryThreshold, mPresenter.getShippingTemplateText(),
+                        mPresenter.getShippingTitleText());
             });
 
         }

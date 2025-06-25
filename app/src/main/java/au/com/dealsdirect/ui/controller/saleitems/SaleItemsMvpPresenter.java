@@ -50,4 +50,8 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
     void loadLeaderboardBanner();
 
     void getPricingInfoText(String seoIdentifier, String saleId);
+
+    String getShippingTemplateText();
+
+    String getShippingTitleText();
 }

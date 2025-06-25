@@ -89,10 +89,10 @@
 
     <color name="search_gray_opaque">#7e404040</color>
 
-    <color name="ourpay_gray">#FF898989</color>
-    <color name="ourpay_orange">#F37325</color>
-    <color name="ourpay_orange_dark">#D98221</color>
-    <color name="ourpay_border_gray">#FFC7C7C7</color>
+    <color name="gray">#FF898989</color>
+    <color name="orange">#F37325</color>
+    <color name="orange_dark">#D98221</color>
+    <color name="border_gray">#FFC7C7C7</color>
 
     <color name="invite_fb">@color/fb_default</color>
     <color name="invite_fb_pressed">@color/fb_pressed</color>
@@ -121,7 +121,7 @@
     <color name="bg_facets_border_default">#f1f1f1</color>
 
     <color name="bg_order_node">#65D87F</color>
-    <color name="refunded_state_color">@color/ourpay_orange</color>
+    <color name="refunded_state_color">@color/orange</color>
 
     <color name="item_select_remove">@color/colorAccent</color>
     <color name="verify_resend_color">@color/colorAccent</color>

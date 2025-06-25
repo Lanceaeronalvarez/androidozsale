@@ -358,4 +358,14 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
             getMvpView().showPricingInfoText(rrpText, totalPercentOff, originalPrice, combinedPricingInfoText);
         });
     }
+
+    @Override
+    public String getShippingTemplateText() {
+        return getDataManager().getShippingHover();
+    }
+
+    @Override
+    public String getShippingTitleText() {
+        return getDataManager().getShippingTitle();
+    }
 }

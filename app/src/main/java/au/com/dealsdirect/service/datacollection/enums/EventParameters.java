@@ -92,8 +92,6 @@ public class EventParameters {
         public final static String PAY = "Pay";
         public final static String ADD_ADDRESS = "AddAddress";
         public final static String ADD_PAYMENT_METHOD = "AddPaymentMethod";
-        public final static String OURPAY_OFFER = "OurpayOffer"; // This is Legacy only
-        public final static String OURPAY_PHONE_VERIFIATION = "OurpayPhoneVerification";
         public final static String PAYPAL = "Paypal";
         public final static String VISACHECKOUT = "VisaCheckout";
         public final static String MASTERPASS = "Masterpass";
@@ -104,8 +102,6 @@ public class EventParameters {
         VCO("VisaCheckout"),
         PAYPAL("PayPal"),
         MASTERPASS("Masterpass"),
-        OURPAY("Ourpay"),
-        OURPAY3DS("Ourpay3DS"),
         THREEDS("3DS"),
         REGULAR("Regular");
 

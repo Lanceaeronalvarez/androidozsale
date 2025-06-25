@@ -15,7 +15,6 @@ import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Shipment;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
@@ -25,11 +24,6 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.priceinfo.PricingInfoLoaderHelper;
 import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
-import au.com.dealsdirect.service.ourpay.Ourpay;
-import au.com.dealsdirect.service.ourpay.OurpayPhoneVerification;
-import au.com.dealsdirect.service.ourpay.OurpayState;
-import au.com.dealsdirect.service.ourpay.OurpayStateManager;
-import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.utils.LoadingDialogType;
@@ -43,7 +37,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     private boolean mFetchCartFinished = false;
     private boolean mFetchUserPaymentMethodsFinished = false;
-    private Ourpay ourpay;
 
     private PricingInfoLoaderHelper pricingInfoLoaderHelper = new PricingInfoLoaderHelper(new PricingInfoLoaderHelper.SaleItemProductLoader() {
         @Override
@@ -236,79 +229,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     @Override
     public boolean checkIsLoggedIn() {
         return getDataManager().isAuthorized();
-    }
-
-    @Override
-    public void generateOurpay(CheckoutDetailsMapper value) {
-        ourpay = new Ourpay();
-        ourpay.setState(OurpayState.ONCART);
-
-        assert ourpay != null;
-
-        try {
-
-            if (value != null)
-                ourpay.setTotalAmount(value.getSummary().getTotal());
-
-            GetCurrentOrderOurpay getCurrentOrderOurpay = value.getOurpay();
-
-            /* default */
-            ourpay.setDescription(getCurrentOrderOurpay.getSummary().getDescription());
-            ourpay.setCanUse(getCurrentOrderOurpay.getSettings().getIsOurPayEnabled());
-            ourpay.setMode(getCurrentOrderOurpay.getSettings().getOurpayMode());
-            ourpay.setErrorCode(getCurrentOrderOurpay.getReasonCode());
-            ourpay.setTermsAndConditionsCheckboxState(getCurrentOrderOurpay.getSettings().getTermsAndConditions());
-            ourpay.setMinAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMinAmountThreshold().doubleValue());
-            ourpay.setMaxAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMaxAmountThreshold().doubleValue());
-            ourpay.setFirstTransactionAmount(getCurrentOrderOurpay.getSummary().getFirstTransactionAmount());
-            ourpay.setFirstTransactionText(getCurrentOrderOurpay.getSummary().getFirstTransactionText());
-            ourpay.setPlannedTransactionAmount(getCurrentOrderOurpay.getSummary().getPlannedTransactionsAmount());
-            ourpay.setPlannedTransactionText(getCurrentOrderOurpay.getSummary().getPlannedTransactionsText());
-
-            if (getCurrentOrderOurpay.getSummary().getDescription() != null) {
-                ourpay.setDetails(getCurrentOrderOurpay.getSummary().getDescription());
-            }
-
-            /* specifics */
-            try {
-                ourpay.setInitialAmount(getCurrentOrderOurpay.getSummary().getFirstTransactionAmount());
-            } catch (Exception e) {
-                ourpay.setInitialAmount(0.0);
-            }
-
-            try {
-                ourpay.setBillingPeriod(OurpayUtils.convertDaysToWeeks(getCurrentOrderOurpay.getPayment().getBillingPeriod()));
-            } catch (Exception e) {
-                ourpay.setBillingPeriod(0);
-            }
-
-            try {
-                ourpay.setTransactionCount(getCurrentOrderOurpay.getPayment().getTransactionCount());
-            } catch (Exception e) {
-                ourpay.setTransactionCount(0);
-            }
-
-            try {
-                ourpay.setPlannedTransactions(getCurrentOrderOurpay.getPayment().getBillingAgreement().getPlannedTransactions());
-            } catch (Exception e) {
-                ourpay.setPlannedTransactions(null);
-                ourpay.setState(ourpay.getState() | OurpayState.ERROR);
-            }
-
-            try {
-                OurpayPhoneVerification ourpayPhoneVerification = new OurpayPhoneVerification();
-                ourpayPhoneVerification.setRequired(value.getPhoneVerification().isRequired);
-                ourpay.setOurpayPhoneVerification(value.getPhoneVerification());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            OurpayStateManager.setDetails(ourpay, getDataManager().getIsMyPayEnabled());
-
-            getMvpView().showMyPayDetails(value, ourpay);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -673,6 +593,11 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
             getMvpView().showPricingInfoText(rrpText, totalPercentOff, originalPrice, combinedPricingInfoText);
         });
+    }
+
+    @Override
+    public String getStoredTemplateTexts(String key) {
+        return getDataManager().getStoredTemplateTexts(key);
     }
 
     @Override

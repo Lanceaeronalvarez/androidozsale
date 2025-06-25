@@ -23,13 +23,11 @@ import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.PhoneVerification;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Shipment;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value.GetOurPaySelect;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -203,18 +201,6 @@ public class CheckoutDetailsMapper {
         return availablePaymentOptions;
     }
 
-    public GetCurrentOrderOurpay getOurpay() {
-        return sourceValue.getOurpay();
-    }
-
-    public GetOurPaySelect getOurPaySelect() {
-        return sourceValue.getOurPaySelect();
-    }
-
-    public int getOurPaySelectTermsAndConditions() {
-        return sourceValue.getOurPaySelectTermsAndConditions();
-    }
-
     public Value.GetCurrentOrderAfterpay getAfterpay() {
         return sourceValue.getAfterpay();
     }
@@ -277,7 +263,6 @@ public class CheckoutDetailsMapper {
         public static final PaymentOption AFTERPAY = new PaymentOption("Afterpay");
         public static final PaymentOption BRAINTREE = new PaymentOption("BrainTree");
         public static final PaymentOption BRAINTREEPAYPAL = new PaymentOption("BrainTreePayPal");
-        public static final PaymentOption OURPAY = new PaymentOption("OurPay");
         public static final PaymentOption MASTERPASSPAYMENT = new PaymentOption("MasterPassPayment");
         public static final PaymentOption VISACHECKOUT = new PaymentOption("VisaCheckout");
         public static final PaymentOption IPAY88PAYMENTS = new PaymentOption("IPay88Payments");
@@ -293,7 +278,6 @@ public class CheckoutDetailsMapper {
                     put("Afterpay".toLowerCase(), AFTERPAY);
                     put("BrainTree".toLowerCase(), BRAINTREE);
                     put("BrainTreePayPal".toLowerCase(), BRAINTREEPAYPAL);
-                    put("OurPay".toLowerCase(), OURPAY);
                     put("MasterPassPayment".toLowerCase(), MASTERPASSPAYMENT);
                     put("VisaCheckoutBrainTree".toLowerCase(), VISACHECKOUT);
                     put("VisaCheckoutCyberSource".toLowerCase(), VISACHECKOUT);

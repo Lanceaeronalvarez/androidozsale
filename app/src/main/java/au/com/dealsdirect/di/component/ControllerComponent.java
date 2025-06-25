@@ -16,7 +16,6 @@ import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsController;
-import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
@@ -41,7 +40,6 @@ import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.notification.NotificationController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
-import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
@@ -144,8 +142,6 @@ public interface ControllerComponent {
 
     void inject(MasterpassController controller);
 
-    void inject(OurpaySMSVerificationController controller);
-
     void inject(BaseController controller);
 
     void inject(SplashScreenController controller);
@@ -159,8 +155,6 @@ public interface ControllerComponent {
     void inject(NotificationController controller);
 
     void inject(InformationMenuController controller);
-
-    void inject(MyAccountsOurpayController controller);
 
     void inject(WebViewController controller);
 

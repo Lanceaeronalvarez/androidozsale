@@ -1,12 +1,13 @@
 package au.com.dealsdirect.ui.controller.login;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
@@ -15,22 +16,16 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
-import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.gdpr.StrictConsentController;
 import au.com.dealsdirect.ui.controller.returns.returninfo.CurrentReturnsInfoController;
 import au.com.dealsdirect.ui.controller.returns.returninfo.NewReturnInfoController;
 import au.com.dealsdirect.ui.controller.returns.returnsuccess.NewReturnSuccessController;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-/**
- * Created by smartwave on 11/06/2018.
- */
 
 public class PopUpHostController extends BaseController implements PopUpHostMvpView {
 
@@ -75,9 +70,6 @@ public class PopUpHostController extends BaseController implements PopUpHostMvpV
                 break;
             case PAYMENT_SUCCESS:
                 GateKeeper.setRoot(mPopUpHostChildRouter, GateKeeper.Destination.PAYMENT_SUCCESS, RouterTransaction.with(new PaymentSuccessController(getArgs())));
-                break;
-            case SMS_VERIFICATION:
-                GateKeeper.setRoot(mPopUpHostChildRouter, GateKeeper.Destination.SMS_VERIFICATION, RouterTransaction.with(new OurpaySMSVerificationController(getArgs())));
                 break;
             case STRICT_CONSENT_UI:
                 GateKeeper.setRoot(mPopUpHostChildRouter, GateKeeper.Destination.STRICT_CONSENT_UI, RouterTransaction.with(StrictConsentController.newInstance()));

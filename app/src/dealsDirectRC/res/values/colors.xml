@@ -137,13 +137,12 @@
     <color name="toolbar_border">@color/border_light</color>
 
     <!-- Ourpay -->
-    <color name="ourpay_gray">#FF898989</color>
-    <color name="ourpay_orange">#FFE47C0B</color>
-    <color name="ourpay_orange_dark">#FFAE5F0A</color>
-    <color name="ourpay_border_gray">#FFC7C7C7</color>
-    <color name="ourpay_navy">#000080</color>
-    <color name="ourpay_red">#FF0000</color>
-    <color name="ourpay_verify_resend">#000080</color>
+    <color name="gray">#FF898989</color>
+    <color name="orange">#FFE47C0B</color>
+    <color name="orange_dark">#FFAE5F0A</color>
+    <color name="border_gray">#FFC7C7C7</color>
+    <color name="navy">#000080</color>
+    <color name="red">#FF0000</color>
 
     <!-- Orders -->
     <color name="bg_order_node">#65D87F</color>
@@ -154,7 +153,7 @@
     <!--Join Now-->
     <color name="join_now_text_color">@color/white</color>
 
-    <color name="refunded_state_color">@color/ourpay_orange</color>
+    <color name="refunded_state_color">@color/orange</color>
 
     <color name="bg_fcm_notif">@color/white</color>
 

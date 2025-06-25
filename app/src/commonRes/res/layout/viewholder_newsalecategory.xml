@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/viewholder_salecategory_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ourpay_thank_you_logo_height"
+        android:layout_height="50dp"
         android:background="@color/white"
         android:paddingStart="@dimen/padding_default"
         android:paddingTop="@dimen/padding_default_half"

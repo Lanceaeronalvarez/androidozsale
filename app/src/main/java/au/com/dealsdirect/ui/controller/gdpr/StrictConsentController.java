@@ -2,9 +2,6 @@ package au.com.dealsdirect.ui.controller.gdpr;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +9,17 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+
+import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-/**
- * Created by Paul on 7/21/17.
- */
 public class StrictConsentController extends BaseController {
 
     public static final String TAG = StrictConsentController.class.getSimpleName();
@@ -37,6 +33,9 @@ public class StrictConsentController extends BaseController {
     private static final String CONSENT_HTML_LOCATION = ASSET_FOLDER + "index.html";
 
     private static final String PRIVACY_POLICY_HTML_LOCATION = ASSET_FOLDER + "personal.html";
+
+    @Inject
+    StrictConsentMvpPresenter<StrictConsentMvpView> mPresenter;
 
     @BindView(R.id.controller_strict_consent_web_view)
     WebView mWebView;
@@ -53,7 +52,9 @@ public class StrictConsentController extends BaseController {
 
     @Override
     public boolean handleBack() {
-        if (mWebView != null && mWebView.getUrl().replace(WEBVIEW_URL_EXTENSION, "")
+        if (mWebView != null &&
+                mWebView.getUrl() != null &&
+                mWebView.getUrl().replace(WEBVIEW_URL_EXTENSION, "")
                 .equals(PRIVACY_POLICY_HTML_LOCATION)) {
             mWebView.loadUrl(CONSENT_HTML_LOCATION);
             return true;
@@ -89,7 +90,7 @@ public class StrictConsentController extends BaseController {
         mWebView.loadUrl(CONSENT_HTML_LOCATION);
         mBackButton.setVisibility(View.INVISIBLE);
 
-        mButton.setText(mActivity.getMyTemplateTexts(AppPreferencesHelper.CONSENT_CONTINUE_TEXT));
+        mButton.setText(mPresenter.getConsentContinueText());
         mButton.setOnClickListener(v -> mActivity.onClickAgreeStrictConsentUI());
     }
 
@@ -105,8 +106,10 @@ public class StrictConsentController extends BaseController {
         public void loadPrivacyPolicy() {
             mWebView.post(() -> {
                 mBackButton.setVisibility(View.VISIBLE);
-                mWebView.loadDataWithBaseURL(null,mActivity.getMyTemplateTexts(AppPreferencesHelper.CONSENT_FULL_TEMPLATE_TEXT)
-                                +"<br><br><br><br><br><br><br>",
+                mWebView.loadDataWithBaseURL(
+                        null,
+                        mPresenter.getConsentFullText()
+                                + "<br><br><br><br><br><br><br>",
                         "text/html", "UTF-8", null);
 
             });

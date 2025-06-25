@@ -9,12 +9,10 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAd
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
-import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.MappedShipment;
 
@@ -23,8 +21,6 @@ public interface CheckoutMvpView extends MvpView {
     String TAG = "CheckoutController";
 
     void loadCart();
-
-    void showMyPayDetails(CheckoutDetailsMapper mappedValues, Ourpay ourpay);
 
     void showCartDetails(List<MappedShipment> items);
 
@@ -73,8 +69,6 @@ public interface CheckoutMvpView extends MvpView {
     boolean isCartLoading();
 
     void setCartIsLoading(boolean val);
-
-    boolean isOurPaySelectDeliveryMethod();
 
     Router getDisplayRouter();
 

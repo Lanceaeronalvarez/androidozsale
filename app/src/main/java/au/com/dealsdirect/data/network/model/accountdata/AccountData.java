@@ -12,9 +12,6 @@ public class AccountData {
     @SerializedName("accountId")
     @Expose
     private String accountId;
-    @SerializedName("ourPay")
-    @Expose
-    private OurPay ourPay;
     @SerializedName("facebook")
     @Expose
     private Facebook facebook;
@@ -28,9 +25,6 @@ public class AccountData {
     @SerializedName("afterpay")
     @Expose
     private Afterpay afterpay;
-    @SerializedName("ourPaySelect")
-    @Expose
-    private OurPaySelect ourPaySelect;
     @SerializedName("payPal")
     @Expose
     private PayPal payPal;
@@ -53,14 +47,6 @@ public class AccountData {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId;
-    }
-
-    public OurPay getOurPay() {
-        return ourPay;
-    }
-
-    public void setOurPay(OurPay ourPay) {
-        this.ourPay = ourPay;
     }
 
     public Facebook getFacebook() {
@@ -93,14 +79,6 @@ public class AccountData {
 
     public void setAfterpay(Afterpay afterpay) {
         this.afterpay = afterpay;
-    }
-
-    public OurPaySelect getOurPaySelect() {
-        return ourPaySelect;
-    }
-
-    public void setOurPaySelect(OurPaySelect ourPaySelect) {
-        this.ourPaySelect = ourPaySelect;
     }
 
     public PayPal getPayPal() {
@@ -155,22 +133,6 @@ public class AccountData {
 
     }
 
-    public static class OurPay {
-
-        @SerializedName("isEnabled")
-        @Expose
-        private Boolean isEnabled;
-
-        public Boolean isEnabled() {
-            return isEnabled;
-        }
-
-        public void setIsEnabled(Boolean isEnabled) {
-            this.isEnabled = isEnabled;
-        }
-
-    }
-
     public static class PromoBanner {
 
         @SerializedName("isEnabled")
@@ -204,20 +166,6 @@ public class AccountData {
     }
 
     public static class Afterpay {
-        @SerializedName("isEnabled")
-        @Expose
-        private Boolean isEnabled;
-
-        public Boolean isEnabled() {
-            return isEnabled;
-        }
-
-        public void setIsEnabled(Boolean enabled) {
-            isEnabled = enabled;
-        }
-    }
-
-    public static class OurPaySelect {
         @SerializedName("isEnabled")
         @Expose
         private Boolean isEnabled;

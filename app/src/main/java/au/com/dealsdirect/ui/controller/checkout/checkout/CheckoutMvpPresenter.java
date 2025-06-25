@@ -6,10 +6,6 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 
-/**
- * dp Created by Admin on 6/6/17.
- */
-
 public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
     void callCartContent(String postcode);
@@ -23,8 +19,6 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     void resetIsCartAlreadyLoaded();
 
     boolean checkIsLoggedIn();
-
-    void generateOurpay(CheckoutDetailsMapper value);
 
     void updateCartValues(CheckoutDetailsMapper mappedValues);
 
@@ -73,6 +67,8 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     }
 
     void getPricingInfoText(String seoIdentifier);
+
+    String getStoredTemplateTexts(String key);
 
     void loadRecentlyViewedItems();
 }

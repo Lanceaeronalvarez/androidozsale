@@ -340,7 +340,7 @@
                     android:layout_gravity="center"
                     android:layout_marginEnd="@dimen/margin_small"
                     android:layout_toRightOf="@id/controller_return_credit_card_refunds_label"
-                    android:background="@drawable/ourpay_info"
+                    android:background="@drawable/icon_info"
                     android:visibility="gone" />
 
                 <TextView

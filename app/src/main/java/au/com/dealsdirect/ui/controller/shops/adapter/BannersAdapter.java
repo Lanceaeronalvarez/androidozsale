@@ -654,26 +654,24 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         mOrientation = orientation;
 
-        if (!context.getResources().getBoolean(R.bool.is_ourpay_app)) {
-            // Dynamic Height Computation
-            ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(mWidth, mHeight, ScreenUtils.getScreenWidth(context), minColumns, maxColumns);
-            mNumberOfColumns = grid.getColumn();
-            mComputedWidth = (int) grid.getItemWidth();
-            if (useOldBannerDimensions) {
-                mComputedHeight = (int) grid.getItemHeight();
-            } else {
-                mComputedHeight = (int) (grid.getItemHeight() + context.getResources().getDimension(R.dimen.banner_sale_info_height));
-            }
-            if (isTablet) {
-                mComputedHeight += context.getResources().getDimension(R.dimen.margin_tiny) * 2;
-            }
-
-            setupSlidingBannersDimensions();
-            if (trendingBrandsWidgetHelper != null) {
-                trendingBrandsWidgetHelper.setupTrendingBrandsDimensions();
-            }
-            setupSponsoredBannersDimensions();
+        // Dynamic Height Computation
+        ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(mWidth, mHeight, ScreenUtils.getScreenWidth(context), minColumns, maxColumns);
+        mNumberOfColumns = grid.getColumn();
+        mComputedWidth = (int) grid.getItemWidth();
+        if (useOldBannerDimensions) {
+            mComputedHeight = (int) grid.getItemHeight();
+        } else {
+            mComputedHeight = (int) (grid.getItemHeight() + context.getResources().getDimension(R.dimen.banner_sale_info_height));
         }
+        if (isTablet) {
+            mComputedHeight += context.getResources().getDimension(R.dimen.margin_tiny) * 2;
+        }
+
+        setupSlidingBannersDimensions();
+        if (trendingBrandsWidgetHelper != null) {
+            trendingBrandsWidgetHelper.setupTrendingBrandsDimensions();
+        }
+        setupSponsoredBannersDimensions();
     }
 
     private int getHorizontalPaddingForHorizontalBanners() {

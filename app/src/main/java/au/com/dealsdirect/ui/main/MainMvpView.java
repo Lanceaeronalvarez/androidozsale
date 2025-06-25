@@ -78,8 +78,6 @@ public interface MainMvpView extends MvpView {
 
     PaymentMethod getPaymentMethodSelected();
 
-    boolean getIsMyPayEnabled();
-
     void startPaypalPayment();
 
     void callApiSettings();

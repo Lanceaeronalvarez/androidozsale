@@ -62,8 +62,6 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
         put(AccountOption.RETURNSPOLICY, () -> getMvpView().showReturnsPolicy());
         put(AccountOption.CONTACTUS, () -> getMvpView().showContactUs());
         put(AccountOption.PAYMENTS, () -> getMvpView().showMyPaymentsController());
-        put(AccountOption.OURPAY, () -> getMvpView().showMyAccountsOurpay());
-        put(AccountOption.SELECT, () -> getMvpView().showMyAccountsSelect());
         put(AccountOption.INVITEFRIEND, () -> getMvpView().showInviteAFriend());
         put(AccountOption.LANGUAGE, () -> getMvpView().showLanguage());
         put(AccountOption.ABOUTUS, () -> getMvpView().showLegalities(BundleKeys.TEMPLATE_KEY_ABOUT_US, AccountOption.ABOUTUS));
@@ -103,11 +101,6 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     @Override
     public boolean shouldShowStrictConsent() {
         return getDataManager().shouldShowStrictConsent();
-    }
-
-    @Override
-    public boolean isOurpayEnabled() {
-        return getDataManager().getIsOurpayDashboardEnabled();
     }
 
     @Override

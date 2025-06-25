@@ -2,15 +2,8 @@ package au.com.dealsdirect.ui.controller.account;
 
 import com.bluelinelabs.conductor.Router;
 
-import java.util.List;
-
 import au.com.dealsdirect.ui.base.MvpView;
-import au.com.dealsdirect.ui.controller.account.model.AccountItem;
 import au.com.dealsdirect.ui.controller.account.model.AccountOption;
-
-/**
- * dp Created by Admin on 6/6/17.
- */
 
 public interface AccountMvpView extends MvpView {
 
@@ -29,10 +22,6 @@ public interface AccountMvpView extends MvpView {
     void showReturnsPolicy();
 
     void showMyPaymentsController();
-
-    void showMyAccountsOurpay();
-
-    void showMyAccountsSelect();
 
     void showLanguage();
 

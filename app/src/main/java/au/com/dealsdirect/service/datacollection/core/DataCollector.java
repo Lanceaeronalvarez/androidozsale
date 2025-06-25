@@ -213,8 +213,6 @@ public class DataCollector {
             VCO("VisaCheckout"),
             PAYPAL("PayPal"),
             MASTERPASS("Masterpass"),
-            OURPAY("Ourpay"),
-            OURPAY3DS("Ourpay3DS"),
             THREEDS("3DS"),
             REGULAR("Regular");
 
@@ -231,7 +229,6 @@ public class DataCollector {
 
         public enum Operation {
             REGULAR(8),
-            OURPAY(10),
             MASTERPASS(11),
             VCO(12),
             PAYPALCREDIT(9),
@@ -258,8 +255,6 @@ public class DataCollector {
             public final static String PAY = "Pay";
             public final static String ADD_ADDRESS = "AddAddress";
             public final static String ADD_PAYMENT_METHOD = "AddPaymentMethod";
-            public final static String OURPAY_OFFER = "OurpayOffer"; // This is Legacy only
-            public final static String OURPAY_PHONE_VERIFIATION = "OurpayPhoneVerification";
             public final static String PAYPAL = "Paypal";
             public final static String VISACHECKOUT = "VisaCheckout";
             public final static String MASTERPASS = "Masterpass";

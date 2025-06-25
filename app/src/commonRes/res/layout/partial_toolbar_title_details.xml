@@ -121,7 +121,7 @@
                     android:ellipsize="middle"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:textColor="@color/ourpay_red"
+                    android:textColor="@color/red"
                     android:textSize="@dimen/text_size_caption2"
                     tools:text="23:12:12" />
             </LinearLayout>
