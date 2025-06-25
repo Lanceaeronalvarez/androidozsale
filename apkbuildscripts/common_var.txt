@@ -27,11 +27,26 @@ print_yellow(){
     printf "\e[1;33m$1\e[0m"
 }
 
-expectedVersionName="8.14.1"
-expectedVersionCode="519"
+copy_to_output_folder(){
+	if [ ! -d $OUTPUT_DIR ]
+	then
+		mkdir $OUTPUT_DIR
+	fi
+	cp -f "$PROJECT_DIR"app/build/outputs/apk/"$flavorName"/release/app-"$flavorName"-release.apk "$OUTPUT_DIR"
+	flag_error $?
+	if [ -f "$OUTPUT_DIR"app-"$flavorName"-release.apk ]
+	then
+		print_blue "\n\n\n Finished copying APK to output directory\n"
+	else
+		print_yellow "\n\n\n APK is not be copied into output directory\n"
+	fi
+}
+
+expectedVersionName="8.15.0"
+expectedVersionCode="529"
 expectedMinSDK="21"
-expectedCompileSDK="34"
-expectedTargetSDK="34"
-expectedBuildToolsVersion="33.0.2"
+expectedCompileSDK="35"
+expectedTargetSDK="35"
+expectedBuildToolsVersion="35.0.0"
 expectedSupportLibrary="28.0.0"
 expectedLegacyVersion="3.31"

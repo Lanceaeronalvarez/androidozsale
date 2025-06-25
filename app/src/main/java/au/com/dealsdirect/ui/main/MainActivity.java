@@ -438,6 +438,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
+    public Router getDetailRouter() {
+        return null;
+    }
+
+    @Override
     public void onBackPressed() {
         if (!isActivityStateValid()) {
             return;
@@ -472,7 +477,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             getMainController().getPopUpHostRouter().handleBack();
         } else {
             Router currentRouter = getCurrentRouter();
-            if (getMainController().getHomeViewPager().getCurrentItem() == MainController.SHOP_INDEX &&
+            Controller topController = null;
+            if (currentRouter.getBackstackSize() > 0) {
+                topController = currentRouter.getBackstack().get(currentRouter.getBackstackSize() - 1).controller();
+            }
+
+            if (topController instanceof MvpView &&
+                    ((MvpView) topController).getDetailRouter() != null &&
+                    ((MvpView) topController).getDetailRouter().getBackstackSize() > 1) {
+                ((MvpView) topController).getDetailRouter().handleBack();
+            } else if (getMainController().getHomeViewPager().getCurrentItem() == MainController.SHOP_INDEX &&
                     currentRouter.getBackstackSize() <= 1) {
                 DialogUtils.showYesNoDialog(
                         this,
