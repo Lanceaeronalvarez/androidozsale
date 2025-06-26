@@ -91,5 +91,9 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
         return getDataManager().getAppSettingsConsentIsChecked(key);
     }
 
+    public boolean isFacebookLoginEnabled(){
+        return getDataManager().getFacebookLoginEnabled();
+    }
+
 
 }

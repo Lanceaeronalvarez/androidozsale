@@ -188,6 +188,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String HOURS_LEFT_TO_DISPLAY_TIMER = "HOURS_LEFT_TO_DISPLAY_TIMER";
 
+    private static final String FACEBOOK_LOGIN_ENABLED = "FACEBOOK_LOGIN_ENABLED";
+
     private Context mContext;
 
     @Inject
@@ -1187,5 +1189,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public int getHoursLeftToDisplayTimer() {
         return Prefs.getInt(HOURS_LEFT_TO_DISPLAY_TIMER, 48);
+    }
+
+    @Override
+    public void setFacebookLoginEnabled(boolean facebookLoginEnabled) {
+        Prefs.putBoolean(FACEBOOK_LOGIN_ENABLED, facebookLoginEnabled);
+    }
+
+    @Override
+    public boolean getFacebookLoginEnabled() {
+        return Prefs.getBoolean(FACEBOOK_LOGIN_ENABLED, true);
     }
 }

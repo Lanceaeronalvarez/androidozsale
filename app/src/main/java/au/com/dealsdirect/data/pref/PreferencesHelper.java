@@ -371,4 +371,8 @@ public interface PreferencesHelper {
     void setHoursLeftToDisplayTimer(int value);
 
     int getHoursLeftToDisplayTimer();
+
+    void setFacebookLoginEnabled(boolean facebookLoginEnabled);
+
+    boolean getFacebookLoginEnabled();
 }
