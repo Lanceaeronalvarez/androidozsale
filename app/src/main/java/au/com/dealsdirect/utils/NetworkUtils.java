@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.androidnetworking.common.ANConstants;
-import com.androidnetworking.interceptors.GzipRequestInterceptor;
 import com.androidnetworking.interceptors.HttpLoggingInterceptor;
 import com.androidnetworking.utils.Utils;
 import com.mysale.genie.utility.Prefs;
@@ -64,7 +63,7 @@ public final class NetworkUtils {
                 .cookieJar(CookieUtils.getInstance());
 
         if (level != null) {
-            builder.addInterceptor(new HttpLoggingInterceptor().setLevel(level));
+            builder.addInterceptor(new HttpLoggingInterceptor(new ApiLogger()).setLevel(level));
         }
 
         return builder.addInterceptor(provideOfflineCacheInterceptor(ctx, CACHE_EXPIRATION, TimeUnit.HOURS))
@@ -75,7 +74,7 @@ public final class NetworkUtils {
 
     public static OkHttpClient provideDebugOkHttpClientResponseCaching(Context ctx, HttpLoggingInterceptor.Level level) {
         try {
-            final TrustManager[] trustAllCerts = new TrustManager[] {
+            final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
                         @Override
                         public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
@@ -104,10 +103,10 @@ public final class NetworkUtils {
                     .cookieJar(CookieUtils.getInstance());
 
             if (level != null) {
-                builder.addInterceptor(new HttpLoggingInterceptor().setLevel(level));
+                builder.addInterceptor(new HttpLoggingInterceptor(new ApiLogger()).setLevel(level));
             }
 
-            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager)trustAllCerts[0]);
+            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession session) {
