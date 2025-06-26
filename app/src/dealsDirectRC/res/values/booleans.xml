@@ -7,7 +7,6 @@
     <bool name="is_quantity_spinner_loading">false</bool>
 
     <!--APP SPECIFIC SETTINGS-->
-    <bool name="is_ourpay_app">false</bool>
     <bool name="is_ozsale_app">true</bool>
     <bool name="show_split_registration_toggles">false</bool>
     <bool name="show_details_email_option">false</bool>

@@ -6,7 +6,6 @@ import static au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetails
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -43,21 +42,15 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.service.braintree.FetchBraintreeClientTokenHandler;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
-import au.com.dealsdirect.service.ourpay.Ourpay;
-import au.com.dealsdirect.service.ourpay.OurpayPanel;
-import au.com.dealsdirect.service.ourpay.OurpayStateManager;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.ExpiryDateEditText;
@@ -67,10 +60,6 @@ import au.com.dealsdirect.utils.LoadingDialogType;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-/*
- * Created by smartwave on 29/06/2017.
- */
-
 public class AddPaymentController extends BaseController implements AddPaymentMvpView, OnCardFormSubmitListener, CardEditText.OnCardTypeChangedListener, OnCardFormScanListener {
 
     public static abstract class Parameters {
@@ -78,20 +67,13 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         }
 
         public static final class FromCheckout extends Parameters {
-            private Boolean mIsOurpaySelectDeliveryMethod;
             private String mCartTotalCost;
             private CheckoutDetailsMapper mCurrentOrderValue;
 
-            public FromCheckout(Boolean isOurpaySelectDeliveryMethod,
-                                String cartTotalCost,
+            public FromCheckout(String cartTotalCost,
                                 CheckoutDetailsMapper currentOrderValue) {
-                mIsOurpaySelectDeliveryMethod = isOurpaySelectDeliveryMethod;
                 mCartTotalCost = cartTotalCost;
                 mCurrentOrderValue = currentOrderValue;
-            }
-
-            public Boolean getIsOurpaySelectDeliveryMethod() {
-                return mIsOurpaySelectDeliveryMethod;
             }
 
             public String getCartTotalCost() {
@@ -127,8 +109,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     Button mVcoButton;
     @BindView(R.id.partial_checkout_button_masterpass)
     RelativeLayout mMasterpassButton;
-    @BindView(R.id.partial_checkout_ourpay_panel_holder)
-    LinearLayout mOurpayHolder;
     @BindView(R.id.add_payment_scrollview)
     ScrollView mNestedScrollView;
     @BindView(R.id.partial_toolbar_right_view)
@@ -165,7 +145,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
     private boolean isFromCart;
     private boolean isPayPalSubmitClicked = false;
-    private boolean mIsOurpaySelectDeliveryMethod;
     private String mCartTotalCost;
     private CheckoutDetailsMapper mCurrentOrderValue;
     private GA4EventParams.GA4AddPaymentInfoParams ga4AddPaymentInfoParams = null;
@@ -179,7 +158,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
         if (parameters instanceof Parameters.FromCheckout) {
             controller.isFromCart = true;
-            controller.mIsOurpaySelectDeliveryMethod = ((Parameters.FromCheckout) parameters).getIsOurpaySelectDeliveryMethod();
             controller.mCartTotalCost = ((Parameters.FromCheckout) parameters).getCartTotalCost();
             controller.mCurrentOrderValue = ((Parameters.FromCheckout) parameters).getCurrentOrderValue();
         }
@@ -190,7 +168,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     public AddPaymentController(Bundle args) {
         super(args);
         isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
-        mIsOurpaySelectDeliveryMethod = args.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, false);
         mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
         mCurrentOrderValue = decompress(args.getByteArray(BundleKeys.CURRENT_ORDER_VALUE));
     }
@@ -200,7 +177,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(BundleKeys.IS_FROM_CART, isFromCart);
-        outState.putBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, mIsOurpaySelectDeliveryMethod);
         outState.putString(BundleKeys.CART_TOTAL_COST, mCartTotalCost);
         if (mCurrentOrderValue != null) {
             mCurrentOrderValue.putInBundle(outState, BundleKeys.CURRENT_ORDER_VALUE);
@@ -212,7 +188,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         super.onRestoreInstanceState(savedInstanceState);
 
         isFromCart = savedInstanceState.getBoolean(BundleKeys.IS_FROM_CART);
-        mIsOurpaySelectDeliveryMethod = savedInstanceState.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD);
         mCartTotalCost = savedInstanceState.getString(BundleKeys.CART_TOTAL_COST);
         mCurrentOrderValue = decompress(savedInstanceState.getByteArray(BundleKeys.CURRENT_ORDER_VALUE));
     }
@@ -233,10 +208,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         if (isFromCart) {
 
             Set<PaymentOption> paymentOptions = mCurrentOrderValue.getAvailablePaymentOptions();
-
-            if (paymentOptions.contains(PaymentOption.OURPAY)) {
-                mPresenter.generateOurpay(mCurrentOrderValue);
-            }
         }
         setUp(view);
     }
@@ -246,7 +217,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         mViewAddressToolarTitle.setText("Add New Payment");
 
         mLineView.setVisibility(View.GONE);
-        mOurpayHolder.setVisibility(View.GONE);
         mAfterpayPanel.setVisibility(View.GONE);
         mLPayPanel.setVisibility(View.GONE);
         mKlarnaButton.setVisibility(View.GONE);
@@ -415,7 +385,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         if (mCurrentOrderValue == null) {
             mPayButton.setVisibility(View.VISIBLE);
             mPaypalButton.setVisibility(mPresenter.isPayPalEnabled() ? View.VISIBLE : View.GONE);
-            mMasterpassButton.setVisibility(isFromCart && mPresenter.isMasterPassEnabled() && !mIsOurpaySelectDeliveryMethod ? View.VISIBLE : View.GONE);
+            mMasterpassButton.setVisibility(isFromCart && mPresenter.isMasterPassEnabled() ? View.VISIBLE : View.GONE);
             mPaypalCreditButton.setVisibility(mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
         } else {
             mPaypalCreditButton.setVisibility(View.GONE);
@@ -509,39 +479,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         mCardForm.getCardEditText().getText().clear();
         mCardForm.getCvvEditText().getText().clear();
         mCardForm.getExpirationDateEditText().getText().clear();
-    }
-
-    @Override
-    public void showMyPayDetails(CheckoutDetailsMapper value, Ourpay ourpay) {
-        if (value != null) {
-            mOurpayHolder.setVisibility(View.VISIBLE);
-
-            PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
-            boolean isMyPayEnabled = mActivity.getIsMyPayEnabled();
-
-            if (ourpay != null && isMyPayEnabled) {
-                boolean isPaymentInvalid = paymentMethod == null ? false : paymentMethod.getPaymentType().equalsIgnoreCase(OurpayStateManager.CARD_MASTERPASS);
-                OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, isPaymentInvalid);
-
-                OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) mActivity, getRouter());
-                mOurpayHolder.removeAllViews();
-                if (mOurpayHolder.getChildCount() == 0) { //add view if there is no childview yet
-                    mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay, isRowVisible -> {
-                        if (isRowVisible) {
-                            new Handler().postDelayed(() -> mNestedScrollView.fullScroll(View.FOCUS_DOWN), 400);
-                        }
-                    }));
-                }
-
-                RelativeLayout mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
-                mButtonOurpay.setOnClickListener(view -> onCardFormSubmit());
-
-                OurPayToggleSwitch mOurpayTncCheckBox = mOurpayHolder.findViewById(R.id.ourpay_toggle_switch_tc);
-                mOurpayTncCheckBox.setClickable(false);
-                OurpayPanel.TermsAndConditionStates termsAndConditionStatesState = OurpayPanel.TermsAndConditionStates.values()[value.getOurPaySelectTermsAndConditions()];
-                mOurpayTncCheckBox.setOurPayToggleSwitch(termsAndConditionStatesState);
-            }
-        }
     }
 
     @Override

@@ -11,9 +11,11 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface DeliveryOptionsMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
-    void getDeliveryServicePackageDetails();
+    String getStandardTitleText();
+
+    String getExpressTitleText();
+
+    String getExpressDescriptionText();
 
     void setDeliveryOption(SetDeliveryOption.OptionParameters setDeliveryOptionParameters);
-
-    void onTermsAndConditionsClicked();
 }

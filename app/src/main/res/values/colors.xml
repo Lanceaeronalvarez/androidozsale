@@ -22,6 +22,12 @@
     <color name="black_20">#60000000</color>
     <color name="beige_50">#80DFC2C2</color>
     <color name="fluorescent_blue_50">#B3F8FF</color>
+    <color name="gray">#FF898989</color>
+    <color name="orange">#FFE47C0B</color>
+    <color name="orange_dark">#FFAE5F0A</color>
+    <color name="border_gray">#FFC7C7C7</color>
+    <color name="navy">#000080</color>
+    <color name="red">#FF0000</color>
 
     <color name="recyclerview_overscroll">@color/colorPrimary</color>
 
@@ -165,18 +171,6 @@
     <color name="toolbar_active_skin">@color/colorAccent</color>
     <color name="toolbar_border">@color/border_light</color>
 
-    <!-- Ourpay -->
-    <color name="ourpay_gray">#FF898989</color>
-    <color name="ourpay_orange">#F37325</color>
-    <color name="ourpay_orange_dark">#FFAE5F0A</color>
-    <color name="ourpay_border_gray">#FFC7C7C7</color>
-    <color name="ourpay_circle_state_color_active">#FCBD12</color>
-    <color name="ourpay_circle_state_color_default">#D7D8DA</color>
-
-    <color name="ourpay_navy">#000080</color>
-    <color name="ourpay_red">#FF0000</color>
-    <color name="ourpay_verify_resend">#000080</color>
-
     <color name="snack_bar_color">@color/colorAccent</color>
     <color name="pressed_logo">@color/bluegreen</color>
     <color name="idle_logo">@color/colorAccent</color>
@@ -218,8 +212,6 @@
     <color name="sale_items_highlight">#446E87</color>
     <color name="search_filter_range_bar_color">#d6d6d6</color>
     <color name="search_filter_highlight_text">#7c7c7c</color>
-    <color name="ourpay_panel_header_price">#eb5424</color>
-    <color name="ourpay_panel_dark_gray">#FF6F7070</color>
     <color name="product_details_button_overlay">#a0ffffff</color>
     <color name="item_view_selected_color">@color/background_default</color>
 
@@ -252,7 +244,7 @@
     <color name="checkout_voucher_view_color">#F2F2F2</color>
     <color name="order_details_view_color">#f4f4f4</color>
     <color name="toolbar_fade_in_color">@color/white</color>
-    <color name="refunded_state_color">@color/ourpay_red</color>
+    <color name="refunded_state_color">@color/red</color>
     <color name="banner_discount_color">#f09536</color>
     <color name="banner_discount_color_dark">#fc6e21</color>
     <color name="bg_product_detail_discount_button">#00ba57</color>
@@ -262,15 +254,9 @@
     <color name="bg_banner_name_new">#8a000000</color>
     <color name="bg_inactive_add_to_cart_button">@color/tab_bar_icon_inactive</color>
 
-    <!--Ourpay-->
-    <color name="ourpay_header_detail">#66000000</color>
-    <color name="ourpay_installment_circle">#cccccc</color>
-    <color name="ourpay_installment_circle_fail">#e05050</color>
-    <color name="ourpay_installment_circle_success">#50d050</color>
-
     <color name="bg_fcm_notif">#F00065</color>
     <color name="checkout_item_footer_other_text_color">#46A1D8</color>
-    <color name="checkout_item_footer_red_text_color">@color/ourpay_red</color>
+    <color name="checkout_item_footer_red_text_color">@color/red</color>
 
     <color name="text_link_color">#007CF7</color>
     <color name="checkout_selected_text_color">#000000</color>

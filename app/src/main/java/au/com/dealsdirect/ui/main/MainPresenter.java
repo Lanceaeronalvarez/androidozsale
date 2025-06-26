@@ -25,7 +25,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -84,29 +83,13 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public static final String KEY_CHECKOUT_MYPAY_PAY_OUT_UP_TO_MOBILE_APP = "_checkoutMyPayPayOutUpToMobileApp";
     public static final String KEY_CHECKOUT_MYPAY_PAY_UNTRUSTED = "_checkoutMyPayPayUntrusted";
     public static final String KEY_MYPAY_DETAILS_MOBILE_APP = "myPayDetailsMobileApp";
-    public static final String KEY_OURPAY_THANK_YOU_TEXT = "_OurPayThankYouTextMobileApp";
-    public static final String KEY_OURPAY_TC_TEXT = "_OurPayTC_text"; // Using web's template text for hyper link
-    public static final String KEY_OURPAY_TC_VALIDATION_FAILED = "_OurPayTCValidationFailed";
     public static final String KEY_PAYMENT_SCHEDULE = "_PaymentSchedule";
     public static final String KEY_PERSONALISATION_VALIDATION = "_PleaseFillPersonalization";
 
-    //    DELIVERY OPTIONS/OURPAY SELECT
-    public static final String KEY_DELIVERYOPTION_OPS_FREE = "_Free";
-    public static final String KEY_DELIVERYOPTION_OPS_TITLE = "_DeliveryOption_OURPAYSELECT_Title";
-    public static final String KEY_DELIVERYOPTION_OPS_DESCRIPTION = "_DeliveryOption_OURPAYSELECT_Description";
-
+    //    DELIVERY OPTIONS
     public static final String KEY_DELIVERYOPTION_EXPRESS_TITLE = "_DeliveryOption_EXPRESS_Title";
     public static final String KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION = "_DeliveryOption_EXPRESS_Description";
     public static final String KEY_DELIVERYOPTION_STANDARD_TITLE = "_DeliveryOption_STANDARD_Title";
-
-    public static final String KEY_OURPAY_OPS_DESCRIPTION_REMAINING = "_Ops_description_remaining";
-    public static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE = "_Ops_info_remaining_before_purchase";
-    public static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY = "_Ops_info_remaining_before_purchase_free_delivery";
-
-    public static final String KEY_OURPAY_OPS_TNC_HEADER = "_OurPaySelectTermsAndConditionsHeader";
-    public static final String KEY_OURPAY_OPS_TNC_BODY = "_OurPaySelectTermsAndConditionsBody";
-
-    public static final String KEY_OURPAY_UNAVAILABLE_MESSAGE = "_OurPayUnavailableMessage";
 
     /* June 22, 2018 - GDPR Template Text Keys */
     public static final String KEY_CONSENT_CONTINUE_TEXT = "_consentContinueText";
@@ -144,23 +127,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_CHECKOUT_MYPAY_PAY_OUT_UP_TO_MOBILE_APP, //3
             KEY_CHECKOUT_MYPAY_PAY_UNTRUSTED, //4
             KEY_MYPAY_DETAILS_MOBILE_APP, //5
-            KEY_OURPAY_THANK_YOU_TEXT, //6
-            KEY_OURPAY_TC_TEXT, //7
-            KEY_OURPAY_TC_VALIDATION_FAILED, //8
             KEY_PAYMENT_SCHEDULE, //9
-            KEY_DELIVERYOPTION_OPS_FREE,
-            KEY_DELIVERYOPTION_OPS_TITLE,
-            KEY_DELIVERYOPTION_OPS_DESCRIPTION,
             KEY_DELIVERYOPTION_EXPRESS_TITLE,
             KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION,
             KEY_DELIVERYOPTION_STANDARD_TITLE,
-            KEY_OURPAY_OPS_DESCRIPTION_REMAINING,
-            KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE,
-            KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY,
-            KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY,
-            KEY_OURPAY_OPS_TNC_HEADER,
-            KEY_OURPAY_OPS_TNC_BODY,
-            KEY_OURPAY_UNAVAILABLE_MESSAGE,
             KEY_PERSONALISATION_VALIDATION, //10
             KEY_CONSENT_CONTINUE_TEXT,
             KEY_CONSENT_WITH_REGISTRATION_TERMS_TEXT,
@@ -315,9 +285,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setKountMerchantId(value.getPayments().getKount().getMerchantID());
                 getDataManager().setSearchMaxPrice(value.getSearch().getMaxPrice());
                 getDataManager().setAccessAnonymousEnabled(value.getAccess().getAnonymousEnabled());
-                getDataManager().setIsMyPayEnabled(value.getPayments().getMyPay().getEnabled());
                 getDataManager().setIsPaypalCreditEnabled(value.getPayments().getBrainTree().isPaypalCreditEnabled());
-                getDataManager().setIsOurpayDashboardEnabled(value.getMyAccount().isShowOurpaySchedulerInMyAccount());
                 getDataManager().setShippingByPostcodeEnabled(value.getCheckout().getShippingByPostcodeEnabled());
                 getDataManager().setMobilePhoneBannerColumns(value.getShop().getMobilePhoneBannerColumns());
                 getDataManager().setMobileTabletBannerColumns(value.getShop().getMobileTabletBannerColumns());
@@ -377,7 +345,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             if (accountData != null) {
                 getDataManager().setIsSortingEnabled(accountData.getSorting().getIsEnabled());
 
-                getDataManager().setIsOurpayEnabled(accountData.getOurPay().isEnabled());
                 getDataManager().setIsAfterpayEnabled(accountData.getAfterpay().isEnabled());
 
                 getDataManager().setSupplierOriginalPriceInfoEnabled(accountData.getSupplierOriginalPriceInfo().isEnabled());
@@ -1390,7 +1357,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(getTemplateTextsResponse -> {
-                    getDataManager().setMyPayTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getDataManager().setDeliveryOptionsTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getDataManager().setPersonalisationTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getDataManager().setConsentTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
@@ -1451,21 +1417,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public String getStoredTemplateTexts(String detailKey) {
-        return getDataManager().getMyPayTemplateTexts(detailKey);
-    }
-
-    @Override
-    public String getStoredShippingTemplateText() {
-        return getDataManager().getShippingHover();
-    }
-
-    @Override
-    public String getShippingTitle() {
-        return getDataManager().getShippingTitle();
-    }
-
-    @Override
     public void initializeNotifications(Context context) {
         if (gNotification != null) {
             gNotification.registerDeviceForNotification(context);
@@ -1494,10 +1445,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             }
         }
         return jsonArray;
-    }
-
-    public boolean getIsMyPayEnabled() {
-        return getDataManager().getIsMyPayEnabled();
     }
 
     @Override

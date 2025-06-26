@@ -7,7 +7,6 @@
     <bool name="is_personalisation_grouped_style">false</bool>
 
     <!--APP SPECIFIC SETTINGS-->
-    <bool name="is_ourpay_app">false</bool>
     <bool name="is_ozsale_app">false</bool>
     <bool name="show_split_registration_toggles">false</bool>
     <bool name="show_details_email_option">false</bool>
@@ -29,8 +28,6 @@
     <bool name="price_block_is_three_lines">false</bool>
 
     <bool name="is_afterpay_disabled_client_override">false</bool>
-
-    <bool name="is_myaccount_ourpay_unavailable_notice_visible">true</bool>
 
     <bool name="is_gift_card_terms_and_conditions_visible">true</bool>
     <bool name="is_gift_card_category_visible">false</bool>

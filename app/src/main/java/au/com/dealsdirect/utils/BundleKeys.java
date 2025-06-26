@@ -101,7 +101,6 @@ public class BundleKeys {
     public static final String PAYMENT_METHODS = "payment_methods";
     public static final String IS_FROM_CART = "is_from_cart";
     public static final String CART_TOTAL_COST = "cart_total_cost";
-    public static final String IS_OURPAY_SELECT_DELIVERY_METHOD = "is_ourpay_select_delivery_method";
     public static final String CURRENT_ORDER_VALUE = "current_order_value";
 
     //payment success
@@ -111,14 +110,12 @@ public class BundleKeys {
     public static final String KEY_INVOICE = "Invoice";
     public static final String KEY_INVOICE_NUMBER = "InvoiceNumber";
     public static final String KEY_ESTIMATED_DELIVERY = "EstimatedDelivery";
-    public static final String KEY_IS_OURPAY_USED = "IsOurpayUsed";
 
     //legalities
     public static final String TEMPLATE_KEY = "TEMPLATE_KEY";
     public static final String TEMPLATE_KEY_ABOUT_US = "aboutus";
     public static final String TEMPLATE_KEY_PRIVACY = "mobilePrivacyPolicy_Text";
     public static final String TEMPLATE_KEY_TNC = "TermsAndConditions_Text";
-    public static final String TEMPLATE_KEY_OURPAY_TNC = "_OurPayTermsAndConditionsBody";
     public static final String LEGALITIES_TITLE = "LEGALITIES_TITLE";
     public static final String STRING_RESOURCE = "STRING_RESOURCE";
 
@@ -142,9 +139,6 @@ public class BundleKeys {
     public static final String CONTACT_IS_INVOICE_REQUIRED = "CONTACT_IS_INVOICE_REQUIRED";
     public static final String CONTACT_ACTIONS = "CONTACT_ACTIONS";
     public static final String CONTACT_TIME_STAMP = "CONTACT_TIME_STAMP";
-
-    //Ourpay SMS Verification
-    public static final String PHONE_KEY = "PHONE_KEY";
 
     //Returns
     public static final String KEY_ORDER_NUMBER = "ReturnDetailsController.KEY_ORDER_NUMBER";

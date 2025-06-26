@@ -743,8 +743,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             if (deliveryType.equalsIgnoreCase(AppConstants.THRESHOLD_RESTRICT) ||
                     deliveryType.equalsIgnoreCase(AppConstants.ORDER_PRICE_RESTRICT)) {
 
-                mActivity.showFreeShippingDialog(deliveryThreshold, mActivity.getShippingTemplateText(),
-                        mActivity.getShippingTitle());
+                mActivity.showFreeShippingDialog(deliveryThreshold, mPresenter.getShippingTemplateText(),
+                        mPresenter.getShippingTitleText());
 
             }
         }
@@ -1146,7 +1146,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 // bug/gen-8065_ozsale-reskin_bugfixing - always set searchbar hint to 'search'
                 if (mHasSavedInstance) {
                     if (mSourceType == SourceType.CATEGORY_SEARCH) {
-                        if (mSearchQuery.length() > 0) {
+                        if (!mSearchQuery.isEmpty()) {
                             mSaleItemsToolbarField.setText(mSearchQuery);
                             refreshBrandBubbles(mSearchQuery);
                         } else {
@@ -1154,7 +1154,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                             refreshBrandBubbles("");
                         }
                     } else {
-                        if (mShopSearchQuery.length() > 0) {
+                        if (!mShopSearchQuery.isEmpty()) {
                             mSearchQuery = mShopSearchQuery;
                             mSaleItemsToolbarField.setText(mSearchQuery);
                             refreshBrandBubbles(mSearchQuery);
@@ -1163,7 +1163,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                             refreshBrandBubbles("");
                         }
                     }
-                } else if (mSearchQuery != null && mSearchQuery.length() > 0) {
+                } else if (mSearchQuery != null && !mSearchQuery.isEmpty()) {
                     mSaleItemsToolbarField.setText(mSearchQuery);
                     refreshBrandBubbles(mSearchQuery);
                 } else {
@@ -1203,7 +1203,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     mSaleItemsToolbarTitle.setBackground(
                             mActivity.getResources().getDrawable(R.drawable.logo_colored));
                     mSaleItemsToolbarSubTitleText.setText(subTitle);
-                    if (!mCategoryKeyFromCategorySearch.equals("") && !mSelectedCategoryKeys.isEmpty()) {
+                    if (!mCategoryKeyFromCategorySearch.isEmpty() && !mSelectedCategoryKeys.isEmpty()) {
                         mSearchResultTextView.setText(title);
                     }
                 } else if (mCategoryForTitle != null && !mCategoryForTitle.isEmpty()) {

@@ -92,10 +92,6 @@ public class FeatureUsageEventType {
         public static final int RETURN_INCORRECT = 1018;
         public static final int RETURNS_INQUIRY = 1019;
         public static final int RETURNS_HELP = 1020;
-        public static final int OURPAY = 1021;
-        public static final int OURPAY_SITE = 1022;
-        public static final int SELECT = 1023;
-        public static final int SELECT_SITE = 1024;
         public static final int PAYMENTS = 1025;
         public static final int PAYMENTS_HELP = 1026;
         public static final int INVITE_FRIEND = 1027;
@@ -121,8 +117,6 @@ public class FeatureUsageEventType {
         public static final int RETURNS_HEADER = 1061;
         public static final int PAYMENTS_MENU = 1062;
         public static final int PAYMENTS_HEADER = 1063;
-        public static final int OURPAY_MENU = 1064;
-        public static final int OURPAY_HEADER = 1065;
         public static final int INVITE_A_FRIEND_MENU = 1066;
         public static final int INVITE_A_FRIEND_HEADER = 1067;
         public static final int ABOUT_US = 1084;

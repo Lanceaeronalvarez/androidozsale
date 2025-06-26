@@ -105,14 +105,4 @@ public class PaymentMethod implements Serializable {
                 ((PaymentMethod) obj).getToken() != null &&
                 ((PaymentMethod) obj).getToken().equals(token);
     }
-
-
-    public boolean canUseOurPaySelect() {
-        switch (paymentType.toLowerCase()) {
-            case MASTERPASS:
-                return false;
-            default:
-                return true;
-        }
-    }
 }

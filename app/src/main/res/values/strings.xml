@@ -459,7 +459,6 @@
     <string name="enter_your_code_below">Enter your code below</string>
     <string name="confirm">Confirm</string>
     <string name="invalid_phone_number">Invalid Phone Number</string>
-    <string name="ourpay_code_hint">xxxxxx</string>
     <string name="invalid_code">Invalid Code</string>
     <string name="sms_verification_title">SMS Verification</string>
     <string name="add_address_before_payment">Please set delivery address before proceeding to payment</string>
@@ -527,8 +526,6 @@
     <string name="account_terms_and_conditions">Terms and Conditions</string>
     <string name="account_returns_policy">Returns Policy</string>
     <string name="account_country">My Country</string>
-    <string name="account_ourpay">Ourpay</string>
-    <string name="account_select">Select</string>
     <string name="account_options">My Options</string>
     <string name="account_notification">My Notification</string>
     <string name="account_clear_cookies_data">Clear Cookies</string>
@@ -614,17 +611,14 @@
     <string name="shop">Shop</string>
     <string name="wishlist">Wishlist</string>
     <string name="payment_schedule">Payment Schedule</string>
-    <string name="ourpay">Ourpay</string>
     <string name="account">Account</string>
     <string name="checkout">Checkout</string>
     <string name="best_sellers">Best Sellers</string>
-    <string name="ourpay_is_cocosa_s_exclusive_installment_payment_plan_solution_ourpay_allows_you_to_checkout_with_all_the_items_you_love_and_pay_over_four_easy_interest_free_installments_simply_browse_the_site_and_add_your_preferred_goodies_to_your_cart_proceed_to_checkout_and_pay_less_today_with_ourpay">Ourpay is Cocosa\'s exclusive installment payment plan solution. Ourpay allows you to checkout with all the items you love and pay over four easy, interest free installments. Simply browse the site and add your preferred goodies to your cart. Proceed to checkout and pay less today with Ourpay!</string>
     <string name="benefits">benefits</string>
     <string name="shop_all_your_favorite_sales">shop all your favorite sales</string>
     <string name="interest_free">interest free</string>
     <string name="easy_to_use_no_long_sign_ups">easy to use - no long sign ups</string>
     <string name="secure_payment_method">secure payment method</string>
-    <string name="get_that_pair_of_shoes_and_handbag_using_ourpay">get that pair of shoes and handbag using ourpay</string>
     <string name="our_partners">our partners</string>
     <string name="active_plans">Active Plans</string>
     <string name="balance_owing">Balance Owing</string>
@@ -681,7 +675,6 @@
     <string name="checkout_lowercase">checkout</string>
     <string name="delivery_address">Delivery Address</string>
     <string name="delivery_method">Delivery Method</string>
-    <string name="by_choosing_ourpay_select">By choosing OurPay Select,</string>
     <string name="deliver_options_title">Delivery Options</string>
     <string name="choose_delivery_method">Choose Delivery Method</string>
     <string name="add_new_delivery_address">Add New Delivery Address</string>
@@ -767,7 +760,6 @@
     <string name="an_error_has_occurred">An error has occurred</string>
     <string name="track_order">Track Order</string>
     <string name="default_image_link">https://c1.mysalec.com/brands/%1$s/%2$s/%3$s</string>
-    <string name="ourpay_order_schedule">ORDER PAYMENT SCHEDULE</string>
     <string name="vouchers_balance_prefix">Balance </string>
     <string name="top_brands">Brands</string>
 
@@ -801,30 +793,6 @@
 
     <string name="address_error_format">%1$s must be minimum of %2$s and maximum of %3$s characters</string>
     <string name="address_error_format_equal">%1$s must be exactly %2$s characters</string>
-
-    <!--My Accounts Ourpay-->
-    <string name="ourpay_title">Ourpay</string>
-    <string name="ourpay_payment_plans">Payment Plans</string>
-    <string name="ourpay_schedule_payments">Scheduled Payments</string>
-    <string name="ourpay_past_payments">Past Payments</string>
-    <string name="ourpay_active_plans">Active Plans</string>
-    <string name="ourpay_balance_owing">Balance Owing</string>
-    <string name="ourpay_remaining_credit">Remaining Credit</string>
-    <string name="ourpay_order">Order:</string>
-    <string name="ourpay_paid">Paid:</string>
-    <string name="ourpay_refund">Refund:</string>
-    <string name="ourpay_adjusted_to_schedule">Adjusted to Schedule:</string>
-    <string name="ourpay_refund_to_card">Refund to Card:</string>
-    <string name="ourpay_balance">Balance:</string>
-    <string name="ourpay_installment_date_format">MMM dd</string>
-    <string name="ourpay_big_date_format">dd</string>
-    <string name="ourpay_small_date_format">MMM</string>
-    <string name="ourpay_order_number_prefix">#</string>
-    <string name="ourpay_section_header_date_format">MMM yyyy</string>
-    <string name="ourpay_info_page_title">Information Page</string>
-    <string name="ourpay_info_page_url">https://www.ourpaypayments.com/onlyonline/ourpay.html</string>
-    <string name="ourpay_tnc_title">Terms and Conditions</string>
-    <string name="ourpay_empty_view_text">Ourpay is exclusive installment payment plan\nsolution. Ourpay allows you to checkout with all\nthe items you love and pay over four easy,\ninterest free installments.\n\nSimply browse the site and add your preferred\ngoodies to your cart. Proceeed to checkout and\npay less today with Ourpay!\n\n\nMore details about Ourpay, you can visit:\n</string>
 
     <string name="generic_failed_transaction_message">Your order could not be completed, and you have not been charged. Please try again.</string>
 
@@ -1019,8 +987,6 @@
     <string name="price_block_bottom_text_alternate_prefix">Suppliers RRP or ORP</string>
 
     <string name="product_details_seller_text">Sold and delivered by</string>
-
-    <string name="myaccount_ourpay_unavailable_message">Unfortunately, Ourpay is no longer available. We apologise for any inconvenience, please choose from one of the other payment options. Existing Ourpay payments agreements remain unchanged.</string>
 
     <string name="account_deletion_confirmation_text">Are you sure you want to delete your account and all data associated with it?\n\nIt may take up to 28 days to completely remove all the data associated with your account.</string>
 

@@ -123,7 +123,7 @@
                 android:drawablePadding="@dimen/margin_tiny"
                 android:drawableLeft="@drawable/ic_chronometer_red"
                 android:ellipsize="middle"
-                android:textColor="@color/ourpay_red"
+                android:textColor="@color/red"
                 android:textSize="@dimen/text_size_caption2"
                 tools:text="23:12:12"/>
             </LinearLayout>

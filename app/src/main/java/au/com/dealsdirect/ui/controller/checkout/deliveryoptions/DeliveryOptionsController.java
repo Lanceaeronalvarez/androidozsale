@@ -11,28 +11,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
-import au.com.dealsdirect.data.network.model.checkout.GetDeliveryServicePackageDetails;
+import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
-import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.DateUtils;
-import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -90,8 +85,7 @@ public class DeliveryOptionsController extends BaseController implements Deliver
 
         final ArrayList<DeliveryOption> deliveryOptions = new ArrayList<>();
         for (DeliveryOption option : mDeliveryOptions) {
-            if (!(option.getPostServiceId() != null && option.getPostServiceId().equals("OURPAYSELECT")) ||
-                    isSelectAvailableAfterDecommission()) {
+            if (!(option.getPostServiceId() != null && option.getPostServiceId().equals("OURPAYSELECT"))) {
                 deliveryOptions.add(option);
             }
         }
@@ -99,12 +93,31 @@ public class DeliveryOptionsController extends BaseController implements Deliver
 
         mAdapter = new DeliveryOptionsAdapter(
                 mActivity,
-                mRecyclerView,
                 mDeliveryOptions,
                 mDeliveryAddressId,
                 mDeliveryServicePackageDetail,
                 mIsAddressValid,
-                mPresenter);
+                new DeliveryOptionsAdapter.DeliveryOptionsAdapterHelper() {
+                    @Override
+                    public String getStandardTitleText() {
+                        return mPresenter.getStandardTitleText();
+                    }
+
+                    @Override
+                    public String getExpressTitleText() {
+                        return mPresenter.getExpressTitleText();
+                    }
+
+                    @Override
+                    public String getExpressDescriptionText() {
+                        return mPresenter.getExpressDescriptionText();
+                    }
+
+                    @Override
+                    public void setDeliveryOption(SetDeliveryOption.OptionParameters parameters) {
+                        mPresenter.setDeliveryOption(parameters);
+                    }
+                });
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity, SimpleDividerItemDecoration.VERTICAL_LIST));
@@ -116,31 +129,7 @@ public class DeliveryOptionsController extends BaseController implements Deliver
     }
 
     @Override
-    public void onDeliveryServicePackageDetailsLoaded(List<GetDeliveryServicePackageDetails.ResponseValue.Value> ourpaySelectDeliveryOptions) {
-        mAdapter.setOurPaySelectDeliveryOptions(ourpaySelectDeliveryOptions);
-    }
-
-    @Override
     public void onSetDeliveryOption(GetCurrentOrder.ResponseValue responseValue) {
         onBackPressed();
-    }
-
-    @Override
-    public void showTermsAndConditionsController() {
-        GateKeeper.push(getRouter(), GateKeeper.Destination.LEGALITIES,
-                new BundleBuilder(new Bundle())
-                        .putString(BundleKeys.TEMPLATE_KEY, OurpayTemplateText.KEY_OPS_TNC_FULL_TEXT)
-                        .putString(BundleKeys.LEGALITIES_TITLE, getString(R.string.my_basket))
-                        .build(),
-                new VerticalChangeHandler(false),
-                new VerticalChangeHandler());
-    }
-
-    private boolean isSelectAvailableAfterDecommission() {
-        final Date currentDate = new Date();
-        return mDeliveryServicePackageDetail != null &&
-                mDeliveryServicePackageDetail.getPurchased() &&
-                mDeliveryServicePackageDetail.getRemainingCount() > 0 &&
-                currentDate.before(DateUtils.dateFromServerDateString(mDeliveryServicePackageDetail.getExpiryDate()));
     }
 }

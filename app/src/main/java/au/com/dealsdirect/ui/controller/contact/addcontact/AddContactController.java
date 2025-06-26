@@ -198,13 +198,6 @@ public class AddContactController extends BaseController
                                     .pushChangeHandler(new HorizontalChangeHandler())
                                     .popChangeHandler(new HorizontalChangeHandler()));
                     break;
-                case "ourpay":
-                    getRouter().popToRoot();
-                    mActivity.getAccountController().showMyAccountsOurpay();
-                    break;
-                case "select":
-                    // there is no select menu
-                    break;
                 case "my_payments":
                     getRouter().popToRoot();
                     mActivity.getAccountController().showMyPaymentsController();
@@ -558,18 +551,6 @@ public class AddContactController extends BaseController
                 logContactSuggestionsFeatureUsageEvent(isHelp ?
                         FeatureUsageEventType.Suggestions.RETURNS_HELP :
                         FeatureUsageEventType.Suggestions.RETURNS_INQUIRY
-                );
-                break;
-            case "2a874ce9719a4ceb89f5fd75c898350f":
-                logContactSuggestionsFeatureUsageEvent(isHelp ?
-                        FeatureUsageEventType.Suggestions.OURPAY_SITE :
-                        FeatureUsageEventType.Suggestions.OURPAY
-                );
-                break;
-            case "829cc717fad548e5ab63a536e072dc5d":
-                logContactSuggestionsFeatureUsageEvent(isHelp ?
-                        FeatureUsageEventType.Suggestions.SELECT_SITE :
-                        FeatureUsageEventType.Suggestions.SELECT
                 );
                 break;
             case "9dc2ea035fb94df182286fb9f30767c1":

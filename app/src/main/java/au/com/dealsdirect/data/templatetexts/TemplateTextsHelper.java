@@ -10,47 +10,13 @@ public interface TemplateTextsHelper {
 
     interface TemplateTextsRepository {
 
-        String getCheckoutMyPayPayExceedLimit();
-
-        String getCheckoutMyPayPayInvalidPaymentMethod();
-
-        String getCheckoutMyPayPayOutOfRangeMobileApp();
-
-        String getCheckoutMyPayPayOutUpToMobileApp();
-
-        String getCheckoutMyPayPayUntrusted();
-
-        String getMyPayDetailsMobileApp();
-
-        String getOurPayThankYouTextMobileApp();
-
-        String getOurPayTC_text();
-
-        String getOurPayTCValidationFailed();
-
         String getPaymentSchedule();
-
-        String getDeliveryOptionOPSFree();
-
-        String getDeliveryOptionOPSTitle();
-
-        String getDeliveryOptionOPSDescription();
 
         String getDeliveryOptionExpressTitle();
 
         String getDeliveryOptionExpressDescription();
 
         String getDeliveryOptionStandardTitle();
-
-        String getDeliveryOptionOPSDescriptionRemaining();
-
-        String getDeliveryOptionOPSInfoBeforePurchase();
-
-        String getDeliveryOptionOPSInfoBeforeFreeDelivery();
-
-        String getDeliveryOptionOPSTncHeader();
-
-        String getDeliveryOptionOPSTncBody();
 
         String getPersonalisationValidation();
 
@@ -95,7 +61,5 @@ public interface TemplateTextsHelper {
         String getPleaseConfirmAgeRestrictedText();
 
         String getKlarnaDescription();
-
-        String getOurpayUnavailableText();
     }
 }

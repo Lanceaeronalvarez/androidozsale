@@ -39,10 +39,6 @@ import au.com.dealsdirect.utils.LoadingDialogType;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-/*
- * Created by smartwave on 30/06/2017.
- */
-
 public class PaymentSelectController extends BaseController implements PaymentSelectMvpView {
 
     @Inject
@@ -65,7 +61,6 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
     private ArrayList<PaymentMethod> mPaymentMethods = new ArrayList<>();
     private boolean isFromCart = false;
-    private boolean mIsOurpaySelectDeliveryMethod = false;
     private String mCartTotalCost;
     private CheckoutDetailsMapper mValue;
     private GA4EventParams.GA4AddPaymentInfoParams ga4AddPaymentInfoParams = null;
@@ -88,7 +83,6 @@ public class PaymentSelectController extends BaseController implements PaymentSe
         }
 
         isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
-        mIsOurpaySelectDeliveryMethod = args.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, false);
         mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
         mValue = CheckoutDetailsMapper.decompress(args.getByteArray(BundleKeys.CURRENT_ORDER_VALUE));
     }
@@ -229,7 +223,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
         AddPaymentController controller;
         if (isFromCart) {
             AddPaymentController.Parameters.FromCheckout parameters = new AddPaymentController
-                    .Parameters.FromCheckout(mIsOurpaySelectDeliveryMethod,
+                    .Parameters.FromCheckout(
                     Double.toString(mValue.getSummary().getTotal()),
                     mValue);
             controller = AddPaymentController.newInstance(parameters);

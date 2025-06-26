@@ -213,7 +213,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/margin_small"
-                    android:background="@drawable/ourpay_info" />
+                    android:background="@drawable/icon_info" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -351,16 +351,6 @@
                     android:src="@drawable/zippay_logo_white" />
             </RelativeLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/partial_checkout_ourpay_panel_holder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical"
-            android:visibility="gone"/>
-
 
     </LinearLayout>
 </RelativeLayout>

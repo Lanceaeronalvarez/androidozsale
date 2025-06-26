@@ -1,15 +1,10 @@
 package au.com.dealsdirect.ui.main;
-/*
- * Created by CodeineBot on 9/18/17.
- */
 
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
-import au.com.dealsdirect.service.ourpay.Ourpay;
 
 // TODO: Refactor this static container class out
 public class PaymentInfo {
 
-    public static final String TYPE_MYPAY = "mypay";
     public static final String TYPE_BRAINTREE = "braintree";
     public static final String TYPE_AFTERPAY = "afterpay";
     public static final String TYPE_LPAY = "lpay";
@@ -27,7 +22,6 @@ public class PaymentInfo {
     private static String sAuthorization = "";
     private static Double sCartCost = 0d;
     private static boolean sThreeDSecureCalled = false;
-    private static Ourpay sOurpay = null;
     private static boolean sIsTokenFetching = false;
     private static String provider = "";
 
@@ -47,7 +41,7 @@ public class PaymentInfo {
         PaymentInfo.sPaymentType = sPaymentType;
     }
 
-//    USED FOR PAYMENT TYPE MAPPING FOR FABRIC APP EVENTS
+    //    USED FOR PAYMENT TYPE MAPPING FOR FABRIC APP EVENTS
     public static String getFabricPaymentType() {
         return sFabricPaymentType;
     }
@@ -88,19 +82,10 @@ public class PaymentInfo {
         PaymentInfo.sThreeDSecureCalled = sThreeDSecureCalled;
     }
 
-    public static Ourpay getOurpay() {
-        return sOurpay;
-    }
-
-    public static void setOurpay(Ourpay sOurpay) {
-        PaymentInfo.sOurpay = sOurpay;
-    }
-
     public static void resetPaymentInfo() {
         PaymentInfo.sThreeDSecureRequired = false;
         PaymentInfo.sCartCost = 0d;
         PaymentInfo.sThreeDSecureCalled = false;
-        PaymentInfo.sOurpay = null;
 
         //Have own method for clearing
         //PaymentInfo.sPaymentType = "";

@@ -196,10 +196,6 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/promo-info", ApiUrlVersion.v3.apiVersion());
     }
 
-    public static String getOurpayData() {
-        return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/ourpaydata", ApiUrlVersion.v2.apiVersion());
-    }
-
     public static String getAddToCart() {
         return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/basket/items", ApiUrlVersion.v2.apiVersion());
     }
@@ -690,27 +686,6 @@ public final class ApiEndPoint {
     /* 3DS */
     public static String getPaymentMethodNonce() {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetPaymentMethodNonce");
-    }
-
-    /* Ourpay */
-    public static String getPaymentPlans() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetPaymentPlans");
-    }
-
-    public static String getScheduledPlans() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetScheduledPayments");
-    }
-
-    public static String getPastPayments() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetPastPayments");
-    }
-
-    public static String getDeliveryService() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetDeliveryServicePackageByCustomer");
-    }
-
-    public static String processOurpayInstallment() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "ProcessOurpayInstallment");
     }
 
     public static String createAfterpayOrder() {

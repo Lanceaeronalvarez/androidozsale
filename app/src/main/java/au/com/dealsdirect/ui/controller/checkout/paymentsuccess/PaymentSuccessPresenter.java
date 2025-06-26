@@ -35,13 +35,6 @@ public class PaymentSuccessPresenter<V extends PaymentSuccessMvpView> extends Ba
     }
 
     @Override
-    public void generateOurpay() {
-        if (getDataManager().getIsMyPayEnabled()){
-            getMvpView().showOurpay();
-        }
-    }
-
-    @Override
     public void setHasUserRateApp(boolean hasUserRateApp) {
         getDataManager().setUserHasRateApp(hasUserRateApp);
     }

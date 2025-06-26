@@ -147,35 +147,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/partial_checkout_summary_ourpay_select_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/margin_extra_small"
-            android:visibility="visible">
-
-            <ImageView
-                android:id="@+id/delivery_option_ourpay_logo"
-                android:layout_width="@dimen/ourpay_logo_width_summary"
-                android:layout_height="@dimen/ourpay_logo_height_summary"
-                android:layout_gravity="bottom"
-                android:scaleType="fitStart"
-                android:src="@drawable/ic_select_checkout_small" />
-
-            <TextView
-                android:id="@+id/partial_checkout_summary_ourpay_select_price"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:textColor="@color/row_checkout_text_dark_color"
-                android:textSize="@dimen/text_size_body"
-                android:textStyle="bold"
-                tools:text="$9" />
-
-        </LinearLayout>
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

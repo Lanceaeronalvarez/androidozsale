@@ -17,8 +17,6 @@ public enum AccountOption {
     RETURNSPOLICY(R.string.account_returns_policy, false),
     CONTACTUS(R.string.account_contact_us, true),
     PAYMENTS(R.string.account_payments, true),
-    OURPAY(R.string.account_ourpay, true),
-    SELECT(R.string.account_select, true),
     INVITEFRIEND(R.string.account_invite_friend, true),
     LANGUAGE(R.string.account_language, false),
     ABOUTUS(R.string.account_about_us, false),

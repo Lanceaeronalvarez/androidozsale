@@ -71,10 +71,6 @@ public interface PreferencesHelper {
 
     boolean isMasterpassEnabled();
 
-    void setIsOurpayEnabled(boolean val);
-
-    boolean isOurpayEnabled();
-
     void setIsAfterpayEnabled(boolean val);
 
     boolean isAfterpayEnabled();
@@ -133,10 +129,6 @@ public interface PreferencesHelper {
 
     int getGCMAppVersion();
 
-    void setIsMyPayEnabled(boolean isMyPayEnabled);
-
-    boolean getIsMyPayEnabled();
-
     void setIsVisaCheckoutEnabled(boolean isVisaCheckoutEnabled);
 
     boolean getIsVisaCheckoutEnabled();
@@ -169,8 +161,6 @@ public interface PreferencesHelper {
 
     boolean getAppSettingsConsentIsChecked(String key);
 
-    void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
-
     void setDeliveryOptionsTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
 
     void setEventUserId(String userId);
@@ -179,7 +169,7 @@ public interface PreferencesHelper {
 
     HashSet<String> getCookies();
 
-    String getMyPayTemplateTexts(String detailKey);
+    String getStoredTemplateTexts(String detailKey);
 
     void setIsInitialLaunch(boolean isInitialLaunch);
 
@@ -267,10 +257,6 @@ public interface PreferencesHelper {
     void setShouldShowStrictConsent(boolean shouldShowStrictConsent);
 
     boolean shouldShowStrictConsent();
-
-    void setIsOurpayDashboardEnabled(boolean enabled);
-
-    boolean getIsOurpayDashboardEnabled();
 
     void setShippingByPostcodeEnabled(boolean enabled);
 
@@ -383,6 +369,7 @@ public interface PreferencesHelper {
     int getProductPagePriceBlockMode();
 
     void setHoursLeftToDisplayTimer(int value);
+
     int getHoursLeftToDisplayTimer();
 
     void setFacebookLoginEnabled(boolean facebookLoginEnabled);

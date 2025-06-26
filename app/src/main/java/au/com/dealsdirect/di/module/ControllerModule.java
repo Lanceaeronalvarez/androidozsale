@@ -38,9 +38,6 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutPresenter;
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsMvpView;
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsPresenter;
-import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationMvpPresenter;
-import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationMvpView;
-import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationPresenter;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectMvpView;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectPresenter;
@@ -62,21 +59,6 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsPresent
 import au.com.dealsdirect.ui.controller.country.CountryMvpPresenter;
 import au.com.dealsdirect.ui.controller.country.CountryMvpView;
 import au.com.dealsdirect.ui.controller.country.CountryPresenter;
-import au.com.dealsdirect.ui.controller.dashboard.DashboardMvpPresenter;
-import au.com.dealsdirect.ui.controller.dashboard.DashboardMvpView;
-import au.com.dealsdirect.ui.controller.dashboard.DashboardPresenter;
-import au.com.dealsdirect.ui.controller.dashboard.details.PaymentDetailsMvpPresenter;
-import au.com.dealsdirect.ui.controller.dashboard.details.PaymentDetailsMvpView;
-import au.com.dealsdirect.ui.controller.dashboard.details.PaymentDetailsPresenter;
-import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsMvpPresenter;
-import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsMvpView;
-import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsPresenter;
-import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansMvpPresenter;
-import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansMvpView;
-import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansPresenter;
-import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansMvpPresenter;
-import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansMvpView;
-import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpView;
 import au.com.dealsdirect.ui.controller.details.DetailsPresenter;
@@ -122,9 +104,6 @@ import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsPresente
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersMvpPresenter;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersMvpView;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersPresenter;
-import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayMvpPresenter;
-import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayMvpView;
-import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayPresenter;
 import au.com.dealsdirect.ui.controller.register.RegisterMvpPresenter;
 import au.com.dealsdirect.ui.controller.register.RegisterMvpView;
 import au.com.dealsdirect.ui.controller.register.RegisterPresenter;
@@ -388,11 +367,6 @@ public class ControllerModule {
     }
 
     @Provides
-    OurpaySMSVerificationMvpPresenter<OurpaySMSVerificationMvpView> provideOurpaySMSVerificationPresenter(OurpaySMSVerificationPresenter<OurpaySMSVerificationMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides
     SplashScreenMvpPresenter<SplashScreenMvpView> provideSplashScreenPresenter(SplashScreenPresenter<SplashScreenMvpView> presenter) {
         return presenter;
     }
@@ -413,36 +387,6 @@ public class ControllerModule {
     }
 
     @Provides
-    DashboardMvpPresenter<DashboardMvpView> provideDashboardPresenter(DashboardPresenter<DashboardMvpView> presenter) {
-
-        return presenter;
-    }
-
-    @Provides
-    PastPaymentsMvpPresenter<PastPaymentsMvpView> providePastPaymentsPresenter(PastPaymentsPresenter<PastPaymentsMvpView> presenter) {
-
-        return presenter;
-    }
-
-    @Provides
-    PaymentPlansMvpPresenter<PaymentPlansMvpView> providePaymentPlansPresenter(PaymentPlansPresenter<PaymentPlansMvpView> presenter) {
-
-        return presenter;
-    }
-
-    @Provides
-    ScheduledPlansMvpPresenter<ScheduledPlansMvpView> provideScheduledPlansPresenter(ScheduledPlansPresenter<ScheduledPlansMvpView> presenter) {
-
-        return presenter;
-    }
-
-    @Provides
-    PaymentDetailsMvpPresenter<PaymentDetailsMvpView> providePaymentDetailsPresenter(PaymentDetailsPresenter<PaymentDetailsMvpView> presenter) {
-
-        return presenter;
-    }
-
-    @Provides
     DeliveryOptionsMvpPresenter<DeliveryOptionsMvpView> provideDeliveryOptionsPresenter(DeliveryOptionsPresenter<DeliveryOptionsMvpView> presenter) {
         return presenter;
     }
@@ -459,11 +403,6 @@ public class ControllerModule {
 
     @Provides
     InformationMenuMvpPresenter<InformationMenuMvpView> provideInformationMenuPresenter(InformationMenuPresenter<InformationMenuMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides
-    MyAccountsOurpayMvpPresenter<MyAccountsOurpayMvpView> provideMyAccountsOurpayPresenter(MyAccountsOurpayPresenter<MyAccountsOurpayMvpView> presenter) {
         return presenter;
     }
 

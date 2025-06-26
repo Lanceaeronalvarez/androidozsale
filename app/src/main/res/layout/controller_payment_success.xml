@@ -58,7 +58,7 @@
             android:textColor="@color/payment_success_text_order_name"
             android:textSize="@dimen/payment_success_order_number_text_size"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/ourpay_panel_holder"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -89,7 +89,7 @@
             android:layout_marginTop="@dimen/padding_default"
             android:layout_marginBottom="@dimen/padding_default"
             android:text="@string/continue_shopping"
-            app:layout_constraintBottom_toTopOf="@+id/ourpay_panel_holder"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -97,20 +97,6 @@
             app:layout_constraintTop_toBottomOf="@+id/thank_you_for_shopping_textview"
             app:layout_constraintVertical_bias="1.0"
             app:layout_goneMarginBottom="@dimen/padding_default" />
-
-        <LinearLayout
-            android:id="@+id/ourpay_panel_holder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding_default"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

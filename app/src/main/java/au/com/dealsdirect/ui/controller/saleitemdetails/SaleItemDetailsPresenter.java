@@ -18,8 +18,6 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetLeaderboardBannerRequest;
 import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
 import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
-import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
-import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
@@ -32,23 +30,16 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsRes
 import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.priceinfo.PricingInfoLoaderHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
-import au.com.dealsdirect.service.ourpay.Ourpay;
-import au.com.dealsdirect.service.ourpay.OurpayError;
-import au.com.dealsdirect.service.ourpay.OurpayState;
-import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.leaderboardbanner.LeaderboardPresenterHelper;
-import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CookieUtils;
-import au.com.dealsdirect.utils.CurrencyUtil;
 import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import okhttp3.Cookie;
 
 public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends BasePresenter<V> implements SaleItemDetailsMvpPresenter<V> {
 
@@ -115,24 +106,6 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                 }
             }
         });
-    }
-
-    @Override
-    public void loadOurpayData(final SaleItemDetails value) {
-        if (!getDataManager().isOurpayEnabled()) {
-            return;
-        }
-
-        doApiCallForResponse(getDataManager().callGetOurpayData(OurpayDataRequest.init(
-                        CurrencyUtil.getCurrency(getDataManager().getCountryId()), value.getPrice().getValue())),
-                new AppApiCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        super.onSuccess(response);
-
-                        generateOurpay(value, (OurpayDataResponse) response);
-                    }
-                });
     }
 
     @SuppressLint("DefaultLocale")
@@ -248,56 +221,6 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     @Override
     public boolean isAuthorized() {
         return getDataManager().isAuthorized();
-    }
-
-    @Override
-    public void generateOurpay(SaleItemDetails value, OurpayDataResponse ourpayDataResponse) {
-        if (!isViewAttached()) {
-            return;
-        }
-
-        Ourpay ourpay = new Ourpay();
-
-        try {
-            ourpay.setState(OurpayState.PRECART);
-
-            ourpay.setDescription(ourpayDataResponse.getSummary().getDescription());
-            ourpay.setTotalAmount(value.getPrice().getValue());
-            ourpay.setCanUse(true);
-            ourpay.setBillingPeriod(ourpayDataResponse.getPayment().getBillingPeriod());
-            ourpay.setTransactionCount(ourpayDataResponse.getPayment().getTransactionCount());
-
-            ourpay.setMinAmount(ourpayDataResponse.getPayment().getPaymentConditions().getMinAmountThreshold().doubleValue());
-            ourpay.setMaxAmount(ourpayDataResponse.getPayment().getPaymentConditions().getMaxAmountThreshold().doubleValue());
-
-            ourpay.setInitialAmount(ourpayDataResponse.getSummary().getFirstTransactionAmount());
-
-            ourpay.setPlannedTransactions(ourpayDataResponse.getPayment().getBillingAgreement().getPlannedTransactions());
-            ourpay.setPlannedTransactionText(ourpayDataResponse.getSummary().getPlannedTransactionsText());
-            ourpay.setPlannedTransactionAmount(ourpayDataResponse.getSummary().getPlannedTransactionsAmount());
-            ourpay.setFirstTransactionText(ourpayDataResponse.getSummary().getFirstTransactionText());
-            ourpay.setFirstTransactionAmount(ourpayDataResponse.getSummary().getFirstTransactionAmount());
-
-            if (ourpayDataResponse.getSummary().getDescription() != null) {
-                ourpay.setDetails(ourpayDataResponse.getSummary().getDescription());
-            }
-
-            if (OurpayStateManager.isPriceOutOfRange(ourpay)) {
-                ourpay.setState(ourpay.getState() | OurpayState.ERROR);
-                ourpay.setCanUse(false);
-                ourpay.setErrorCode(OurpayError.AMOUNT_OUT_OF_RANGE);
-            } else {
-                if (ourpay.getPlannedTransactions() == null) {
-                    ourpay.setState(OurpayState.DISABLED);
-                }
-            }
-        } catch (Exception ex) {
-            ourpay.setState(OurpayState.DISABLED);
-        }
-
-        getMvpView().showMyPayDetails(value, ourpay);
-
-
     }
 
     @Override
@@ -656,6 +579,16 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     }
 
     @Override
+    public String getShippingTemplateText() {
+        return getDataManager().getShippingHover();
+    }
+
+    @Override
+    public String getShippingTitleText() {
+        return getDataManager().getShippingTitle();
+    }
+
+    @Override
     public String getBuyboxTemplateTextTitle() {
         return getDataManager().getBuyBoxTemplateTextTitle();
     }
@@ -728,7 +661,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                 });
     }
 
-    void resetUtmCookies(){
+    private void resetUtmCookies() {
         Map<String, String> utmKeys = new HashMap<>();
         utmKeys.put("sc", "");
         utmKeys.put("c", "");

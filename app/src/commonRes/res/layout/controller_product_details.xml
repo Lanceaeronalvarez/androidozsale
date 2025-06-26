@@ -361,18 +361,6 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:id="@+id/partial_item_details_ourpay_panel_holder"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@color/white"
-                                android:orientation="vertical"
-                                android:paddingLeft="@dimen/margin_small"
-                                android:paddingTop="@dimen/margin_extra_small"
-                                android:paddingRight="@dimen/margin_small"
-                                android:paddingBottom="@dimen/margin_extra_small"
-                                android:visibility="gone" />
-
-                            <LinearLayout
                                 android:id="@+id/partial_item_details_afterpay_panel_holder"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

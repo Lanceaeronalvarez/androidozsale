@@ -52,12 +52,6 @@ public class Value {
     @SerializedName(value = "Afterpay", alternate = {"afterpay", "AfterPay"})
     @Expose
     private GetCurrentOrderAfterpay afterpay;
-    @SerializedName(value = "OurPay", alternate = {"ourPay"})
-    @Expose
-    private GetCurrentOrderOurpay ourpay;
-    @SerializedName(value = "OurPaySelect", alternate = {"ourPaySelect"})
-    @Expose
-    private GetOurPaySelect ourPaySelect;
     @SerializedName("PromoCodeList")
     @Expose
     private List<PromoCode> promoCodeList;
@@ -142,18 +136,6 @@ public class Value {
         return deliveryServicePackageDetail;
     }
 
-    public GetCurrentOrderOurpay getOurpay() {
-        return ourpay;
-    }
-
-    public GetOurPaySelect getOurPaySelect() {
-        return ourPaySelect;
-    }
-
-    public int getOurPaySelectTermsAndConditions() {
-        return ourPaySelect.getTermsAndConditions();
-    }
-
     public GetCurrentOrderAfterpay getAfterpay() {
         return afterpay;
     }
@@ -209,16 +191,6 @@ public class Value {
 
         public void setAvailableMobileApp(boolean availableMobileApp) {
             isAvailableMobileApp = availableMobileApp;
-        }
-    }
-
-    public static class GetOurPaySelect {
-        @SerializedName(value = "TermsAndConditions", alternate = {"termsAndConditions"})
-        @Expose
-        private int termsAndConditions;
-
-        private int getTermsAndConditions() {
-            return termsAndConditions;
         }
     }
 

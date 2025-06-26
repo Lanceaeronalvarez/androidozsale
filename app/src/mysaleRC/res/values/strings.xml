@@ -30,7 +30,6 @@
     <string name="forgot_password_title">Forgot Password</string>
     <string name="register_title">Registration</string>
     <string name="username">Username</string>
-    <string name="marydoe_ourpay">marydoe.ourpay</string>
     <string name="password">Password</string>
     <string name="close">Close</string>
     <string name="see_todays_sale">See Today\'s Sales</string>
@@ -61,16 +60,13 @@
     <string name="more_information"><u>More Information</u></string>
 
     <string name="payment_schedule">Payment Schedule</string>
-    <string name="ourpay">Ourpay</string>
     <string name="account">Account</string>
     <string name="checkout">Checkout</string>
-    <string name="ourpay_is_cocosa_s_exclusive_installment_payment_plan_solution_ourpay_allows_you_to_checkout_with_all_the_items_you_love_and_pay_over_four_easy_interest_free_installments_simply_browse_the_site_and_add_your_preferred_goodies_to_your_cart_proceed_to_checkout_and_pay_less_today_with_ourpay">Ourpay is Cocosa\'s exclusive installment payment plan solution. Ourpay allows you to checkout with all the items you love and pay over four easy, interest free installments. Simply browse the site and add your preferred goodies to your cart. Proceed to checkout and pay less today with Ourpay!</string>
     <string name="benefits">benefits</string>
     <string name="shop_all_your_favorite_sales">shop all your favorite sales</string>
     <string name="interest_free">interest free</string>
     <string name="easy_to_use_no_long_sign_ups">easy to use - no long sign ups</string>
     <string name="secure_payment_method">secure payment method</string>
-    <string name="get_that_pair_of_shoes_and_handbag_using_ourpay">get that pair of shoes and handbag using ourpay</string>
     <string name="our_partners">our partners</string>
     <string name="active_plans">Active Plans</string>
     <string name="balance_owing">Balance Owing</string>
@@ -98,7 +94,6 @@
     <string name="country_code">Country Code</string>
     <string name="australia_61">Australia (+61)</string>
     <string name="mobile_number">Mobile Number</string>
-    <string name="ourpay_code_hint">Code</string>
     <string name="enter_your_code_below">ENTER YOUR CODE BELOW</string>
     <string name="invalid_phone_number">Invalid Number</string>
     <string name="send_sms_verification">Send SMS Verification</string>
