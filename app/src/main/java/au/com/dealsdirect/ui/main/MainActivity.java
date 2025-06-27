@@ -1187,7 +1187,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
         if (isAuthorized()) {
             mMainController.updateBasketItemsQuantity();
-        } else if (!hasShownSignupModal && getResources().getBoolean(R.bool.will_show_signup_modal)){
+        } else if (!hasShownSignupModal && getResources().getBoolean(R.bool.will_show_signup_modal)) {
             new Handler(getMainLooper()).post(() -> {
                 Controller controller = mMainController.getShopRouter().getControllerWithTag(ShopsController.TAG);
                 if (controller instanceof ShopsController) {
@@ -1580,6 +1580,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         bottomSheetFragment.setDescription(description);
 
         bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
+    }
+
+    public void createBraintreePaymentMethod(String cardNumber, String cardMonth, String cardYear, String cardCVV) {
+        getBraintreeClient().tokenizeCard(cardNumber, cardMonth, cardYear, cardCVV, (cardNonce, error) -> {
+            if (cardNonce == null || error != null) {
+                CustomAlertDialog.showCustomAlertDialog(
+                        MainActivity.this, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        getResources().getString(R.string.stripe_add_card_error));
+                return;
+            }
+            mBraintreeClientHelper.collectDeviceData(deviceData -> mPresenter.createPaymentMethod(
+                    deviceData, cardNonce.getString(), PaymentInfo.TYPE_BRAINTREE));
+        });
     }
 
     public void createStripePaymentMethod(String cardNumber, int cardMonth, int cardYear, String cardCVV) {

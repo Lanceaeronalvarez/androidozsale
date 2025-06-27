@@ -8,7 +8,5 @@ public interface AddPaymentMvpView extends MvpView {
 
     void showAddPaymentResult(boolean result, String paymentType);
 
-    void clearFields();
-
     void onMasterpassButtonClick();
 }

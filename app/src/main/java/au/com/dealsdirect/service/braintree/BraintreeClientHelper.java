@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.braintreepayments.api.BraintreeClient;
 import com.braintreepayments.api.BraintreeRequestCodes;
 import com.braintreepayments.api.BrowserSwitchResult;
+import com.braintreepayments.api.Card;
 import com.braintreepayments.api.CardClient;
+import com.braintreepayments.api.CardTokenizeCallback;
 import com.braintreepayments.api.DataCollector;
 import com.braintreepayments.api.PayPalAccountNonce;
 import com.braintreepayments.api.PayPalCheckoutRequest;
@@ -143,6 +145,15 @@ public class BraintreeClientHelper {
         request.setNonce(nonce);
         mThreeDSecureVerificationHandler = handler;
         mThreeDSecureClient.performVerification(activity, request, this::handleThreeDSecureResult);
+    }
+
+    public void tokenizeCard(String cardNumber, String cardMonth, String cardYear, String cardCVV, CardTokenizeCallback callback) {
+        Card card = new Card();
+        card.setNumber(cardNumber);
+        card.setExpirationMonth(cardMonth);
+        card.setExpirationYear(cardYear);
+        card.setCvv(cardCVV);
+        mCardClient.tokenize(card, callback);
     }
 
     private void tokenizePayPalAccountWithCheckout(String totalCost) {
