@@ -614,6 +614,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.product_details_bottom_spacer)
     View mBottomSpacer;
 
+    @BindView(R.id.product_details_zoom)
+    ImageButton mProductSharedImageZoom;
+
     int[] mSharedImageLocation;
 
     public static final String TAG = SaleItemDetailsController.class.getSimpleName();
@@ -1234,6 +1237,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 currentSaleImagePosition = 0;
             }
             ImageUtils.loadImageImmediate(qualitySaleImages.get(currentSaleImagePosition), mProductSharedImage, null);
+        });
+
+        mProductSharedImageZoom.setOnClickListener( v -> {
+            getRouter().pushController(RouterTransaction
+                    .with(SaleItemDetailsImageZoomController.newInstance(qualitySaleImages.get(currentSaleImagePosition)))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
         });
 
         mShippingPostcodeContainer.setVisibility(View.GONE);

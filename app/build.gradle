@@ -726,6 +726,9 @@ dependencies {
     //password strength meter
     implementation 'nu.aaro.gustav:passwordstrengthmeter:0.4'
 
+    //zoom image
+    implementation("com.otaliastudios:zoomlayout:1.9.0")
+
     implementation project(path: ':genie-utility')
     implementation project(path: ':genie-animation')
     implementation project(path: ':genie-views')

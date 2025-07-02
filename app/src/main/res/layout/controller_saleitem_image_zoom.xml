@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <ImageButton
+        android:id="@+id/close_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:tint="@color/black"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/margin_small"
+        android:src="@drawable/ic_close" />
+
+    <com.otaliastudios.zoom.ZoomLayout
+        android:id="@+id/product_details_zoom_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:alignment="center"
+        app:overScrollHorizontal="false"
+        app:overScrollVertical="false"
+        app:overPinchable="false"
+        app:horizontalPanEnabled="true"
+        app:verticalPanEnabled="true"
+        app:zoomEnabled="true"
+        app:flingEnabled="true"
+        app:scrollEnabled="true"
+        app:oneFingerScrollEnabled="true"
+        app:twoFingersScrollEnabled="true"
+        app:threeFingersScrollEnabled="true"
+        app:minZoom="0"
+        app:minZoomType="zoom"
+        app:maxZoom="4.5"
+        app:maxZoomType="zoom"
+        app:animationDuration="280"
+        app:hasClickableChildren="true"
+        android:layout_below="@id/close_button">
+
+        <ImageView
+            android:id="@+id/product_details_shared_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </com.otaliastudios.zoom.ZoomLayout>
+
+</RelativeLayout>
