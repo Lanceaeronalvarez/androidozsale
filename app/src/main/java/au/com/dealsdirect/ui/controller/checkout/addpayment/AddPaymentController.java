@@ -139,7 +139,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     CvcEditText mStripeCVV;
 
     @BindView(R.id.partial_toolbar_title)
-    TextView mViewAddressToolarTitle;
+    TextView mViewAddressToolbarTitle;
 
     private boolean isPaymentMethodChanged = false;
 
@@ -214,7 +214,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
     @Override
     protected void setUp(View view) {
-        mViewAddressToolarTitle.setText("Add New Payment");
+        mViewAddressToolbarTitle.setText("Add New Payment");
 
         mLineView.setVisibility(View.GONE);
         mAfterpayPanel.setVisibility(View.GONE);
@@ -232,18 +232,24 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         mCheckoutButtons.setVisibility(isFromCart ? View.VISIBLE : View.GONE);
         mAddButton.setVisibility(isFromCart ? View.GONE : View.VISIBLE);
 
-        mStripeLayout.setVisibility(View.VISIBLE);
-
         mCardForm.cardRequired(true)
-                .expirationRequired(false)
-                .cvvRequired(false)
+                .expirationRequired(true)
+                .cvvRequired(true)
                 .actionLabel("Purchase")
                 .setup(getActivity());
-        mCardForm.setVisibility(View.GONE);
 
         mCardForm.setOnCardFormSubmitListener(this);
         mCardForm.setOnCardTypeChangedListener(this);
         mCardForm.setOnCardFormScanListener(this);
+
+        if (mPresenter.isStripe()) {
+            mStripeLayout.setVisibility(View.VISIBLE);
+            mCardForm.setVisibility(View.GONE);
+        } else {
+            mStripeLayout.setVisibility(View.GONE);
+            mCardForm.setVisibility(View.VISIBLE);
+        }
+
         mCameraButton.setBackground(null);
         mCameraButton.setImageDrawable(getResources().getDrawable(R.drawable.bg_credit_card));
 //        mCameraButton.setVisibility(View.VISIBLE);
@@ -421,23 +427,11 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @Override
     public void onCardFormSubmit() {
         hideKeyboard();
-
-        if (!mStripeCVV.getText().toString().equalsIgnoreCase("")
-                && !mStripeCardNumber.getText().toString().equalsIgnoreCase("")) {
-
-            mStripeExpiryDate.validate();
-
-            if (mStripeExpiryDate.isValid()) {
-                mActivity.createStripePaymentMethod(mStripeCardNumber.getText().toString(), Integer.parseInt(mStripeExpiryDate.getMonth()),
-                        Integer.parseInt(mStripeExpiryDate.getYear()), mStripeCVV.getText().toString());
-            }
-
+        if (mPresenter.isStripe()) {
+            addStripePaymentMethod();
         } else {
-            CustomAlertDialog.showCustomAlertDialog(
-                    mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    mActivity.getResources().getString(R.string.stripe_add_card_error));
+            addBraintreePaymentMethod();
         }
-
     }
 
     @Override
@@ -472,13 +466,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
                     "Can't add payment method");
         }
         getRouter().handleBack();
-    }
-
-    @Override
-    public void clearFields() {
-        mCardForm.getCardEditText().getText().clear();
-        mCardForm.getCvvEditText().getText().clear();
-        mCardForm.getExpirationDateEditText().getText().clear();
     }
 
     @Override
@@ -607,5 +594,41 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
     public boolean isPaymentMethodChanged() {
         return isPaymentMethodChanged;
+    }
+
+    private void addStripePaymentMethod() {
+        if (!mStripeCVV.getText().toString().equalsIgnoreCase("")
+                && !mStripeCardNumber.getText().toString().equalsIgnoreCase("")) {
+            mStripeExpiryDate.validate();
+            if (mStripeExpiryDate.isValid()) {
+                mActivity.createStripePaymentMethod(
+                        mStripeCardNumber.getText().toString(),
+                        Integer.parseInt(mStripeExpiryDate.getMonth()),
+                        Integer.parseInt(mStripeExpiryDate.getYear()),
+                        mStripeCVV.getText().toString());
+            }
+        } else {
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    mActivity.getResources().getString(R.string.stripe_add_card_error));
+        }
+    }
+
+    private void addBraintreePaymentMethod() {
+        if (mCardForm.isValid()) {
+            if (mActivity.isBraintreeInitialized()) {
+                mActivity.createBraintreePaymentMethod(
+                        mCardForm.getCardNumber(),
+                        mCardForm.getExpirationMonth(),
+                        mCardForm.getExpirationYear(),
+                        mCardForm.getCvv());
+            } else {
+                CustomAlertDialog.showCustomAlertDialog(
+                        mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        "Please wait for payments to finish initializing");
+            }
+        } else {
+            mCardForm.validate();
+        }
     }
 }

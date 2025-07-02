@@ -1708,6 +1708,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                     mActivity.getMainController().resetAccountRouter();
                     mActivity.getMainController().resetWishlistRouter();
                     mActivity.getMainController().resetBrandsRouter();
+                    mActivity.getMainController().resetCheckoutRouter();
                 }
 
                 @Override

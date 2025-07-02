@@ -6,8 +6,6 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 
 public interface AddPaymentMvpPresenter <V extends MvpView> extends MvpPresenter<V> {
 
-    boolean isDebug();
-
     void facebookInitiatedCheckout(String paymentType,
                                    int numItems,
                                    double price);
@@ -17,4 +15,6 @@ public interface AddPaymentMvpPresenter <V extends MvpView> extends MvpPresenter
     boolean isPaypalCreditEnabled();
 
     boolean isPayPalEnabled();
+
+    boolean isStripe();
 }

@@ -19,11 +19,6 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
     }
 
     @Override
-    public boolean isDebug() {
-        return getDataManager().isDebugMode();
-    }
-
-    @Override
     public void facebookInitiatedCheckout(String paymentType, int numItems, double price) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(DataCollector.EventParameters.PAYMENT_METHOD_TYPE, paymentType);
@@ -46,5 +41,10 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
     @Override
     public boolean isPayPalEnabled() {
         return getDataManager().isPaypalEnabled();
+    }
+
+    @Override
+    public boolean isStripe() {
+        return getDataManager().isStripeEnabled();
     }
 }
