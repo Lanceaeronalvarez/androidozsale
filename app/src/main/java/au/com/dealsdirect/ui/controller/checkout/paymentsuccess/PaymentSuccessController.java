@@ -162,7 +162,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         PaymentInfo.resetPaymentInfo();
 
         mActivity.getMainController().showShopController();
-
+        mActivity.getMainController().resetCheckoutRouter();
         return true;
     }
 

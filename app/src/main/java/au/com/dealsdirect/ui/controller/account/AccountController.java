@@ -677,6 +677,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                     mActivity.getMainController().resetAccountRouter();
                     mActivity.getMainController().resetWishlistRouter();
                     mActivity.getMainController().resetBrandsRouter();
+                    mActivity.getMainController().resetCheckoutRouter();
 
                     userDetailsLoggedOut = null;
                 }
