@@ -35,8 +35,6 @@
     <color name="category_text_active">@color/colorAccent</color>
     <color name="category_text_inactive">#707070</color>
 
-    <color name="border_gray">#E4E4E4</color>
-
     <color name="gray_category_text">#707070</color>
     <color name="gray_item_details">#466E87</color>
     <color name="gray_title_text">#959595</color>
