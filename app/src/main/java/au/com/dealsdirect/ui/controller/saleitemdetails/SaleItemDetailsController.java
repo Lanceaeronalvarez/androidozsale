@@ -1239,7 +1239,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             ImageUtils.loadImageImmediate(qualitySaleImages.get(currentSaleImagePosition), mProductSharedImage, null);
         });
 
-        mProductSharedImageZoom.setOnClickListener( v -> {
+        mProductSharedImageZoom.setOnClickListener(v -> {
             getRouter().pushController(RouterTransaction
                     .with(SaleItemDetailsImageZoomController.newInstance(qualitySaleImages.get(currentSaleImagePosition)))
                     .pushChangeHandler(new HorizontalChangeHandler())

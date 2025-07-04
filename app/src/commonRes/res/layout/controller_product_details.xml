@@ -176,10 +176,10 @@
                                             android:id="@+id/product_details_zoom"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:src="@drawable/zoom_btn"
-                                            android:backgroundTint="@color/white"
                                             android:layout_alignParentEnd="true"
-                                            android:layout_alignParentBottom="true"/>
+                                            android:layout_alignParentBottom="true"
+                                            android:backgroundTint="@color/white"
+                                            android:src="@drawable/zoom_btn" />
 
                                     </RelativeLayout>
 

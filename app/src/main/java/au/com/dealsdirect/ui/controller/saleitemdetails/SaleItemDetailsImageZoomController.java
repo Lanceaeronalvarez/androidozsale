@@ -57,10 +57,10 @@ public class SaleItemDetailsImageZoomController extends BaseController {
         });
 
         mProductSharedImage.setOnClickListener(v -> {
-            if(zoom){
+            if (zoom) {
                 mProductZoomImage.zoomBy(0.3f, true);
                 zoom = false;
-            }else{
+            } else {
                 mProductZoomImage.zoomBy(3, true);
                 zoom = true;
             }
