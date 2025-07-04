@@ -20,6 +20,10 @@ public interface CheckoutMvpView extends MvpView {
 
     String TAG = "CheckoutController";
 
+    PaymentMethod getSelectedPaymentMethod();
+
+    void setSelectedPaymentMethod(PaymentMethod selectedPaymentMethod);
+
     void loadCart();
 
     void showCartDetails(List<MappedShipment> items);

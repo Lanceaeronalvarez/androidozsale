@@ -14,7 +14,6 @@ import com.braintreepayments.api.DataCollector;
 import com.braintreepayments.api.PayPalAccountNonce;
 import com.braintreepayments.api.PayPalCheckoutRequest;
 import com.braintreepayments.api.PayPalClient;
-import com.braintreepayments.api.PayPalFlowStartedCallback;
 import com.braintreepayments.api.PayPalPaymentIntent;
 import com.braintreepayments.api.PayPalVaultRequest;
 import com.braintreepayments.api.ThreeDSecureClient;
@@ -23,9 +22,7 @@ import com.braintreepayments.api.ThreeDSecureResult;
 
 import javax.annotation.Nullable;
 
-import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.main.PaymentInfo;
 
 public class BraintreeClientHelper {
 
@@ -39,6 +36,8 @@ public class BraintreeClientHelper {
     private CardClient mCardClient = null;
     private DataCollector mDataCollector = null;
     private String currencyCode = "";
+
+    private boolean isFetchingToken = false;
 
     private final PaymentHandler paymentHandler = new PaymentHandler(this);
 

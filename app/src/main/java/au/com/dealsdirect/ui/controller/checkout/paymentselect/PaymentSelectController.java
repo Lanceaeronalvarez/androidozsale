@@ -59,13 +59,14 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
     private PaymentSelectAdapter mAdapter;
 
-    private ArrayList<PaymentMethod> mPaymentMethods = new ArrayList<>();
-    private boolean isFromCart = false;
     private String mCartTotalCost;
+    private ArrayList<PaymentMethod> mPaymentMethods;
+    private boolean isFromCart;
     private CheckoutDetailsMapper mValue;
     private GA4EventParams.GA4AddPaymentInfoParams ga4AddPaymentInfoParams = null;
 
     private boolean isPaymentMethodChanged = false;
+    private PaymentMethod selectedPaymentMethod = null;
 
 
     public static PaymentSelectController newInstance() {
@@ -125,7 +126,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
             }
         }
 
-        boolean hasPaymentMethod = paymentMethods != null && paymentMethods.size() > 0;
+        boolean hasPaymentMethod = paymentMethods != null && !paymentMethods.isEmpty();
         mPaymentSubtitleText.setVisibility(hasPaymentMethod ? View.VISIBLE : View.GONE);
 
         if (hasPaymentMethod) {
@@ -146,7 +147,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
     @Override
     public void showRemovePaymentMethodResult(PaymentMethod paymentMethod, boolean result, String message) {
-        mActivity.setPaymentMethodSelected(null);
+        selectedPaymentMethod = null;
         hideLoading();
 
         if (result) {
@@ -175,11 +176,11 @@ public class PaymentSelectController extends BaseController implements PaymentSe
         mToolbarLeftView.setVisibility(mPresenter.isTablet() && !isFromCart ? View.INVISIBLE : View.VISIBLE);
         mPaymentSelectToolbarTitle.setText(getString(R.string.my_payments));
 
-        mAdapter = new PaymentSelectAdapter(mActivity, mPaymentMethods, mPresenter, isFromCart);
+        mAdapter = new PaymentSelectAdapter(mPaymentMethods, mPresenter, isFromCart);
+        mAdapter.setSelectedPaymentMethod(selectedPaymentMethod);
         RecyclerViewSwipeManager recyclerViewSwipeManager = new RecyclerViewSwipeManager();
-        RecyclerView.Adapter wrappedAdapter = recyclerViewSwipeManager.createWrappedAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        mRecyclerView.setAdapter(wrappedAdapter);
+        mRecyclerView.setAdapter(recyclerViewSwipeManager.createWrappedAdapter(mAdapter));
         recyclerViewSwipeManager.attachRecyclerView(mRecyclerView);
 
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity, SimpleDividerItemDecoration.VERTICAL_LIST));
@@ -193,10 +194,10 @@ public class PaymentSelectController extends BaseController implements PaymentSe
                 showPaymentList(mPaymentMethods);
                 mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> {
                     final PaymentMethod selectedPaymentMethod = mPaymentMethods.get(position);
-                    if (mActivity.getPaymentMethodSelected() != selectedPaymentMethod) {
+                    if (getSelectedPaymentMethod() != selectedPaymentMethod) {
                         isPaymentMethodChanged = true;
                     }
-                    mActivity.setPaymentMethodSelected(selectedPaymentMethod);
+                    setSelectedPaymentMethod(selectedPaymentMethod);
 
                     logAddPaymentWhileFromCart(selectedPaymentMethod.getPaymentType());
 
@@ -249,5 +250,13 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
     public boolean isPaymentMethodChanged() {
         return isPaymentMethodChanged;
+    }
+
+    public PaymentMethod getSelectedPaymentMethod() {
+        return selectedPaymentMethod;
+    }
+
+    public void setSelectedPaymentMethod(PaymentMethod selectedPaymentMethod) {
+        this.selectedPaymentMethod = selectedPaymentMethod;
     }
 }

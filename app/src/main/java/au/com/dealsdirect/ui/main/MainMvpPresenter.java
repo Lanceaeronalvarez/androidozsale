@@ -9,6 +9,7 @@ import android.content.Context;
 import com.visa.checkout.VisaPaymentSummary;
 
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.di.PerActivity;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.controller.main.Settings;
@@ -52,7 +53,7 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void fetchBraintreeClientToken();
 
-    void createPaymentTransaction(String deviceData, String paymentType, String paymentNonce, String paymentToken, String provider);
+    void createPaymentTransaction(String deviceData, PaymentMethod paymentMethod, String paymentNonce, String paymentToken, boolean isThreeDSecureRequired);
 
     void createPaymentTransactionGPay(String token);
 
@@ -78,7 +79,7 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     boolean isAuthorized();
 
-    void callGetPaymentMethodNonce(String token);
+    void callGetPaymentMethodNonce(PaymentMethod paymentMethod, String token, double cartTotalAmount);
 
     void callGCMNotificationEvent(Context context);
 

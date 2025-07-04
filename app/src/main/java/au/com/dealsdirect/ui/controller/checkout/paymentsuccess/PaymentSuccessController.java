@@ -18,7 +18,6 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.main.CardInfo;
-import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DialogUtils;
@@ -159,8 +158,6 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
     @Override
     public boolean handleBack() {
-        PaymentInfo.resetPaymentInfo();
-
         mActivity.getMainController().showShopController();
         mActivity.getMainController().resetCheckoutRouter();
         return true;

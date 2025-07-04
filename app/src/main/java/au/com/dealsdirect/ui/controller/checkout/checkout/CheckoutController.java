@@ -70,7 +70,6 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.GA4EventParams;
-import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
@@ -101,7 +100,6 @@ import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.HorizontalScrollingItemsAdapter;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsHorizontalScrollingItemsHelper;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.controller.zippay.ZipPayViewController;
 import au.com.dealsdirect.ui.custom.BottomPopupView;
@@ -110,7 +108,6 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -301,7 +298,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private boolean mIsCartLoading = false;
     private boolean mIsPaymentMethodChanged = false;
-    private String mAddressPhoneNumber;
+    private PaymentMethod selectedPaymentMethod = null;
     private Double mDiscountValue;
     private Double mTotalValue;
 
@@ -314,8 +311,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private PaymentMethod mLastUserPaymentMethod;
     private boolean mHasSavedInstance = false;
-    private HashMap<String, Object> parameters = new HashMap<>();
-    private boolean isStripe;
 
     private boolean isShipmentAvailable = true;
 
@@ -608,6 +603,16 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     @Override
+    public PaymentMethod getSelectedPaymentMethod() {
+        return selectedPaymentMethod;
+    }
+
+    @Override
+    public void setSelectedPaymentMethod(PaymentMethod selectedPaymentMethod) {
+        this.selectedPaymentMethod = selectedPaymentMethod;
+    }
+
+    @Override
     public boolean isCartLoading() {
         return mIsCartLoading;
     }
@@ -669,7 +674,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (deliveryAddress != null) {
             ((TextView) mAddressLayout.findViewById(R.id.partial_checkout_address_name)).setText(deliveryAddress.name);
             ((TextView) mAddressLayout.findViewById(R.id.partial_checkout_address_details)).setText(formAddressDetails(deliveryAddress));
-            mAddressPhoneNumber = deliveryAddress.phone;
 
             mAddNewAddressLayout.setVisibility(View.GONE);
             mAddressLayout.setVisibility(View.VISIBLE);
@@ -774,7 +778,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void displayPaymentDetails() {
-        PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
+        PaymentMethod paymentMethod = selectedPaymentMethod;
         if (paymentMethod != null) {
 
             if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
@@ -942,10 +946,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mPaymentList.clear();
         mPaymentList.addAll(paymentList);
 
-        PaymentMethod paymentMethod = getCompatiblePaymentType(mLastUserPaymentMethod,
-                mActivity.getPaymentMethodSelected(),
+        selectedPaymentMethod = getCompatiblePaymentType(mLastUserPaymentMethod,
+                selectedPaymentMethod,
                 getSelectedDeliveryOption());
-        mActivity.setPaymentMethodSelected(paymentMethod);
 
         displayPaymentDetails();
     }
@@ -1073,7 +1076,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void onKlarnaButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Klarna"));
-        logInitiateCheckout(mActivity, PaymentInfo.TYPE_KLARNA, mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.KLARNA, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.KLARNA);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1109,7 +1112,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                                                    PaymentMethod selectedPaymentMethod,
                                                    String deliveryOption) {
 
-        ArrayList<PaymentMethod> defaultPayments = new ArrayList();
+        ArrayList<PaymentMethod> defaultPayments = new ArrayList<>();
         if (selectedPaymentMethod != null) defaultPayments.add(selectedPaymentMethod);
         if (lastPaymentMethod != null) defaultPayments.add(lastPaymentMethod);
 
@@ -1118,13 +1121,23 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void storeCartDetails(CheckoutDetailsMapper mappedValues) {
-        //Set 3DS value
-        if (mappedValues != null) {
-            PaymentInfo.setThreeDSecureRequired(mappedValues.getThreeDSecureRequired());
-            PaymentInfo.setCartCost(mappedValues.getSummary().getTotal());
+        mValue = mappedValues;
+    }
+
+    private boolean isThreeDSecureRequired() {
+        if (mValue == null) {
+            return false;
         }
 
-        mValue = mappedValues;
+        return mValue.getThreeDSecureRequired();
+    }
+
+    private double getCartTotalAmount() {
+        if (mValue == null) {
+            return 0d;
+        }
+
+        return mValue.getSummary().getTotal();
     }
 
     @Override
@@ -1175,24 +1188,28 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void onPayButtonClick() {
+        String paymentProviderType = selectedPaymentMethod.getProviderType();
         String paymentLogType = AppConstants.REGULAR;
 
         if (!commonPaymentAbilityDetermination()) {
-            logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
-                    mValue.getSummary().getTotal(), paymentLogType);
+            logInitiateCheckout(
+                    mActivity,
+                    paymentProviderType,
+                    mItemList.size(),
+                    mValue.getSummary().getTotal(),
+                    paymentLogType);
             return;
         }
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
-        if (mActivity.getPaymentMethodSelected() == null) {
+        if (selectedPaymentMethod == null) {
             showAddPaymentMethodController();
-        } else if (mActivity.getPaymentMethodSelected().getProviderType() != null &&
-                mActivity.getPaymentMethodSelected().getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
-            PaymentInfo.setProvider(PaymentInfo.TYPE_STRIPE);
+        } else if (selectedPaymentMethod.getProviderType() != null &&
+                selectedPaymentMethod.getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
             if (mPresenter.isStripeEnabled() && mPresenter.getStripePublicKey() != null) {
                 mActivity.callCreatePaymentTransactionStripe(AppConstants.STRIPE,
-                        mActivity.getPaymentMethodSelected().getToken());
+                        selectedPaymentMethod.getToken());
                 paymentLogType = AppConstants.STRIPE;
             } else {
                 CustomAlertDialog.showCustomAlertDialog(
@@ -1200,19 +1217,21 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                         mActivity.getResources().getString(R.string.stripe_error_occured));
             }
         } else {
-            PaymentInfo.setThreeDSecureCalled(false);
-            PaymentInfo.setProvider(PaymentInfo.TYPE_BRAINTREE);
-            PaymentInfo.setFabricPaymentType(PaymentInfo.isThreeDSecureRequired() ?
-                    DataCollector.EventParameters.PaymentOption.THREEDS.getValue() :
-                    DataCollector.EventParameters.PaymentOption.REGULAR.getValue());
-            PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
             if (mActivity.isBraintreeInitialized()) {
-                mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                mActivity.callCreatePaymentTransaction(
+                        selectedPaymentMethod,
+                        "",
+                        isThreeDSecureRequired(),
+                        getCartTotalAmount());
             } else {
                 mActivity.fetchBraintreeAuthorization(new FetchBraintreeClientTokenHandler() {
                     @Override
                     public void onSuccess() {
-                        mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                        mActivity.callCreatePaymentTransaction(
+                                selectedPaymentMethod,
+                                "",
+                                isThreeDSecureRequired(),
+                                getCartTotalAmount());
                     }
 
                     @Override
@@ -1223,13 +1242,17 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             }
         }
 
-        logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
-                mValue.getSummary().getTotal(), paymentLogType);
+        logInitiateCheckout(
+                mActivity,
+                paymentProviderType,
+                mItemList.size(),
+                mValue.getSummary().getTotal(),
+                paymentLogType);
     }
 
     private void onGPayButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Google Pay"));
-        logInitiateCheckout(mActivity, PaymentInfo.TYPE_GPAY, mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.GPAY, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.GPAY);
 
         MainActivity activity = (MainActivity) getActivity();
@@ -1241,7 +1264,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void onPaypalButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Paypal"));
-        logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.PAYPAL, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.PAYPAL);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1249,24 +1272,26 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         }
 
         mPresenter.setLastCartRedirection(DataCollector.EventParameters.LastRedirection.PAYPAL);
-        PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.PAYPAL.getValue());
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
         if (mActivity.isBraintreeInitialized()) {
             //If no selected payment method displayed, call paypal
-            if (mActivity.getPaymentMethodSelected() == null || mActivity.getPaymentMethodSelected().getProviderType().equals(PaymentInfo.TYPE_STRIPE)) {
+            if (selectedPaymentMethod == null || selectedPaymentMethod.getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
                 mActivity.startPaypalPayment();
             } else {
-                PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
-                mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                mActivity.callCreatePaymentTransaction(
+                        selectedPaymentMethod,
+                        "",
+                        isThreeDSecureRequired(),
+                        getCartTotalAmount());
             }
         }
-        
+
     }
 
     private void onPaypalCreditButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Paypal Credit"));
-        logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.PAYPALCREDIT, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.PAYPALCREDIT);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1274,15 +1299,17 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         }
 
         mPresenter.setLastCartRedirection(DataCollector.EventParameters.LastRedirection.PAYPAL);
-        PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.PAYPAL.getValue());
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
         if (mActivity.isBraintreeInitialized()) {
-            if (mActivity.getPaymentMethodSelected() == null) {
+            if (selectedPaymentMethod == null) {
                 mActivity.startPaypalCreditPayment(String.valueOf(mValue.getSummary().getTotal()));
             } else {
-                PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
-                mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                mActivity.callCreatePaymentTransaction(
+                        selectedPaymentMethod,
+                        "",
+                        isThreeDSecureRequired(),
+                        getCartTotalAmount());
             }
         }
 
@@ -1290,7 +1317,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void onMasterpassButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Masterpass"));
-        logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.MASTERPASS, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.MASTERPASS);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1299,7 +1326,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         mPresenter.setLastCartRedirection(DataCollector.EventParameters.LastRedirection.MASTERPASS);
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
-        PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.MASTERPASS.getValue());
         getRouter().pushController(RouterTransaction.with(MasterpassController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
@@ -1332,7 +1358,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void onAfterpayButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Afterpay"));
-        logInitiateCheckout(mActivity, PaymentInfo.TYPE_AFTERPAY, mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.AFTERPAY, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.AFTERPAY);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1364,7 +1390,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void onLPayButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("LPay"));
-        logInitiateCheckout(mActivity, PaymentInfo.TYPE_LPAY, mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.LPAY, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.LPAY);
 
         logCommonCheckoutEvent(mActivity, CheckoutUserActivityOperationType.LPAY_BUTTON_CLICK.getValue());
@@ -1409,7 +1435,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void onZipPayButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("ZipPay"));
-        logInitiateCheckout(mActivity, PaymentInfo.TYPE_ZIPPAY, mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.ZIPPAY, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.ZIPPAY);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1585,8 +1611,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private List<View> getSupposedlyVisibleButtons() {
         List<View> buttons = new ArrayList<>();
-        if (mActivity.getPaymentMethodSelected() != null) {
-            String paymentType = mActivity.getPaymentMethodSelected().getPaymentType();
+        if (selectedPaymentMethod != null) {
+            String paymentType = selectedPaymentMethod.getPaymentType();
             if (!paymentType.equalsIgnoreCase(CARD_PAYPAL) ||
                     !paymentType.equalsIgnoreCase(CARD_MASTERPASS)) {
                 buttons.add(mPayButton);
@@ -1626,7 +1652,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (previousController instanceof AddPaymentController) {
             mIsPaymentMethodChanged = ((AddPaymentController) previousController).isPaymentMethodChanged();
         } else if (previousController instanceof PaymentSelectController) {
-            mIsPaymentMethodChanged = ((PaymentSelectController) previousController).isPaymentMethodChanged();
+            final PaymentSelectController paymentSelectController = (PaymentSelectController) previousController;
+            mIsPaymentMethodChanged = paymentSelectController.isPaymentMethodChanged();
+            if (mIsPaymentMethodChanged) {
+                selectedPaymentMethod = paymentSelectController.getSelectedPaymentMethod();
+            }
         }
     }
 
@@ -1792,7 +1822,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mValue.putInBundle(bundle, BundleKeys.CURRENT_ORDER_VALUE);
         }
 
-        getRouter().pushController(RouterTransaction.with(new PaymentSelectController(bundle))
+        PaymentSelectController paymentSelectController = new PaymentSelectController(bundle);
+        paymentSelectController.setSelectedPaymentMethod(selectedPaymentMethod);
+
+        getRouter().pushController(RouterTransaction.with(paymentSelectController)
                 .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
@@ -2120,7 +2153,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void logFailedTransaction(Context context, String errorMessage) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
-                PaymentInfo.TYPE_LPAY);
+                AppConstants.LPAY);
         parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.IS_NEW_USER,
                 mPresenter.getIsNewUser());
         parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RESULT, false);

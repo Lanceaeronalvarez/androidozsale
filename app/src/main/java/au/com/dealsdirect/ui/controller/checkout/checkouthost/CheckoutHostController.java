@@ -713,4 +713,19 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     public Router getDetailRouter() {
         return mCheckoutDetailRouter;
     }
+
+    @Override
+    public PaymentMethod getSelectedPaymentMethod() {
+        if (mCheckoutDetailView == null) {
+            return null;
+        }
+        return mCheckoutDetailView.getSelectedPaymentMethod();
+    }
+
+    @Override
+    public void setSelectedPaymentMethod(PaymentMethod selectedPaymentMethod) {
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.setSelectedPaymentMethod(selectedPaymentMethod);
+        }
+    }
 }

@@ -44,6 +44,7 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionSt
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
 import au.com.dealsdirect.data.network.model.legalities.TemplateTextResponse;
@@ -711,8 +712,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
 
-                        PaymentInfo.setIsTokenFetching(false);
-
                         if (!isViewAttached()) {
                             return;
                         }
@@ -725,7 +724,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             getDataManager().setCurrentPaymentToken(responseValue.getPaymentToken());
                             getDataManager().setCurrentPaymentType(responseValue.getPaymentType());
 
-                            getMvpView().onBraintreeAuthorizationFetchSuccess(responseValue.getPaymentToken(), responseValue.getPaymentType());
+                            getMvpView().onBraintreeAuthorizationFetchSuccess(responseValue.getPaymentToken());
                         } else {
                             getMvpView().onBraintreeAuthorizationFetchFail();
                         }
@@ -734,8 +733,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     @Override
                     public void onFailure(Throwable t) {
                         super.onFailure(t);
-
-                        PaymentInfo.setIsTokenFetching(false);
 
                         if (!isViewAttached()) {
                             return;
@@ -757,7 +754,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void callGetPaymentMethodNonce(String token) {
+    public void callGetPaymentMethodNonce(PaymentMethod paymentMethod, String token, double cartTotalAmount) {
         doApiCallForResponse(getDataManager().callGetPaymentMethodNonce(new GetPaymentMethodNonceRequest(token)),
                 new AppApiCallback() {
                     @Override
@@ -769,7 +766,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                 JSONObject jsonResponse = ((JSONObject) response).getJSONObject("d");
 
                                 if (jsonResponse.getBoolean("IsAuthenticated") && jsonResponse.getBoolean("Result")) {
-                                    getMvpView().showGetPaymentMethodNonceSuccess(jsonResponse.getJSONObject("Value").getString("Nonce"));
+                                    String nonce = jsonResponse.getJSONObject("Value").getString("Nonce");
+                                    getMvpView().showGetPaymentMethodNonceSuccess(paymentMethod, nonce, cartTotalAmount);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -923,9 +921,15 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void createPaymentTransaction(String deviceData, String paymentType, String paymentNonce,
-                                         String paymentToken, String provider) {
+    public void createPaymentTransaction(String deviceData,
+                                         PaymentMethod paymentMethod,
+                                         String paymentNonce,
+                                         String paymentToken,
+                                         boolean isThreeDSecureRequired) {
         getMvpView().showLoading(LoadingDialogType.DEFAULT);
+
+        final String provider = paymentMethod.getProviderType();
+        final String paymentType = paymentMethod.getPaymentType();
 
         String languageId = getDataManager().getLanguageId();
         String countryId = getDataManager().getCountryId();
@@ -933,7 +937,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 new CreatePaymentTransaction.RequestValue.Request();
         requestValue.setPaymentType(paymentType);
         requestValue.setPaymentNonce(paymentNonce);
-        if (provider.equals(AppConstants.BRAINTREE)) {
+        if (provider.equalsIgnoreCase(AppConstants.BRAINTREE)) {
             requestValue.setProvider("");
             requestValue.setSelectedPaymentOption(AppConstants.BRAINTREE);
             requestValue.setPaymentToken("");
@@ -953,15 +957,13 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             return;
                         }
 
-                        //        reset 3ds called flag
-                        PaymentInfo.setThreeDSecureCalled(false);
                         getMvpView().hideLoading();
                         getMvpView().performResetWithAuthFetch();
 
                         if (responseValue.getD().getResult()) {
-                            getMvpView().showCreatePaymentTransactionSuccess(paymentType, responseValue);
+                            getMvpView().showCreatePaymentTransactionSuccess(paymentType, provider, isThreeDSecureRequired, responseValue);
                         } else {
-                            getMvpView().showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
+                            getMvpView().showCreatePaymentTransactionFailure(paymentType, provider, isThreeDSecureRequired, responseValue.getD().getMessage());
                         }
 
                     }
@@ -971,8 +973,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         if (!isViewAttached()) {
                             return;
                         }
-                        //        reset 3ds called flag
-                        PaymentInfo.setThreeDSecureCalled(false);
                         getMvpView().hideLoading();
 
                         getMvpView().onError(throwable.getMessage());
@@ -1016,7 +1016,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         String languageId = getDataManager().getLanguageId();
         String countryId = getDataManager().getCountryId();
         CreatePaymentTransactionVco.RequestValue.Request requestValue =
-                new CreatePaymentTransactionVco.RequestValue.Request(PaymentInfo.VISA_CHECKOUT_CYBERSOURCE,
+                new CreatePaymentTransactionVco.RequestValue.Request(AppConstants.VISA_CHECKOUT_CYBERSOURCE,
                         visaPaymentSummary.getCallId(),
                         visaPaymentSummary.getEncKey(),
                         visaPaymentSummary.getEncPaymentData());
@@ -1035,9 +1035,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         getMvpView().performResetWithAuthFetch();
 
                         if (responseValue.getD().getResult()) {
-                            getMvpView().showCreatePaymentTransactionSuccess(PaymentInfo.VISA_CHECKOUT_CYBERSOURCE, responseValue);
+                            getMvpView().showCreatePaymentTransactionSuccess(AppConstants.VISA_CHECKOUT_CYBERSOURCE, "", false, responseValue);
                         } else {
-                            getMvpView().showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
+                            getMvpView().showCreatePaymentTransactionFailure(AppConstants.VISA_CHECKOUT_CYBERSOURCE, "", false, responseValue.getD().getMessage());
                         }
 
                     }
@@ -1100,7 +1100,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         if (responseValue.getD().getValue().getErrorMessage() != null) {
             getMvpView().showErrorMessage(responseValue.getD().getValue().getErrorMessage());
         } else if (responseValue.getD().getResult() && responseValue.getD().getValue().getIsPaid()) {
-            getMvpView().showCreatePaymentTransactionSuccess(responseValue.getD().getValue().getPaymentType().toString(),
+            getMvpView().showCreatePaymentTransactionSuccess(
+                    responseValue.getD().getValue().getPaymentType().toString(),
+                    AppConstants.STRIPE,
+                    false,
                     responseValue);
         } else if (!responseValue.getD().getValue().getIsPaid() && responseValue.getD().getValue().getResponse().equalsIgnoreCase(AppConstants.USE_STRIPE_SDK)) {
             getMvpView().show3DSecureStripe(responseValue.getD().getValue().getClientSecret());
@@ -1308,8 +1311,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         setIsNewUser(false);
                         //Remove login ticket
                         getDataManager().revokeAuth();
-                        //Clear payment info
-                        PaymentInfo.resetPaymentInfo();
                         CardInfo.clearCardInfo();
 
                         getDataManager().setCurrentPaymentType(null);
