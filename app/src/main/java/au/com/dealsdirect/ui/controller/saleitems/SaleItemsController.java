@@ -2072,7 +2072,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         SaleItemDetailsController.Parameters.FromProductList parameters = new SaleItemDetailsController.Parameters.FromProductList(
-                mSaleId, product, position, imagePlaceholderDrawable, imageUrl, mSalesOrigin, mEndDate);
+                mSaleId,
+                product,
+                position,
+                imagePlaceholderDrawable,
+                mSalesOrigin,
+                mEndDate);
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));

@@ -44,17 +44,18 @@ public class BundleKeys {
     public static final String SHOP_SALEITEMS_KEY_END_DATE = "SaleItemsController.SHOP_KEY_END_DATE";
 
     //sale item details
-    public static final String SALEITEMDETAILS_KEY_POSITION = "KEY_POSITION";
-    public static final String SALEITEMDETAILS_KEY_SKU_ID = "KEY_SKU_ID";
-    public static final String SALEITEMDETAILS_KEY_SALE_ID = "KEY_SALE_ID";
-    public static final String SALEITEMDETAILS_KEY_ITEM_IMAGE_ID = "KEY_IMAGE_ID";
-    public static final String SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID = "KEY_SEO_IDENTIFIER";
-    public static final String SALEITEMDETAILS_KEY_ITEM_NAME = "KEY_SALE_NAME";
-    public static final String SALEITEMDETAILS_KEY_ITEM_PRICE = "KEY_SALE_PRICE";
-    public static final String SALEITEMDETAILS_KEY_ITEM_OLD_PRICE = "KEY_SALE_OLD_PRICE";
-    public static final String SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE = "KEY_IS_DEEP_LINKED_WITH_SALE";
-    public static final String SALEITEMDETAILS_KEY_SALE_ORIGIN = "KEY_SALE_ORIGIN";
-    public static final String SALEITEMDETAILS_KEY_END_DATE = "KEY_END_DATE";
+    public static final String SALEITEMDETAILS_KEY_POSITION = "SaleItemDetailsController.KEY_POSITION";
+    public static final String SALEITEMDETAILS_KEY_SKU_ID = "SaleItemDetailsController.KEY_SKU_ID";
+    public static final String SALEITEMDETAILS_KEY_SALE_ID = "SaleItemDetailsController.KEY_SALE_ID";
+    public static final String SALEITEMDETAILS_KEY_ITEM_IMAGE_ID = "SaleItemDetailsController.KEY_IMAGE_ID";
+    public static final String SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID = "SaleItemDetailsController.KEY_SEO_IDENTIFIER";
+    public static final String SALEITEMDETAILS_KEY_ITEM_NAME = "SaleItemDetailsController.KEY_SALE_NAME";
+    public static final String SALEITEMDETAILS_KEY_ITEM_BRAND = "SaleItemDetailsController.KEY_SALE_BRAND";
+    public static final String SALEITEMDETAILS_KEY_ITEM_PRICE = "SaleItemDetailsController.KEY_SALE_PRICE";
+    public static final String SALEITEMDETAILS_KEY_SALE_ORIGIN = "SaleItemDetailsController.KEY_SALE_ORIGIN";
+    public static final String SALEITEMDETAILS_KEY_END_DATE = "SaleItemDetailsController.KEY_END_DATE";
+    public static final String SALEITEMDETAILS_KEY_IS_FREE_DELIVERY = "SaleItemDetailsController.KEY_IS_FREE_DELIVERY";
+    public static final String SALEITEMDETAILS_KEY_END_IS_SOLD_OUT = "SaleItemDetailsController.KEY_IS_SOLD_OUT";
 
     //search filters
     public static final String FACET_FILTER_TYPE = "FACET_FILTER_TYPE";

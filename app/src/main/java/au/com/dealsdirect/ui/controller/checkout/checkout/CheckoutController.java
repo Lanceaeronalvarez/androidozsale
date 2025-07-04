@@ -1910,8 +1910,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             return;
         }
 
-        SaleItemDetailsController.Parameters.FromCheckout parameters = new SaleItemDetailsController.Parameters.FromCheckout(position,
-                null,
+        SaleItemDetailsController.Parameters.FromCheckout parameters = new SaleItemDetailsController.Parameters.FromCheckout(
+                position,
                 imageUrl,
                 CommonUtils.loadSaleItem(mActivity, productID),
                 skuId,
@@ -1919,8 +1919,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 itemName,
                 brandName,
                 price,
-                oldPrice,
-                "", "", isFreeDelivery, false);
+                "",
+                "",
+                isFreeDelivery,
+                false);
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));

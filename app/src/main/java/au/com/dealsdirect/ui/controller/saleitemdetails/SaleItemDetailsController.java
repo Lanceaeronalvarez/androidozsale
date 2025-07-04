@@ -167,7 +167,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             private final SaleItemProduct product;
             private final Integer mPosition;
             private final Drawable mLowResImageDrawable;
-            private final String mImageURL;
             private final String mSalesOrigin;
             private final String mEndDate;
 
@@ -175,13 +174,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                    SaleItemProduct product,
                                    Integer position,
                                    Drawable lowResImageDrawable,
-                                   String imageURL,
                                    String salesOrigin,
                                    String endDate) {
                 mSaleId = saleId;
                 mPosition = position;
                 mLowResImageDrawable = lowResImageDrawable;
-                mImageURL = imageURL;
                 mSalesOrigin = salesOrigin;
                 mEndDate = endDate;
                 this.product = product;
@@ -203,10 +200,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 return mLowResImageDrawable;
             }
 
-            public String getImageURL() {
-                return mImageURL;
-            }
-
             public String getSalesOrigin() {
                 return mSalesOrigin;
             }
@@ -219,22 +212,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         // TODO: consider removing this and convert to loading with SaleItemProduct from Checkout
         public static final class FromCheckout extends Parameters {
             private final Integer mPosition;
-            private final Drawable mLowResImageDrawable;
-            private final String mImageURL;
-            private final String mSeoIdentifierId;
-            private final String mSkuId;
+            private final SaleItemDetails mItem;
             private final String mSaleId;
-            private final String mProductName;
-            private final String mProductBrand;
-            private final String mPrice;
-            private final String mOldPrice;
             private final String mSalesOrigin;
             private final String mEndDate;
-            private final boolean mIsFreeDelivery;
-            private Boolean mIsSoldOut;
 
             public FromCheckout(Integer position,
-                                Drawable lowResImageDrawable,
                                 String imageURL,
                                 String seoIdentifierId,
                                 String skuId,
@@ -242,65 +225,32 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                 String productName,
                                 String productBrand,
                                 String price,
-                                String oldPrice,
                                 String salesOrigin,
                                 String endDate,
                                 boolean isFreeDelivery,
-                                Boolean isSoldOut) {
+                                boolean isSoldOut) {
                 mPosition = position;
-                mLowResImageDrawable = lowResImageDrawable;
-                mImageURL = imageURL;
-                mSeoIdentifierId = seoIdentifierId;
-                mSkuId = skuId;
                 mSaleId = saleId;
-                mProductName = productName;
-                mProductBrand = productBrand;
-                mPrice = price;
-                mOldPrice = oldPrice;
                 mSalesOrigin = salesOrigin;
                 mEndDate = endDate;
-                mIsFreeDelivery = isFreeDelivery;
-                mIsSoldOut = isSoldOut;
+
+                mItem = new SaleItemDetails(
+                        imageURL,
+                        seoIdentifierId,
+                        skuId,
+                        productName,
+                        productBrand,
+                        price,
+                        isFreeDelivery,
+                        isSoldOut);
             }
 
             public Integer getPosition() {
                 return mPosition;
             }
 
-            public Drawable getLowResImageDrawable() {
-                return mLowResImageDrawable;
-            }
-
-            public String getImageURL() {
-                return mImageURL;
-            }
-
-            public String getSeoIdentifierId() {
-                return mSeoIdentifierId;
-            }
-
-            public String getSkuId() {
-                return mSkuId;
-            }
-
             public String getSaleId() {
                 return mSaleId;
-            }
-
-            public String getProductName() {
-                return mProductName;
-            }
-
-            public String getProductBrand() {
-                return mProductBrand;
-            }
-
-            public String getPrice() {
-                return mPrice;
-            }
-
-            public String getOldPrice() {
-                return mOldPrice;
             }
 
             public String getSalesOrigin() {
@@ -311,16 +261,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 return mEndDate;
             }
 
-            public boolean getIsFreeDelivery() {
-                return mIsFreeDelivery;
-            }
-
-            public Boolean isSoldOut() {
-                return mIsSoldOut;
-            }
-
-            public void setIsSoldOut(Boolean isSoldOut) {
-                mIsSoldOut = isSoldOut;
+            public SaleItemDetails getItem() {
+                return mItem;
             }
         }
 
@@ -383,29 +325,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private SaleItemDetails currentItem = null;
     private SaleItemDetails previousItem = null;
-    // TODO: store SaleItemProduct instead of these
-    private String mSaleId;
-    private String mSkuId;
-    private Attributes mAttributes = null;
-    private String mItemImageUrl;
+    private String mSaleId = null;
+    private String mSeoIdentifier = null;
+    private String mSkuId = null;
+    private String mEndDate = null;
     private Drawable mItemLowResImageDrawable = null;
-    private String mSeoIdentifierId;
-    private String mSeoUrl;
-    private String mSeoIdentifier;
-    private String mSaleName;
-    private String mSalePrice;
-    private String mSaleOldPrice;
-    private String mBrandName;
-    private String mSupplierId;
-    private List<SaleItemDetails> mSkuVariants = new ArrayList<>();
-    private String mEndDate;
-    private boolean mIsFreeDelivery;
-    private CountDownTimer mCountDownTimer;
+    private CountDownTimer mCountDownTimer = null;
 
     private boolean shouldAfterpayDetailsBeVisible = false;
 
-    List<GetYouMayAlsoLikeResponse> mYouMayAlsoLikeList = new ArrayList<>();
-    List<RecommendedItemsResponse> mRecommendedList = new ArrayList<>();
+    private List<GetYouMayAlsoLikeResponse> mYouMayAlsoLikeList = new ArrayList<>();
+    private List<RecommendedItemsResponse> mRecommendedList = new ArrayList<>();
 
     @BindView(R.id.share_right)
     ImageView mLikeButton;
@@ -694,13 +624,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private BottomPopupView currentBottomPopupView = null;
 
-    List<String> qualitySaleImages = new ArrayList<>();
+    private List<String> qualitySaleImages = new ArrayList<>();
 
-    int currentSaleImagePosition = 0;
+    private int currentSaleImagePosition = 0;
 
-    boolean showFullDescription = false;
+    private boolean showFullDescription = false;
 
-    boolean isBuyNow = false;
+    private boolean isBuyNow = false;
 
     private interface OnLoadProductDetails {
         void onLoad(SaleItemDetails saleDetails);
@@ -744,44 +674,21 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
     };
 
-    public SaleItemDetailsController(
-            String seoIdentifierId, String imageUrl, String skuId, String saleId) {
-        this(new BundleBuilder(new Bundle())
-                .putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, imageUrl)
-                .putString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId)
-                .putString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, skuId)
-                .putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID, saleId)
-                .build());
-    }
-
-    public static SaleItemDetailsController newInstance(Bundle bundle) {
-        return new SaleItemDetailsController(bundle);
-    }
-
     public static SaleItemDetailsController newInstance(Parameters parameters) {
         SaleItemDetailsController controller = new SaleItemDetailsController(
                 new BundleBuilder(new Bundle()).build());
 
         if (parameters instanceof Parameters.FromCheckout) {
             controller.mSaleId = ((Parameters.FromCheckout) parameters).getSaleId();
-            controller.mSkuId = ((Parameters.FromCheckout) parameters).getSkuId();
-            controller.mItemLowResImageDrawable = ((Parameters.FromCheckout) parameters).getLowResImageDrawable();
-            controller.mItemImageUrl = ((Parameters.FromCheckout) parameters).getImageURL();
-            controller.mSeoIdentifierId = ((Parameters.FromCheckout) parameters).getSeoIdentifierId();
-            controller.mSaleName = ((Parameters.FromCheckout) parameters).getProductName();
-            controller.mBrandName = ((Parameters.FromCheckout) parameters).getProductBrand();
-            controller.mSalePrice = ((Parameters.FromCheckout) parameters).getPrice();
-            controller.mSaleOldPrice = ((Parameters.FromCheckout) parameters).getOldPrice();
+            controller.partialProductDetailsToShow = ((Parameters.FromCheckout) parameters).getItem();
+            controller.mSeoIdentifier = controller.partialProductDetailsToShow.getSeoIdentifier();
             controller.mFromPosition = ((Parameters.FromCheckout) parameters).getPosition();
             String origin = ((Parameters.FromCheckout) parameters).getSalesOrigin();
             controller.mEndDate = ((Parameters.FromCheckout) parameters).getEndDate();
-            controller.mIsFreeDelivery = ((Parameters.FromCheckout) parameters).getIsFreeDelivery();
             controller.mOrigin = origin != null ? origin : DataCollector.EventParameters.ViewSource.SALE;
-            controller.mIsSoldout = ((Parameters.FromCheckout) parameters).isSoldOut();
         } else if (parameters instanceof Parameters.FromProductList) {
             controller.mSaleId = ((Parameters.FromProductList) parameters).getSaleId();
             controller.mItemLowResImageDrawable = ((Parameters.FromProductList) parameters).getLowResImageDrawable();
-            controller.mItemImageUrl = ((Parameters.FromProductList) parameters).getImageURL();
             controller.mFromPosition = ((Parameters.FromProductList) parameters).getPosition();
             String origin = ((Parameters.FromProductList) parameters).getSalesOrigin();
             controller.mEndDate = ((Parameters.FromProductList) parameters).getEndDate();
@@ -789,15 +696,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             controller.partialProductDetailsToShow = ((Parameters.FromProductList) parameters).getProduct();
         } else if (parameters instanceof Parameters.FromDeepLink) {
             controller.mSaleId = ((Parameters.FromDeepLink) parameters).getSaleId();
-            controller.mSeoIdentifierId = ((Parameters.FromDeepLink) parameters).getSeoIdentifierId();
-            controller.mSaleName = ((Parameters.FromDeepLink) parameters).getProductName();
+            controller.mSeoIdentifier = ((Parameters.FromDeepLink) parameters).getSeoIdentifierId();
             controller.mOrigin = DataCollector.EventParameters.ViewSource.SALE;
         } else if (parameters instanceof Parameters.FromSaleItemProduct) {
             final SaleItemProduct item = ((Parameters.FromSaleItemProduct) parameters).getSaleItemProduct();
             final Map<String, String> utmKeys = ((Parameters.FromSaleItemProduct) parameters).getUtmKeys();
             controller.mSaleId = item.getId();
-            controller.mSeoIdentifierId = item.getSeoIdentifier();
-            controller.mSaleName = item.getName();
+            controller.mSeoIdentifier = item.getSeoIdentifier();
             controller.partialProductDetailsToShow = item;
             controller.mUtmKeys = utmKeys;
         }
@@ -807,30 +712,26 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     public SaleItemDetailsController(Bundle args) {
         super(args);
-        mSaleId = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID);
-        mSkuId = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, "");
-        mItemImageUrl = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID);
-        mSeoIdentifierId = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID);
-        mSaleName = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME);
-        mSalePrice = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE);
-        mSaleOldPrice = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE);
-        mFromPosition = args.getInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION);
-        mOrigin = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN, DataCollector.EventParameters.ViewSource.SALE);
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        SaleItemProduct item = currentItem != null ? currentItem : partialProductDetailsToShow;
         outState.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID, mSaleId);
         outState.putString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, mSkuId);
-        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, mItemImageUrl);
-        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, mSeoIdentifierId);
-        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME, mSaleName);
-        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE, mSalePrice);
-        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE, mSaleOldPrice);
+        String imageUrl = !item.getImages().isEmpty() ? item.getImages().get(0) : "";
+        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, imageUrl);
+        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, mSeoIdentifier);
+        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME, item.getName());
+        String brandName = item.getBrandName();
+        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_BRAND, brandName);
+        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE, PriceUtils.getPriceStringFromPriceObject(item.getPrice()));
         outState.putInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION, mFromPosition);
         outState.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN, mOrigin);
         outState.putString(BundleKeys.SALEITEMDETAILS_KEY_END_DATE, mEndDate);
+        outState.putBoolean(BundleKeys.SALEITEMDETAILS_KEY_IS_FREE_DELIVERY, item.isFreeDelivery());
+        outState.putBoolean(BundleKeys.SALEITEMDETAILS_KEY_END_IS_SOLD_OUT, item.isSoldOut());
         outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
     }
 
@@ -839,15 +740,28 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         super.onRestoreInstanceState(savedInstanceState);
         mSaleId = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID);
         mSkuId = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID);
-        mItemImageUrl = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID);
-        mSeoIdentifierId = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID);
-        mSaleName = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME);
-        mSalePrice = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE);
-        mSaleOldPrice = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE);
+        String itemImageUrl = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID);
+        mSeoIdentifier = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID);
+        String name = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME);
+        String brandName = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_BRAND);
+        String salePrice = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE);
         mFromPosition = savedInstanceState.getInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION);
         mOrigin = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN);
         mEndDate = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_END_DATE);
+        boolean isFreeDelivery = savedInstanceState.getBoolean(BundleKeys.SALEITEMDETAILS_KEY_IS_FREE_DELIVERY);
+        boolean isSoldout = savedInstanceState.getBoolean(BundleKeys.SALEITEMDETAILS_KEY_END_IS_SOLD_OUT);
         mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
+
+        partialProductDetailsToShow = new SaleItemDetails(
+                itemImageUrl,
+                mSeoIdentifier,
+                mSkuId,
+                name,
+                brandName,
+                salePrice,
+                isFreeDelivery,
+                isSoldout
+        );
     }
 
 
@@ -947,7 +861,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mLikeButton.setVisibility(View.GONE);
         mLikeFloatingButton.setVisibility(View.INVISIBLE);
-        loadProductDetails(mSaleId, mSeoIdentifierId);
+        loadProductDetails(mSaleId, mSeoIdentifier);
         if (mHasSavedInstance) {
             mActivity.getMainController().setSavedCurrentItem();
         }
@@ -976,7 +890,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         super.onRestoreViewState(view, savedViewState);
         mLikeButton.setVisibility(View.INVISIBLE);
         mLikeFloatingButton.setVisibility(View.INVISIBLE);
-        loadProductDetails(mSaleId, mSeoIdentifierId);
+        loadProductDetails(mSaleId, mSeoIdentifier);
     }
 
     @Override
@@ -984,7 +898,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         super.refreshContents();
 
         if (!hasLoadedDetails) {
-            loadProductDetails(mSaleId, mSeoIdentifierId);
+            loadProductDetails(mSaleId, mSeoIdentifier);
         }
         stretchImageView();
     }
@@ -1013,14 +927,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         stretchImageView();
 
-        if (mBrandName == null || mBrandName.isEmpty()) {
-            mProductBrand.setText(Html.fromHtml("<u>" + mSaleName + "</u>"));
-            mProductName.setText("");
-        } else {
-            mProductBrand.setText(Html.fromHtml("<u>" + mBrandName + "</u>"));
-            mProductName.setText(mSaleName);
-        }
-
         mProductDetailBottomCard.setVisibility(View.VISIBLE);
 
         //noinspection ConstantConditions
@@ -1048,13 +954,20 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mRootView.addListener(mDragDismissListener);
         }
 
-        mProductSharedImage.setTransitionName(getResources().getString(R.string.transition_sale_image_indexed, mFromPosition));
+        mProductSharedImage.setTransitionName(mActivity.getResources().getString(R.string.transition_sale_image_indexed, mFromPosition));
+
+        String imageUrl = "";
+        if (currentItem != null && !currentItem.getImages().isEmpty()) {
+            imageUrl = currentItem.getImages().get(0);
+        } else if (partialProductDetailsToShow != null && !partialProductDetailsToShow.getImages().isEmpty()) {
+            imageUrl = partialProductDetailsToShow.getImages().get(0);
+        }
 
         if (mItemLowResImageDrawable != null) {
-            ImageUtils.loadImageWithPlaceholder(mItemImageUrl, mProductSharedImage, mItemLowResImageDrawable, null);
+            ImageUtils.loadImageWithPlaceholder(imageUrl, mProductSharedImage, mItemLowResImageDrawable, null);
             mItemLowResImageDrawable = null;
         } else {
-            ImageUtils.loadImageImmediate(mItemImageUrl, mProductSharedImage, null);
+            ImageUtils.loadImageImmediate(imageUrl, mProductSharedImage, null);
         }
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
@@ -1463,10 +1376,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mMasterProductId = saleDetail.getAttributes().getProductId();
 
         mSkuId = saleDetail.getSkuId();
-        mAttributes = saleDetail.getAttributes();
-
-        mSupplierId = saleDetail.getSupplier();
-
         // set product view request object for genie event
         ProductViewRequest productViewRequest = new ProductViewRequest();
         productViewRequest.setEventType(EventTypeId.EVENT_PRODUCTVIEW);
@@ -1478,7 +1387,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         productViewRequest.setSkuInfo(skuInfo);
 
         if (!IS_DISCOUNT_POG_ENABLED) {
-            mPresenter.getDynamicDiscount(saleDetail.getSkuId());
+            mPresenter.getDynamicDiscount(mSkuId);
         }
 
         final Animation anim = AnimationUtils.loadAnimation(mActivity, R.anim.slide_to_bottom);
@@ -1604,9 +1513,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         });
 
         if (saleDetail.getSkuVariants() != null && !saleDetail.getSkuVariants().isEmpty()) {
-            mSkuVariants = saleDetail.getSkuVariants();
             mProductSizes.clear();
-            for (SaleItemDetails skuVariant : mSkuVariants) {
+            for (SaleItemDetails skuVariant : saleDetail.getSkuVariants()) {
                 String skuId = skuVariant.getSkuId();
                 String size = skuVariant.getAttributes().getSize();
                 if (size != null && !size.isEmpty()) {
@@ -1625,7 +1533,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             TagAdapter<Pair<String, String>> sizesAdapter = createTagAdapter(mProductSizes);
 
             mIsSoldOutCombined = true;
-            for (SaleItemDetails response : mSkuVariants) {
+            for (SaleItemDetails response : saleDetail.getSkuVariants()) {
                 if (!response.isSoldOut()) {
                     mIsSoldOutCombined = false;
                     break;
@@ -1672,7 +1580,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         setupSeller(saleDetail);
         setupBuyBox(saleDetail);
 
-        mSeoUrl = saleDetail.getSeoUrl();
         mSeoIdentifier = saleDetail.getSeoIdentifier();
 
         mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
@@ -1681,7 +1588,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         parameters.put(DataCollector.EventParameters.MILLISECONDS,
                 mActivity.getProfiler().getTotalTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue()));
         parameters.put(DataCollector.EventParameters.PRODUCT_VIEW_REQUEST, productViewRequest);
-        parameters.put(DataCollector.EventParameters.ITEM_ID, saleDetail.getSkuId());
+        parameters.put(DataCollector.EventParameters.ITEM_ID, mSkuId);
         parameters.put(DataCollector.EventParameters.ITEM_NAME, saleDetail.getName());
         if (saleDetail.getSalePrice() != null) {
             parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getSalePrice().getValue());
@@ -1724,13 +1631,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     public void setupPartialProductDetails(SaleItemProduct saleDetail) {
-        mSeoIdentifierId = saleDetail.getSeoIdentifier();
-        mSaleName = saleDetail.getName();
-        mBrandName = saleDetail.getBrandName();
-        mSalePrice = saleDetail.getPrice() != null ? PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()) : null;
-        mSaleOldPrice = saleDetail.getOriginalPrice() != null ? PriceUtils.getPriceStringValue(saleDetail.getOriginalPrice().getValue()) : null;
+        mSeoIdentifier = saleDetail.getSeoIdentifier();
+        String salePrice = PriceUtils.getPriceStringFromPriceObject(saleDetail.getPrice());
 
-        mIsFreeDelivery = saleDetail.getFreeDelivery();
+        boolean isFreeDelivery = saleDetail.getFreeDelivery();
         mFreeDeliveryImageView.setVisibility(View.GONE); //the pog style; don't show
 
         String name = saleDetail.getName() == null ? "" : saleDetail.getName();
@@ -1755,7 +1659,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mToolbarItemDescriptionTextView.setVisibility(View.VISIBLE);
             mToolbarItemDescriptionTextView.setText(name.trim());
             mToolbarItemPriceTextView.setVisibility(View.VISIBLE);
-            mToolbarItemPriceTextView.setText(mSalePrice);
+            mToolbarItemPriceTextView.setText(salePrice);
         } else {
             mToolbarItemBrandTextView.setText(name.trim());
             mToolbarItemNameTextView.setText(saleDetail.getPrice() != null ? PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()) : null);
@@ -1766,7 +1670,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         updatePartialPriceDetails(saleDetail);
 
-        if (mIsFreeDelivery) {
+        if (isFreeDelivery) {
             mFreeShippingImageView.setVisibility(View.VISIBLE);
             mPostcodeLayout.setVisibility(View.GONE);
             mPaypalFreeShippingText.setVisibility(View.VISIBLE);
@@ -1875,7 +1779,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 tv.setText(data.first);
                 float size = tv.getContext().getResources().getDimension(R.dimen.text_size_body);
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
-                if (mSkuVariants.get(position).isSoldOut()) {
+                if (currentItem.getSkuVariants().get(position).isSoldOut()) {
                     tv.setBackground(getDrawable(R.drawable.bg_chips_soldout));
                     tv.setTextColor(getColor(R.color.beige));
                 }
@@ -1950,7 +1854,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public void showAddToCartResponse(CheckoutDetailsMapper cartDetailsResponse) {
+    public void showAddToCartResponse(CheckoutDetailsMapper cartDetailsResponse, SaleItemDetails item) {
 
         if (mSharedImageLocation == null) {
             mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
@@ -1963,9 +1867,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
         parameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemDetailsController.class.getSimpleName());
         parameters.put(DataCollector.EventParameters.ITEM_ID, cartDetailsResponse.getSaleID());
-        parameters.put(DataCollector.EventParameters.ITEM_NAME, mSaleName);
-        parameters.put(DataCollector.EventParameters.PRICE,
-                Double.valueOf(mSalePrice.substring(Settings.getSelectedCountry().currencySign.length())));
+        parameters.put(DataCollector.EventParameters.ITEM_NAME, item.getName());
+        parameters.put(DataCollector.EventParameters.PRICE, item.getPrice().getValue());
         parameters.put(DataCollector.EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
         parameters.put(DataCollector.EventParameters.ITEM_CATEGORY, mProductBrand);
         parameters.put(DataCollector.EventParameters.ADD_TO_CART_QUANTITY, "1");
@@ -1973,15 +1876,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 Settings.getSelectedCountry().currencySign);
         parameters.put(DataCollector.EventParameters.ADD_TO_CART_SOURCE, SaleItemDetailsController.class.getSimpleName());
 
-        final Double priceNumber = Double.parseDouble(mSalePrice.substring(Settings.getSelectedCountry().currencySign.length()));
+        final Double priceNumber = item.getPrice().getValue();
         GA4EventParams.GA4AddToCartParams ga4EventParams = new GA4EventParams.GA4AddToCartParams();
         ArrayList<GA4EventParams.Item> ga4Items = new ArrayList<>();
         GA4EventParams.Item ga4Item = new GA4EventParams.Item();
-        ga4Item.setItemName(mSaleName);
+        ga4Item.setItemName(item.getName());
         ga4Item.setItemId(mProductId);
         ga4Item.setPrice(priceNumber);
         ga4Item.setQuantity(1);
-        ga4Item.setItemBrand(mBrandName);
+        ga4Item.setItemBrand(item.getBrandName());
         ga4Items.add(ga4Item);
         ga4EventParams.setItems(ga4Items);
         ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
@@ -2007,11 +1910,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             isBuyNow = false;
             goToCheckoutScreen();
         } else {
-            addedToCartDialog();
+            showAddedToCartDialog(item);
         }
     }
 
-    private void addedToCartDialog() {
+    private void showAddedToCartDialog(SaleItemDetails item) {
         final Dialog dialog = new Dialog(mActivity, R.style.DialogTheme);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -2026,23 +1929,23 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         dialog.setCanceledOnTouchOutside(true);
 
         final TextView textBrandName = dialog.findViewById(R.id.brand_name);
-        textBrandName.setText(mBrandName);
+        textBrandName.setText(item.getBrandName());
 
         final TextView textSaleName = dialog.findViewById(R.id.item_name);
-        textSaleName.setText(mSaleName);
+        textSaleName.setText(item.getName());
 
         final TextView textVariant = dialog.findViewById(R.id.item_size);
         textVariant.setText(mSelectedSizeIndex >= 0 && !mProductSizes.isEmpty() ? mProductSizes.get(mSelectedSizeIndex).first : "");
 
         final TextView testSalePrice = dialog.findViewById(R.id.item_price);
-        testSalePrice.setText(mSalePrice);
+        testSalePrice.setText(PriceUtils.getPriceStringFromPriceObject(item.getPrice()));
 
-        String imageUrl = null;
-        if (qualitySaleImages != null && !qualitySaleImages.isEmpty()) {
+        String imageUrl = "";
+        List<String> qualitySaleImages = getQualityImages(item.getImages());
+        if (!qualitySaleImages.isEmpty()) {
             imageUrl = qualitySaleImages.get(0);
-        }
-        if (imageUrl == null) {
-            imageUrl = mItemImageUrl;
+        } else if (!item.getImages().isEmpty()) {
+            imageUrl = item.getImages().get(0);
         }
         final ImageView itemImageView = dialog.findViewById(R.id.item_image_view);
         ImageUtils.loadImageImmediate(imageUrl, itemImageView, null);
@@ -2334,12 +2237,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         addToBasket(false);
     }
 
-    void addToBasket(boolean now) {
+    private void addToBasket(boolean now) {
         if ((mIsSoldout != null && mIsSoldout) && mIsSoldOutCombined) {
             return;
         }
         isBuyNow = now;
-        if (!hasLoadedDetails) {
+        if (!hasLoadedDetails || currentItem == null) {
             if (!isAddToBasketInputBuffered) {
                 isAddToBasketInputBuffered = true;
                 setupDelayedProgressBar();
@@ -2353,19 +2256,19 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mAttempts++;
 
-        CommonUtils.saveSaleItem(mActivity, mMasterProductId, mSeoIdentifierId, mSaleId);
+        CommonUtils.saveSaleItem(mActivity, mMasterProductId, mSeoIdentifier, mSaleId);
 
         AddToCartRequest request = new AddToCartRequest();
         request.setSkuId(mSkuId);
-        request.setItemName(mSaleName);
-        request.setPrice(Double.parseDouble(mSalePrice.substring(Settings.getSelectedCountry().currencySign.length())));
+        request.setItemName(currentItem.getName());
+        request.setPrice(currentItem.getPrice().getValue());
         request.setPersonalizationData(mPersonalisationLayout.getDataForAddToCart());
         request.setUserClientType(String.valueOf(mPresenter.isTablet() ? AppConstants.ADD_TO_CART_TABLET :
                 AppConstants.ADD_TO_CART_PHONE));
 
         boolean isPersonalisationValid = mPersonalisationLayout.verifyRequiredFields();
 
-        String personalisationError = !mPresenter.getPersonalisationErrorText().equals("") ?
+        String personalisationError = !mPresenter.getPersonalisationErrorText().isEmpty() ?
                 mPresenter.getPersonalisationErrorText() :
                 mActivity.getString(R.string.please_fill_up_personalisation_details);
 
@@ -2386,7 +2289,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         } else if (mSelectedSizeIndex < 0 && !mProductSizes.isEmpty()) {
             bringAttentionToSizeSelection();
         } else {
-            verifyAddToCart(request);
+            verifyAddToCart(request, currentItem);
         }
     }
 
@@ -2407,8 +2310,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private void showBottomDialogWithSizeSelection() {
         HashSet<Integer> indicesOfSoldOutSizes = new HashSet<>();
-        for (int i = 0; i < mSkuVariants.size(); i++) {
-            if (mSkuVariants.get(i).isSoldOut()) {
+        for (int i = 0; i < currentItem.getSkuVariants().size(); i++) {
+            if (currentItem.getSkuVariants().get(i).isSoldOut()) {
                 indicesOfSoldOutSizes.add(i);
             }
         }
@@ -2458,13 +2361,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         return null;
     }
 
-    private void verifyAddToCart(AddToCartRequest request) {
+    private void verifyAddToCart(AddToCartRequest request, SaleItemDetails item) {
         if (!mPresenter.isAuthorized()) {
             mActivity.showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
                     mActivity.callGCMRegisterSubscriber();
-                    mPresenter.addToCart(request);
+                    mPresenter.addToCart(request, item);
                 }
 
                 @Override
@@ -2473,7 +2376,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 }
             });
         } else {
-            mPresenter.addToCart(request);
+            mPresenter.addToCart(request, item);
         }
     }
 
@@ -2581,9 +2484,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @OnClick(R.id.share_layout)
     void shareButtonLayoutPress() {
+        String seoUrl = currentItem.getSeoUrl();
+
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey, thought you might like this \uD83D\uDC4D " + Settings.getSelectedCountry().genieRoot + "product/" + mSeoUrl + "/s/" + mSeoIdentifier);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey, thought you might like this \uD83D\uDC4D " + Settings.getSelectedCountry().genieRoot + "product/" + seoUrl + "/s/" + mSeoIdentifier);
         sendIntent.setType("text/plain");
         Intent.createChooser(sendIntent, "Share via");
         startActivity(sendIntent);
@@ -2599,7 +2504,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             logWishlistEvent(mProductId, isLiked);
         };
         if (isLiked) {
-            mPresenter.addProductToWishlist(mProductId, mSeoIdentifierId, mMasterProductId, delayedCallback);
+            mPresenter.addProductToWishlist(mProductId, mSeoIdentifier, mMasterProductId, delayedCallback);
         } else {
             mPresenter.removeProductFromWishlist(mProductId, delayedCallback);
         }
@@ -2790,13 +2695,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             return;
         }
 
-        boolean isSizeSoldOut = mSkuVariants.get(selectedIndex).isSoldOut();
+        boolean isSizeSoldOut = currentItem.getSkuVariants().get(selectedIndex).isSoldOut();
         if (isSizeSoldOut && !mAllowSelectingSoldoutSizes) {
             selectedIndex = mSelectedSizeIndex;
             if (selectedIndex < 0) {
                 return;
             }
-            isSizeSoldOut = mSkuVariants.get(selectedIndex).isSoldOut();
+            isSizeSoldOut = currentItem.getSkuVariants().get(selectedIndex).isSoldOut();
         }
 
         // force selection - this prevents deselecting tags
@@ -2812,7 +2717,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mAddToCartButton.bringToFront();
 
         if (selectedIndex != mSelectedSizeIndex) {
-            updatePriceDetails(mSkuVariants.get(selectedIndex));
+            updatePriceDetails(currentItem.getSkuVariants().get(selectedIndex));
             mSelectedSizeIndex = selectedIndex;
             if (currentBottomPopupView != null) {
                 currentBottomPopupView.dismiss(true);
@@ -2875,27 +2780,30 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void getPreviewShippingPrice(CharSequence postcode, int operation) {
-        if (postcode != null && postcode.length() > 0 &&
-                mSkuId != null && !mSkuId.isEmpty() &&
-                mSalePrice != null && !mSalePrice.isEmpty()) {
-            int weight = 0;
-            int width = 0;
-            int height = 0;
-            if (mAttributes != null) {
-                weight = mAttributes.getWeight() == null ? 0 : mAttributes.getWeight().intValue();
-                width = mAttributes.getWidth() == null ? 0 : mAttributes.getWidth().intValue();
-                height = mAttributes.getHeight() == null ? 0 : mAttributes.getHeight().intValue();
-            }
-            showCalculateShippingPriceActivityIndicator(true);
-            mPresenter.loadPreviewShippingPrice(
-                    postcode.toString(),
-                    mSkuId,
-                    Float.parseFloat(mSalePrice.substring(Settings.getSelectedCountry().currencySign.length())),
-                    weight,
-                    width,
-                    height,
-                    operation);
+        if (postcode == null || postcode.length() == 0 ||
+                mSkuId == null || mSkuId.isEmpty() ||
+                currentItem.getPrice() == null) {
+            return;
         }
+
+        int weight = 0;
+        int width = 0;
+        int height = 0;
+        final Attributes attributes = currentItem.getAttributes();
+        if (attributes != null) {
+            weight = attributes.getWeight() == null ? 0 : attributes.getWeight().intValue();
+            width = attributes.getWidth() == null ? 0 : attributes.getWidth().intValue();
+            height = attributes.getHeight() == null ? 0 : attributes.getHeight().intValue();
+        }
+        showCalculateShippingPriceActivityIndicator(true);
+        mPresenter.loadPreviewShippingPrice(
+                postcode.toString(),
+                mSkuId,
+                (float) currentItem.getPrice().getValue(),
+                weight,
+                width,
+                height,
+                operation);
     }
 
     private void showCalculateShippingPriceActivityIndicator(boolean show) {
@@ -2967,7 +2875,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         } else {
             mShippingPostcodeHeader.setVisibility(View.GONE);
             mShippingPostcodeContainer.setVisibility(View.GONE);
-            logDeliveryPriceViewEvent(mIsFreeDelivery ? DeliveryPriceViewEventRequest.OPERATION_NONE : DeliveryPriceViewEventRequest.OPERATION_AUTO,
+            logDeliveryPriceViewEvent(currentItem.isFreeDelivery() ? DeliveryPriceViewEventRequest.OPERATION_NONE : DeliveryPriceViewEventRequest.OPERATION_AUTO,
                     null,
                     null);
         }
@@ -3003,7 +2911,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         DeliveryPriceViewEventRequest.DeliveryPriceInfo info = new DeliveryPriceViewEventRequest.DeliveryPriceInfo();
         info.setOperation(operation);
         info.setPostcode(postcode);
-        info.setFreeShipping(mIsFreeDelivery);
+        info.setFreeShipping(currentItem.isFreeDelivery());
         if (operation != DeliveryPriceViewEventRequest.OPERATION_NONE) {
             if (response != null) {
                 info.setDeliveryPrice(response.getPrice());
@@ -3013,7 +2921,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     info.setShippingPolicyId(response.getAdditional().getShippingPolicyId());
                 }
             }
-            info.setSupplierId(mSupplierId);
+            info.setSupplierId(currentItem.getSupplier());
             info.setProductId(mMasterProductId);
         }
         DeliveryPriceViewEventRequest request = new DeliveryPriceViewEventRequest();

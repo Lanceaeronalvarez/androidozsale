@@ -43,7 +43,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends BasePresenter<V> implements SaleItemDetailsMvpPresenter<V> {
 
-    private PricingInfoLoaderHelper pricingInfoLoaderHelper = new PricingInfoLoaderHelper(new PricingInfoLoaderHelper.SaleItemProductLoader() {
+    private final PricingInfoLoaderHelper pricingInfoLoaderHelper = new PricingInfoLoaderHelper(new PricingInfoLoaderHelper.SaleItemProductLoader() {
         @Override
         public void load(String seoIdentifier, String saleId, PricingInfoLoaderHelper.SaleItemProductReceiver receiver) {
             doApiCallForResponse(getDataManager().callGetSaleItemDetails(seoIdentifier), new AppApiCallback() {
@@ -177,7 +177,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     }
 
     @Override
-    public void addToCart(AddToCartRequest requestValues) {
+    public void addToCart(AddToCartRequest requestValues, SaleItemDetails item) {
         if (!isViewAttached()) {
             return;
         }
@@ -192,7 +192,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                 if (!isViewAttached()) {
                     return;
                 }
-                getMvpView().showAddToCartResponse(new CheckoutDetailsMapper((AddToCartResponse.Response) response));
+                getMvpView().showAddToCartResponse(new CheckoutDetailsMapper((AddToCartResponse.Response) response), item);
                 getDataManager().setHasActiveCheckoutSession(false);
             }
 
@@ -389,7 +389,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onSuccess(List<?> object) {
                 super.onSuccess(object);
 
-                if (object != null && object.size() != 0 && isViewAttached()) {
+                if (object != null && !object.isEmpty() && isViewAttached()) {
                     List<RecommendedItemsResponse> responseList = (List<RecommendedItemsResponse>) object;
                     getMvpView().showRecommendedItems(responseList);
                 }
@@ -421,7 +421,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onSuccess(List<?> response) {
                 super.onSuccess(response);
 
-                if (response != null && response.size() != 0 && isViewAttached()) {
+                if (response != null && !response.isEmpty() && isViewAttached()) {
                     getMvpView().showYouMayAlsoLike((List<GetYouMayAlsoLikeResponse>) response);
                 }
 

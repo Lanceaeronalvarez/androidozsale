@@ -4,6 +4,7 @@ import java.util.Map;
 
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -16,7 +17,7 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
 
     void loadPromoInfo(String skuId);
 
-    void addToCart(AddToCartRequest requestValues);
+    void addToCart(AddToCartRequest requestValues, SaleItemDetails item);
 
     boolean isAuthorized();
 

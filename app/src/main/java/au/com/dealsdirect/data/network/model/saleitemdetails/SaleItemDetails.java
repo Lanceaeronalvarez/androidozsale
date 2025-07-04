@@ -67,6 +67,18 @@ public class SaleItemDetails extends SaleItemProduct {
     @Expose
     private List<Category> taxonomy;
 
+    public SaleItemDetails(String imageURL,
+                           String seoIdentifierId,
+                           String skuId,
+                           String productName,
+                           String productBrand,
+                           String price,
+                           boolean isFreeDelivery,
+                           boolean isSoldOut) {
+        super(imageURL, seoIdentifierId, productName, productBrand, price, isFreeDelivery, isSoldOut);
+        this.skuId = skuId;
+    }
+
     public String getPersonalisation() {
         return personalisation;
     }

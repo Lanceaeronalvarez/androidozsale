@@ -68,7 +68,7 @@ public class SaleItemDetailsPresenterTest {
     public void testAddToCart(){
 
         doReturn(Observable.just("")).when(mMockDataManager).callAddItemToCart(any(AddToCartRequest.class));
-        mPresenter.addToCart(new AddToCartRequest(""));
+        mPresenter.addToCart(new AddToCartRequest(""), null);
         mTestScheduler.triggerActions();
 
         verify(mMockSaleItemDetailsView).showAddToCartResponse(true);

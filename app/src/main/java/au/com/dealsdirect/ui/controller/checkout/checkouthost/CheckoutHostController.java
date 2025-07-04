@@ -463,8 +463,8 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
             return;
         }
 
-        SaleItemDetailsController.Parameters.FromCheckout parameters = new SaleItemDetailsController.Parameters.FromCheckout(position,
-                null,
+        SaleItemDetailsController.Parameters.FromCheckout parameters = new SaleItemDetailsController.Parameters.FromCheckout(
+                position,
                 imageUrl,
                 CommonUtils.loadSaleItem(mActivity, productID),
                 skuId,
@@ -472,8 +472,10 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
                 itemName,
                 brandName,
                 price,
-                oldPrice,
-                "", "", isFreeDelivery, false);
+                "",
+                "",
+                isFreeDelivery,
+                false);
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));

@@ -19,7 +19,7 @@ public interface SaleItemDetailsMvpView extends MvpView {
 
     void showProductDetails(SaleItemDetails saleDetail);
 
-    void showAddToCartResponse(CheckoutDetailsMapper addToCartDetailsResponse);
+    void showAddToCartResponse(CheckoutDetailsMapper addToCartDetailsResponse, SaleItemDetails item);
 
     void showAddToCartResponseFailed();
 
