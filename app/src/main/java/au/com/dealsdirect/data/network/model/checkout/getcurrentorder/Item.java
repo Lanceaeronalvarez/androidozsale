@@ -64,6 +64,10 @@ public class Item {
         return saleID;
     }
 
+    public String getBrandName() {
+        return brandName;
+    }
+
     public List<Personalisation.CustomizableItemDetails> getCustomizableItemDetailsList() {
         return customizableItemDetailsList;
     }
@@ -104,6 +108,8 @@ public class Item {
     public int multiBuyCount;
     @SerializedName("MultiBuyDiscountPrice")
     public double multiBuyDiscountPrice;
+    @SerializedName(value = "BrandName", alternate = {"brandName"})
+    public String brandName;
 
     @Override
     public int hashCode() {
@@ -119,6 +125,7 @@ public class Item {
                 imageID,
                 fileName,
                 saleID,
-                customizableItemDetailsList);
+                customizableItemDetailsList,
+                brandName);
     }
 }
