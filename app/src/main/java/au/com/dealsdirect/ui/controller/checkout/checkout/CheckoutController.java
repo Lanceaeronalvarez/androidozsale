@@ -2126,7 +2126,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         DataCollector.logEvent(Events.InitiateCheckout, parameters);
 
         GA4EventParams.GA4PurchaseParams ga4PurchaseParams = new GA4EventParams.GA4PurchaseParams();
-        prepareItemsForGA4EventParams(ga4EventParams);
+        prepareItemsForGA4EventParams(ga4PurchaseParams);
         ga4PurchaseParams.setCurrency(Settings.getSelectedCountry().currencyCode);
         ga4PurchaseParams.setValue(price);
         ga4PurchaseParams.setCoupon(PriceUtils.getPriceStringValue(mDiscountValue));
