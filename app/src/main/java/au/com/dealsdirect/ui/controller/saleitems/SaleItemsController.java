@@ -901,6 +901,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         } else if (parameters instanceof Parameters.FromLocationFilterHash) {
             controller.locationFilterHash = ((Parameters.FromLocationFilterHash) parameters).getLocationFilterHash();
             controller.mSourceType = SourceType.LOCATION_FILTER_HASH;
+            title = ((Parameters.FromLocationFilterHash) parameters).getLocationFilterHash();
         }
 
         title = title != null ? title.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT) : "";
@@ -2288,6 +2289,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
             supplier.add(locationFilterHash);
             facetFilters.put("supplier", supplier);
+
+            List<String> brandName = new ArrayList<>();
+            brandName.add(locationFilterHash);
+            getSaleItemsRequest.setQuery(locationFilterHash);
+            facetFilters.put("skus.brandName", brandName);
         }
 
         //clear SelectedTitle Array and add filter category if any
