@@ -619,7 +619,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             parameters.put(EventParameters.PURCHASE_CURRENCY, Settings.getSelectedCountry().currencyCode);
             parameters.put(EventParameters.PURCHASE_TRANSACTION_ID, responseValue.getD().getValue().getPaymentID());
             if (ga4PurchaseParams != null) {
-                ga4PurchaseParams.setTransactionId(responseValue.getD().getValue().getInvoiceNo());
+                final String transactionId = "T_" + responseValue.getD().getValue().getInvoiceNo();
+                ga4PurchaseParams.setTransactionId(transactionId);
                 parameters.put(EventParameters.GA4_EVENT_PARAMS, ga4PurchaseParams);
             }
             logEvent(Events.PurchaseEvent, parameters);
