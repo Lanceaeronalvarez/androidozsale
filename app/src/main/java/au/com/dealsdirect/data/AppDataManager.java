@@ -23,6 +23,7 @@ import au.com.dealsdirect.data.auth.AuthHelper;
 import au.com.dealsdirect.data.cachedresponses.CachableRequest;
 import au.com.dealsdirect.data.cachedresponses.CachableResponse;
 import au.com.dealsdirect.data.cachedresponses.CachedResponseHelper;
+import au.com.dealsdirect.data.cart.CartHelper;
 import au.com.dealsdirect.data.network.ApiHeader;
 import au.com.dealsdirect.data.network.ApiHelper;
 import au.com.dealsdirect.data.network.model.SampleRequest;
@@ -64,6 +65,7 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderRequest;
 import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderResponse;
 import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionRequest;
@@ -193,6 +195,7 @@ import au.com.dealsdirect.data.wishlist.WishlistChangeListener;
 import au.com.dealsdirect.data.wishlist.WishlistHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.di.ApplicationContext;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import io.reactivex.Observable;
 
 
@@ -209,6 +212,7 @@ public class AppDataManager implements DataManager {
     private final CachedResponseHelper mCachedResponseHelper;
     private final TemplateTextsHelper mTemplateTextsHelper;
     private final PricingInfoCacheHelper mPricingInfoCacheHelper;
+    private final CartHelper mCartHelper;
 
     @Inject
     public AppDataManager(@ApplicationContext Context context,
@@ -218,7 +222,8 @@ public class AppDataManager implements DataManager {
                           WishlistHelper wishlistHelper,
                           CachedResponseHelper cachedResponseHelper,
                           TemplateTextsHelper templateTextsHelper,
-                          PricingInfoCacheHelper pricingInfoCacheHelper) {
+                          PricingInfoCacheHelper pricingInfoCacheHelper,
+                          CartHelper cartHelper) {
         mContext = context;
         mPreferencesHelper = preferencesHelper;
         mApiHelper = apiHelper;
@@ -227,6 +232,7 @@ public class AppDataManager implements DataManager {
         mCachedResponseHelper = cachedResponseHelper;
         mTemplateTextsHelper = templateTextsHelper;
         mPricingInfoCacheHelper = pricingInfoCacheHelper;
+        mCartHelper = cartHelper;
     }
 
     @Override
@@ -2118,5 +2124,25 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<List<GetNotificationsResponse>> getNotifications(GetNotificationsRequest request) {
         return mApiHelper.getNotifications(request);
+    }
+
+    @Override
+    public CartDetailsMapper getCart() {
+        return mCartHelper.getCart();
+    }
+
+    @Override
+    public void saveCart(CartDetailsMapper cart) {
+        mCartHelper.saveCart(cart);
+    }
+
+    @Override
+    public PaymentMethod getSelectedPaymentMethod() {
+        return mCartHelper.getSelectedPaymentMethod();
+    }
+
+    @Override
+    public void setSelectedPaymentMethod(PaymentMethod paymentMethod) {
+        mCartHelper.setSelectedPaymentMethod(paymentMethod);
     }
 }

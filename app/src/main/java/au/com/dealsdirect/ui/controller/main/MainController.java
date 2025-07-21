@@ -51,8 +51,10 @@ import au.com.dealsdirect.ui.controller.account.model.AccountOption;
 import au.com.dealsdirect.ui.controller.brands.TopBrandsController;
 import au.com.dealsdirect.ui.controller.categories.NewSaleCategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkout.split.CheckoutSplitController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.CheckoutStepsController;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -629,9 +631,9 @@ public class MainController extends BaseController implements MainMvpView {
         Controller controller;
 
         if (mPresenter.isTablet()) {
-            controller = CheckoutHostController.newInstance();
+            controller = new CheckoutSplitController();
         } else {
-            controller = CheckoutController.newInstance();
+            controller = new CheckoutStepsController();
         }
 
         router.setRoot(RouterTransaction.with(controller)
@@ -1248,7 +1250,7 @@ public class MainController extends BaseController implements MainMvpView {
         return null;
     }
 
-    public void updateCheckoutWithCartDetails(CheckoutDetailsMapper cartDetails) {
+    public void updateCheckoutWithCartDetails(CartDetailsMapper cartDetails) {
         final CheckoutMvpView checkoutMvpView = getCheckoutView();
         if (checkoutMvpView == null) {
             return;

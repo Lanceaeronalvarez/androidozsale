@@ -43,5 +43,9 @@ public class GetUserPaymentMethods  {
         public String getLastPaidToken() {
             return getD().getValue().getLastPaidToken();
         }
+
+        public PaymentMethod getLastPaymentMethod() {
+            return getD().getValue().getLastPaymentMethod();
+        }
     }
 }

@@ -31,7 +31,7 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.priceinfo.PricingInfoLoaderHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.ui.controller.leaderboardbanner.LeaderboardPresenterHelper;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CartUtil;
@@ -189,10 +189,14 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onSuccess(Object response) {
                 super.onSuccess(response);
 
+                final CartDetailsMapper cartDetailsMapper = new CartDetailsMapper((AddToCartResponse.Response) response);
+
+                getDataManager().saveCart(cartDetailsMapper);
+
                 if (!isViewAttached()) {
                     return;
                 }
-                getMvpView().showAddToCartResponse(new CheckoutDetailsMapper((AddToCartResponse.Response) response), item);
+                getMvpView().showAddToCartResponse(cartDetailsMapper, item);
                 getDataManager().setHasActiveCheckoutSession(false);
             }
 

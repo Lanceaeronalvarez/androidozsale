@@ -7,15 +7,12 @@ import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.DynamicDrawableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
-import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +31,7 @@ import java.util.Objects;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.MappedShipment;
+import au.com.dealsdirect.data.cart.CartDetailsMapper.MappedShipment;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -54,10 +51,12 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     private Context mContext;
     private List<MappedShipment> mSourceData;
     private List<ItemData> mFlattenedData;
-    private final CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
     private static final int MAX_ITEM_QTY = 5;
     private final CheckoutListener mClickListener;
     private ItemQuantityChangedListener itemQuantityChangedListener = null;
+
+    private final boolean isShippingByPostcodeEnabled;
+    private final String impossibleToDeliverAtLocationText;
 
     private boolean shouldAddSpacerOnTop = false;
 
@@ -71,12 +70,14 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public CheckoutOrderAdapter(Context context,
                                 List<MappedShipment> data,
-                                CheckoutMvpPresenter<CheckoutMvpView> presenter,
+                                boolean isShippingByPostcodeEnabled,
+                                String impossibleToDeliverAtLocationText,
                                 CheckoutListener clickListener,
                                 CheckoutOrderPriceInfoClickListener onClickItemPriceInfo) {
         this.mContext = context;
         this.mSourceData = data;
-        this.mPresenter = presenter;
+        this.isShippingByPostcodeEnabled = isShippingByPostcodeEnabled;
+        this.impossibleToDeliverAtLocationText = impossibleToDeliverAtLocationText;
         this.mClickListener = clickListener;
         checkoutOrderPriceHelper = new CheckoutOrderPriceHelper(context, onClickItemPriceInfo);
     }
@@ -268,7 +269,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             spannableStringBuilder.append(mContext.getResources().getString(R.string.shipping_text));
 
-            if (mPresenter.isShippingByPostcodeEnabled() &&
+            if (isShippingByPostcodeEnabled &&
                     estimateShipmentPostcode != null) {
                 spannableStringBuilder.append(" (");
                 start = spannableStringBuilder.length();
@@ -286,8 +287,8 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             spannableStringBuilder.append(": ");
 
-            if (mPresenter.isShippingByPostcodeEnabled() && !shippingAvailability) {
-                final String unavailableText = mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation() == null ? "Unavailable" : mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation();
+            if (isShippingByPostcodeEnabled && !shippingAvailability) {
+                final String unavailableText = impossibleToDeliverAtLocationText == null ? "Unavailable" : impossibleToDeliverAtLocationText;
                 spannableStringBuilder.append(" \n ");
                 spannableStringBuilder.append(
                         unavailableText,

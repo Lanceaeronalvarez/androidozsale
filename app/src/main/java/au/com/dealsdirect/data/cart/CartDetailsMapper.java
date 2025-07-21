@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.checkout.checkout;
+package au.com.dealsdirect.data.cart;
 
 import android.os.Bundle;
 
@@ -10,6 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
@@ -29,34 +31,45 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Shipment;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
+import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
+import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
 
-public class CheckoutDetailsMapper {
+public class CartDetailsMapper {
 
-    private Value sourceValue;
+    private static final long OLD_AGE = 60000;
+
+    private final Value sourceValue;
 
     private HashMap<String, Item> itemMap;
     private ArrayList<MappedShipment> mappedShipments;
     private HashSet<PaymentOption> availablePaymentOptions;
+    private final long timeCreated = System.currentTimeMillis();
 
-    public CheckoutDetailsMapper(Value value) {
+    public CartDetailsMapper(Value value) {
         this.sourceValue = value;
 
         init();
     }
 
-    public CheckoutDetailsMapper(AddToCartResponse.Response responseValue) {
+    public CartDetailsMapper(AddToCartResponse.Response responseValue) {
         this.sourceValue = responseValue.getValue();
 
         init();
     }
 
-    public CheckoutDetailsMapper(GetCurrentOrder.ResponseValue responseValue) {
+    public CartDetailsMapper(GetCurrentOrder.ResponseValue responseValue) {
         this.sourceValue = responseValue.getD().getValue();
 
         init();
+    }
+
+    public boolean isOld() {
+        final long now = System.currentTimeMillis();
+        final long elapsed = now - timeCreated;
+        return elapsed >= OLD_AGE;
     }
 
     private void init() {
@@ -64,12 +77,12 @@ public class CheckoutDetailsMapper {
         mappedShipments = new ArrayList<>();
         availablePaymentOptions = new HashSet<>();
 
-        if (getItems() != null && getItems().size() > 0) {
+        if (getItems() != null && !getItems().isEmpty()) {
             for (Item item : getItems()) {
                 itemMap.put(item.getId(), item);
             }
 
-            if (getShipments() != null && getShipments().size() > 0) {
+            if (getShipments() != null && !getShipments().isEmpty()) {
                 for (Shipment shipment : getShipments()) {
                     mappedShipments.add(new MappedShipment(shipment, getItemsAsMap()));
                 }
@@ -90,7 +103,7 @@ public class CheckoutDetailsMapper {
         }
     }
 
-    public static CheckoutDetailsMapper decompress(byte[] compressed) {
+    public static CartDetailsMapper decompress(byte[] compressed) {
         if (compressed == null || compressed.length == 0) {
             return null;
         }
@@ -106,7 +119,7 @@ public class CheckoutDetailsMapper {
             }
             gis.close();
             is.close();
-            return new CheckoutDetailsMapper(
+            return new CartDetailsMapper(
                     JsonUtils.convertStringToObject(string.toString(),
                             Value.class));
         } catch (IOException ex) {
@@ -289,7 +302,7 @@ public class CheckoutDetailsMapper {
                     put("ZipPayNZ".toLowerCase(), ZIPPAYNZ);
                 }};
 
-        private String value;
+        private final String value;
 
         private PaymentOption(String value) {
             this.value = value;

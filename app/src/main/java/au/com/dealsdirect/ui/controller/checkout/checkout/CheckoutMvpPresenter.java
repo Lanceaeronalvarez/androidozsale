@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.ui.base.MvpPresenter;
@@ -20,7 +21,7 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
 
     boolean checkIsLoggedIn();
 
-    void updateCartValues(CheckoutDetailsMapper mappedValues);
+    void updateCartValues(CartDetailsMapper mappedValues);
 
     void setDeliveryOption(SetDeliveryOption.OptionParameters setDeliveryOptionParameters, String postcode);
 

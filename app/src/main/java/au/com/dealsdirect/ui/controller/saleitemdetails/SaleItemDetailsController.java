@@ -117,7 +117,7 @@ import au.com.dealsdirect.service.datacollection.enums.EventRecommendedField;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.priceblock.SaleItemProductPriceBlockHelper;
@@ -1854,7 +1854,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public void showAddToCartResponse(CheckoutDetailsMapper cartDetailsResponse, SaleItemDetails item) {
+    public void showAddToCartResponse(CartDetailsMapper cartDetailsResponse, SaleItemDetails item) {
 
         if (mSharedImageLocation == null) {
             mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);

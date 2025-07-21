@@ -11,6 +11,8 @@ import au.com.dealsdirect.data.auth.Auth;
 import au.com.dealsdirect.data.auth.AuthHelper;
 import au.com.dealsdirect.data.cachedresponses.AppCachedResponseHelper;
 import au.com.dealsdirect.data.cachedresponses.CachedResponseHelper;
+import au.com.dealsdirect.data.cart.AppCartHelper;
+import au.com.dealsdirect.data.cart.CartHelper;
 import au.com.dealsdirect.data.network.ApiHeader;
 import au.com.dealsdirect.data.network.ApiHelper;
 import au.com.dealsdirect.data.network.AppApiHelper;
@@ -110,6 +112,12 @@ public class ApplicationModule {
     @Singleton
     WishlistHelper provideWishlistHelper(AppWishlistHelper wishlistHelper) {
         return wishlistHelper;
+    }
+
+    @Provides
+    @Singleton
+    CartHelper provideCartHelper(AppCartHelper cartHelper) {
+        return cartHelper;
     }
 
     @Provides

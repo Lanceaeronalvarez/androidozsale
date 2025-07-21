@@ -60,6 +60,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
@@ -88,7 +89,7 @@ import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressControlle
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.bestsellers.BestSellersWidgetHelper;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.MappedShipment;
+import au.com.dealsdirect.data.cart.CartDetailsMapper.MappedShipment;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostMvpView;
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsController;
@@ -302,7 +303,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private Double mDiscountValue;
     private Double mTotalValue;
 
-    private CheckoutDetailsMapper mValue;
+    private CartDetailsMapper mValue;
 
     private CheckoutHostMvpView mCheckoutHostView = null;
 
@@ -465,9 +466,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mAdapter = new CheckoutOrderAdapter(
                     mActivity,
                     mItemList,
-                    mPresenter,
-                    this,
-                    priceInfo -> showBottomPopupView(priceInfo));
+                    mPresenter.isShippingByPostcodeEnabled(),
+                    mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation(),
+                    this, priceInfo -> showBottomPopupView(priceInfo));
             mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
             mAdapter.setItemQuantityChangedListener(new CheckoutOrderAdapter.ItemQuantityChangedListener() {
                 @Override
@@ -1120,7 +1121,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     @Override
-    public void storeCartDetails(CheckoutDetailsMapper mappedValues) {
+    public void storeCartDetails(CartDetailsMapper mappedValues) {
         mValue = mappedValues;
     }
 
@@ -2000,7 +2001,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     @Override
-    public void updateCartWithMappedValues(CheckoutDetailsMapper mappedValues) {
+    public void updateCartWithMappedValues(CartDetailsMapper mappedValues) {
         mPresenter.updateCartValues(mappedValues);
     }
 
