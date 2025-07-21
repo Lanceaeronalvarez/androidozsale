@@ -71,6 +71,7 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.RxBus;
@@ -1910,7 +1911,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             isBuyNow = false;
             goToCheckoutScreen();
         } else {
-            showAddedToCartDialog(item);
+//            showAddedToCartDialog(item);
+            String selectedSize = mSelectedSizeIndex >= 0 && !mProductSizes.isEmpty() ? mProductSizes.get(mSelectedSizeIndex).first : "";
+            mActivity.getCurrentRouter().pushController(RouterTransaction
+                    .with(SaleItemDetailsCartController.newInstance(item, selectedSize))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
         }
     }
 
