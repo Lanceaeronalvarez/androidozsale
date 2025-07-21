@@ -4,6 +4,7 @@ import static android.graphics.Typeface.BOLD;
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
@@ -42,6 +44,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutListener;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutOrderAdapter;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.BottomPopupView;
 import au.com.dealsdirect.ui.custom.BottomPopupWebViewContentAdapter;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
@@ -91,6 +94,9 @@ public class CheckoutStepsCartReviewController extends BaseController implements
     RelativeLayout mFreeShippingLayout;
     @BindView(R.id.partial_checkout_summary_voucher_container)
     ViewGroup mVoucherValueContainer;
+    @BindView(R.id.partial_checkout_voucher_value_text_view)
+    TextView mVoucherValueTextView;
+
 
     private CheckoutOrderAdapter mRecyclerViewItemsAdapter = null;
 
@@ -152,11 +158,19 @@ public class CheckoutStepsCartReviewController extends BaseController implements
     protected void setUp(View view) {
         mToolbarContainer.setVisibility(shouldShowToolbar ? View.VISIBLE : View.GONE);
         mToolbarRightView.setVisibility(View.INVISIBLE);
-        mToolbarTitle.setText(view.getResources().getText(R.string.checkout));
+        mToolbarTitle.setText("Cart Summary");
 
         setupRecyclerViewItems();
         setupSummaryShipping();
         setupSummaryVouchers();
+    }
+
+    @Override
+    public void onViewWillAppear(Controller previousController) {
+        super.onViewWillAppear(previousController);
+        if (previousController instanceof AddVouchersController) {
+            refreshCart();
+        }
     }
 
     @OnClick(R.id.partial_toolbar_left_view)
@@ -291,9 +305,26 @@ public class CheckoutStepsCartReviewController extends BaseController implements
             mSummaryTaxContainer.setVisibility(View.GONE);
         }
 
-        mVoucherValueContainer.setVisibility(summary.getDiscount() > 0 ? View.VISIBLE : View.GONE);
+        if (summary.getDiscount() > 0) {
+            mVoucherValueContainer.setVisibility(View.VISIBLE);
+            mVoucherValueTextView.setVisibility(View.VISIBLE);
+            final String voucherValueText = PriceUtils.getPriceStringValue(summary.getDiscount()) + " " + getString(R.string.voucher);
+            mVoucherValueTextView.setText(voucherValueText);
+        } else {
+            mVoucherValueTextView.setVisibility(View.GONE);
+            mVoucherValueContainer.setVisibility(View.GONE);
+        }
     }
 
+    @OnClick(R.id.partial_checkout_voucher_container_layout)
+    public void changeVoucher() {
+        AddVouchersController addVouchersController = new AddVouchersController(new Bundle());
+
+        getRouter().pushController(RouterTransaction.with(addVouchersController)
+                .pushChangeHandler(new HorizontalChangeHandler(false))
+                .popChangeHandler(new HorizontalChangeHandler()));
+
+    }
     private boolean isShipmentAvailable(List<Shipment> shipments) {
         if (shipments == null) {
             return false;

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -92,19 +93,51 @@ public class CheckoutStepsController extends BaseController implements CheckoutS
     TextView mToolbarTitle;
 
     @BindView(R.id.controller_checkout_steps_step_cart)
-    TextView mPageButtonCart;
+    ViewGroup mPageButtonCart;
 
     @BindView(R.id.controller_checkout_steps_step_contact)
-    TextView mPageButtonContact;
+    ViewGroup mPageButtonContact;
 
     @BindView(R.id.controller_checkout_steps_step_shipping)
-    TextView mPageButtonShipping;
+    ViewGroup mPageButtonShipping;
 
     @BindView(R.id.controller_checkout_steps_step_payment)
-    TextView mPageButtonPayment;
+    ViewGroup mPageButtonPayment;
 
     @BindView(R.id.controller_checkout_steps_pager_container)
     ViewPager mPagerContainer;
+
+    @BindView(R.id.checkout_steps_step_circle_1)
+    ImageView mStepCircleImageView1;
+    @BindView(R.id.checkout_steps_step_circle_text_1)
+    TextView mStepCircleTextView1;
+    @BindView(R.id.checkout_steps_step_text_1)
+    TextView mStepTextView1;
+
+    @BindView(R.id.checkout_steps_step_circle_2)
+    ImageView mStepCircleImageView2;
+    @BindView(R.id.checkout_steps_step_circle_text_2)
+    TextView mStepCircleTextView2;
+    @BindView(R.id.checkout_steps_step_text_2)
+    TextView mStepTextView2;
+
+    @BindView(R.id.checkout_steps_step_circle_3)
+    ImageView mStepCircleImageView3;
+    @BindView(R.id.checkout_steps_step_circle_text_3)
+    TextView mStepCircleTextView3;
+    @BindView(R.id.checkout_steps_step_text_3)
+    TextView mStepTextView3;
+
+    @BindView(R.id.checkout_steps_step_circle_4)
+    ImageView mStepCircleImageView4;
+    @BindView(R.id.checkout_steps_step_circle_text_4)
+    TextView mStepCircleTextView4;
+    @BindView(R.id.checkout_steps_step_text_4)
+    TextView mStepTextView4;
+
+    private final List<ImageView> stepCircleImageViews = new ArrayList<>();
+    private final List<TextView> stepCircleTextViews = new ArrayList<>();
+    private final List<TextView> stepTextViews = new ArrayList<>();
 
     private String mPostcode = null;
     private String mPickupPoint = null;
@@ -151,6 +184,21 @@ public class CheckoutStepsController extends BaseController implements CheckoutS
         mPageButtonShipping.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.SHIPPING_INDEX, true));
         mPageButtonPayment.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.PAYMENT_INDEX, true));
 
+        stepCircleImageViews.add(mStepCircleImageView1);
+        stepCircleImageViews.add(mStepCircleImageView2);
+        stepCircleImageViews.add(mStepCircleImageView3);
+        stepCircleImageViews.add(mStepCircleImageView4);
+
+        stepCircleTextViews.add(mStepCircleTextView1);
+        stepCircleTextViews.add(mStepCircleTextView2);
+        stepCircleTextViews.add(mStepCircleTextView3);
+        stepCircleTextViews.add(mStepCircleTextView4);
+
+        stepTextViews.add(mStepTextView1);
+        stepTextViews.add(mStepTextView2);
+        stepTextViews.add(mStepTextView3);
+        stepTextViews.add(mStepTextView4);
+
         setupViewPager();
         stepChanged();
     }
@@ -195,6 +243,18 @@ public class CheckoutStepsController extends BaseController implements CheckoutS
 
         mToolbarLeftView.setVisibility(currentStep.getPosition() == 0 ? View.GONE : View.VISIBLE);
         mToolbarRightView.setVisibility(currentStep.getPosition() == Step.CART_INDEX ? View.GONE : View.VISIBLE);
+
+        for (int i = 0; i < Step.ORDERED_LIST.length; i++) {
+            if (i <= currentStep.getPosition()) {
+                stepCircleImageViews.get(i).setImageResource(R.drawable.checkout_step_circle_active);
+                stepCircleTextViews.get(i).setTextColor(mActivity.getResources().getColor(R.color.white));
+                stepTextViews.get(i).setTextColor(mActivity.getResources().getColor(R.color.colorPrimaryDark));
+            } else {
+                stepCircleImageViews.get(i).setImageResource(R.drawable.checkout_step_circle_inactive);
+                stepCircleTextViews.get(i).setTextColor(mActivity.getResources().getColor(R.color.gray));
+                stepTextViews.get(i).setTextColor(mActivity.getResources().getColor(R.color.gray));
+            }
+        }
     }
 
     @OnClick(R.id.partial_toolbar_right_view)

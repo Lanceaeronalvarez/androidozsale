@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.checkout.ApiDeliveryDetails;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
@@ -20,15 +21,16 @@ import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
-/**
- * Created by Paul on 6/27/17.
- */
-
 public class AddVouchersPresenter<V extends AddVouchersMvpView> extends BasePresenter<V> implements AddVouchersMvpPresenter<V> {
 
     @Inject
     public AddVouchersPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
+    }
+
+    @Override
+    public CartDetailsMapper getCart() {
+        return getDataManager().getCart();
     }
 
     @Override
@@ -39,7 +41,14 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView> extends BasePres
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                getMvpView().onVouchersApplied((ApplyVouchersResponse) response);
+                if (response instanceof ApplyVouchersResponse) {
+                    ApplyVouchersResponse applyVouchersResponse = (ApplyVouchersResponse) response;
+                    getDataManager().saveCart(new CartDetailsMapper(applyVouchersResponse.getD().getValue()));
+                    getMvpView().onVouchersApplied(applyVouchersResponse);
+                } else {
+                    getMvpView().onVouchersApplied(null);
+                }
+
             }
 
             @Override

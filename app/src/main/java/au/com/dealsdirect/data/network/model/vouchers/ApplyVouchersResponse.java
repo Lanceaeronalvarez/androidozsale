@@ -19,7 +19,7 @@ public class ApplyVouchersResponse {
 
         @SerializedName("Value")
         @Expose
-        public Value value;
+        private Value value;
     }
 
     public Response getD() {

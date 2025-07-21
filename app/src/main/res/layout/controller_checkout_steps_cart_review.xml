@@ -33,6 +33,8 @@
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false" />
 
+            <include layout="@layout/partial_checkout_voucher" />
+
             <include layout="@layout/partial_checkout_summary" />
         </LinearLayout>
 

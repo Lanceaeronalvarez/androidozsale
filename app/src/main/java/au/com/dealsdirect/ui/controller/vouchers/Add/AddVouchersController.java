@@ -109,6 +109,11 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     @Override
     protected void setUp(View view) {
+        if (mPresenter.getCart() != null) {
+            setVouchers(mPresenter.getCart().getVouchers());
+            setAppliedPromoCodes(mPresenter.getCart().getPromoCodeList());
+        }
+
         mTitleText.setText(getString(R.string.add_new_voucher));
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setOnClickListener(action -> mActivity.onBackPressed());
@@ -160,12 +165,23 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     @Override
     public void onVouchersApplied(ApplyVouchersResponse applyVouchersResponseBody) {
+        // TODO: remove this
+        if (applyVouchersResponseBody == null) {
+            setAllButtonsEnabled(true);
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    mActivity.getString(R.string.unable_to_apply_voucher)
+            );
+            return;
+        }
+
         final String responseMessage = applyVouchersResponseBody.getD().getMessage();
         final boolean responseResult = applyVouchersResponseBody.getD().getResult();
         final boolean responseIsAuthenticated = applyVouchersResponseBody.getD().isAuthenticated();
 
         if (responseMessage.isEmpty() && responseResult && responseIsAuthenticated) {
-            mappedCheckoutDetails = new CartDetailsMapper(applyVouchersResponseBody.getD().value);
+            mappedCheckoutDetails = new CartDetailsMapper(applyVouchersResponseBody.getD().getValue());
             informNewCartDetailsListener();
 
             CustomAlertDialog.showCustomAlertDialog(

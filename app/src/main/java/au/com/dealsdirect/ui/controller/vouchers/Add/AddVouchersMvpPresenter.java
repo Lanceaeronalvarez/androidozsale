@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.vouchers.Add;
 
 import java.util.List;
 
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersRequest;
@@ -12,6 +13,8 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
  */
 
 public interface AddVouchersMvpPresenter<V extends AddVouchersMvpView> extends MvpPresenter<V> {
+
+    CartDetailsMapper getCart();
 
     void applyVouchers(String postcode, int imageSize, List<String> voucherIds);
 

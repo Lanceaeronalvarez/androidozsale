@@ -21,6 +21,7 @@ import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersMvpPresenter;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersMvpView;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersPresenter;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.TestSchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
