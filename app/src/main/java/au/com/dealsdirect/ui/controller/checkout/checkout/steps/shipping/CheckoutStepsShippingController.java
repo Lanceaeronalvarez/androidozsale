@@ -33,6 +33,12 @@ public class CheckoutStepsShippingController extends BaseController implements C
     }
 
     @Override
+    protected void onDestroyView(@NonNull View view) {
+        super.onDestroyView(view);
+        mPresenter.onDetach();
+    }
+
+    @Override
     protected void setUp(View view) {
 
     }

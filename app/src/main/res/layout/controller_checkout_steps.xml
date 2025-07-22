@@ -216,10 +216,10 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.viewpager.widget.ViewPager
+    <au.com.dealsdirect.ui.controller.main.MainCustomViewPager
         android:id="@+id/controller_checkout_steps_pager_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </androidx.viewpager.widget.ViewPager>
+    </au.com.dealsdirect.ui.controller.main.MainCustomViewPager>
 </LinearLayout>

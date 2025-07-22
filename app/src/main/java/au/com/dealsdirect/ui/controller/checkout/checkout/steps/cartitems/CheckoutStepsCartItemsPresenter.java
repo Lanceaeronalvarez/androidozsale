@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartreview;
+package au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartitems;
 
 import com.androidnetworking.error.ANError;
 
@@ -11,10 +11,10 @@ import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class CheckoutStepsCartReviewPresenter<V extends CheckoutStepsCartReviewMvpView> extends BasePresenter<V> implements CheckoutStepsCartReviewMvpPresenter<V> {
+public class CheckoutStepsCartItemsPresenter<V extends CheckoutStepsCartItemsMvpView> extends BasePresenter<V> implements CheckoutStepsCartItemsMvpPresenter<V> {
 
     @Inject
-    public CheckoutStepsCartReviewPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
+    public CheckoutStepsCartItemsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 

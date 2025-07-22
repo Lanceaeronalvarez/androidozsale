@@ -24,6 +24,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,6 +77,10 @@ public class CheckoutStepsCartReviewController extends BaseController implements
     @BindView(R.id.controller_checkout_steps_cart_review_recyclerview_items)
     RecyclerView mRecyclerViewItems;
 
+    @BindView(R.id.partial_checkout_summary_container)
+    ViewGroup mSummaryLayout;
+    @BindView(R.id.partial_checkout_summary_total)
+    TextView mSummaryTotalTextView;
     @BindView(R.id.partial_checkout_summary_subtotal)
     TextView mSummarySubtotalTextView;
     @BindView(R.id.partial_checkout_summary_voucher)
@@ -97,11 +102,15 @@ public class CheckoutStepsCartReviewController extends BaseController implements
     @BindView(R.id.partial_checkout_voucher_value_text_view)
     TextView mVoucherValueTextView;
 
+    @BindView(R.id.partial_checkout_voucher_container_layout)
+    ViewGroup mVoucherContainerLayout;
+
 
     private CheckoutOrderAdapter mRecyclerViewItemsAdapter = null;
 
     private boolean shouldShowToolbar = true;
     private boolean shouldShowItems = true;
+    private boolean willShowLargeImages = false;
     private boolean shouldShowSummary = true;
 
     private ViewGroup bottomPopupViewRoot = null;
@@ -123,6 +132,9 @@ public class CheckoutStepsCartReviewController extends BaseController implements
 
     public void setShouldShowItems(boolean shouldShowItems) {
         this.shouldShowItems = shouldShowItems;
+        if (isViewAttached()) {
+            mRecyclerViewItems.setVisibility(shouldShowItems ? View.VISIBLE : View.GONE);
+        }
     }
 
     public boolean isShouldShowSummary() {
@@ -131,6 +143,22 @@ public class CheckoutStepsCartReviewController extends BaseController implements
 
     public void setShouldShowSummary(boolean shouldShowSummary) {
         this.shouldShowSummary = shouldShowSummary;
+        if (isViewAttached()) {
+            mSummaryLayout.setVisibility(shouldShowSummary ? View.VISIBLE : View.GONE);
+            mVoucherContainerLayout.setVisibility(shouldShowSummary ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    public boolean isWillShowLargeImages() {
+        return willShowLargeImages;
+    }
+
+    public void setWillShowLargeImages(boolean willShowLargeImages) {
+        this.willShowLargeImages = willShowLargeImages;
+        if (mRecyclerViewItemsAdapter != null) {
+            mRecyclerViewItemsAdapter.setWillShowLargeImages(willShowLargeImages);
+            mRecyclerViewItemsAdapter.notifyDataSetChanged();
+        }
     }
 
     public void setBottomPopupViewRoot(ViewGroup bottomPopupViewRoot) {
@@ -155,11 +183,29 @@ public class CheckoutStepsCartReviewController extends BaseController implements
     }
 
     @Override
+    protected void onDestroyView(@NonNull View view) {
+        super.onDestroyView(view);
+        mPresenter.onDetach();
+    }
+
+    @Override
     protected void setUp(View view) {
         mToolbarContainer.setVisibility(shouldShowToolbar ? View.VISIBLE : View.GONE);
         mToolbarRightView.setVisibility(View.INVISIBLE);
         mToolbarTitle.setText("Cart Summary");
 
+        setupRecyclerViewItems();
+        setupSummaryShipping();
+        setupSummaryVouchers();
+
+        mRecyclerViewItems.setVisibility(shouldShowItems ? View.VISIBLE : View.GONE);
+        mSummaryLayout.setVisibility(shouldShowSummary ? View.VISIBLE : View.GONE);
+        mVoucherContainerLayout.setVisibility(shouldShowSummary ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void refreshContents() {
+        super.refreshContents();
         setupRecyclerViewItems();
         setupSummaryShipping();
         setupSummaryVouchers();
@@ -194,8 +240,9 @@ public class CheckoutStepsCartReviewController extends BaseController implements
             mRecyclerViewItemsAdapter = new CheckoutOrderAdapter(
                     mActivity,
                     null,
+                    willShowLargeImages,
                     mPresenter.isShippingByPostcodeEnabled(),
-                    mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation(),
+                    () -> mPresenter.getImpossibleToDeliverAtLocationText(),
                     this,
                     this::showBottomPopupView);
             mRecyclerViewItemsAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
@@ -220,9 +267,9 @@ public class CheckoutStepsCartReviewController extends BaseController implements
             mRecyclerViewItems.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         }
         if (mPresenter.getCart() == null) {
-            mRecyclerViewItemsAdapter.replaceData(null);
+            mRecyclerViewItemsAdapter.replaceData(mActivity, Collections.emptyList());
         } else {
-            mRecyclerViewItemsAdapter.replaceData(mPresenter.getCart().getMappedShipments(), mPresenter.getCart().getDeliveryAddress() != null);
+            mRecyclerViewItemsAdapter.replaceData(mActivity, mPresenter.getCart().getMappedShipments(), mPresenter.getCart().getDeliveryAddress() != null);
         }
     }
 
@@ -235,6 +282,13 @@ public class CheckoutStepsCartReviewController extends BaseController implements
         final DeliveryAddress deliveryAddress = mPresenter.getCart().getDeliveryAddress();
         final boolean isShipmentAvailable = isShipmentAvailable(mPresenter.getCart().getShipments());
         final boolean isAddressValid = deliveryAddress != null;
+
+        if (deliveryAddress == null) {
+            mSummaryTotalTextView.setVisibility(View.GONE);
+        } else {
+            mSummaryTotalTextView.setVisibility(View.VISIBLE);
+            mSummaryTotalTextView.setText(PriceUtils.getPriceStringValue(summary.getTotal()));
+        }
 
         mSummaryShippingFeeContainer.setVisibility(View.VISIBLE);
 
@@ -266,7 +320,7 @@ public class CheckoutStepsCartReviewController extends BaseController implements
 
         if (mPresenter.isShippingByPostcodeEnabled() && !isShipmentAvailable) {
             mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
-            final String unavailableText = mPresenter.getTemplateTextsRepository() == null ? "Unavailable" : mPresenter.getTemplateTextsRepository().getUnavailable();
+            final String unavailableText = mPresenter.getUnavailableText() == null ? "Unavailable" : mPresenter.getUnavailableText();
             mSummaryShippingFeeTextView.setText(unavailableText);
             mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.checkout_item_footer_red_text_color));
             mFreeShippingLayout.setVisibility(View.GONE);
@@ -325,6 +379,7 @@ public class CheckoutStepsCartReviewController extends BaseController implements
                 .popChangeHandler(new HorizontalChangeHandler()));
 
     }
+
     private boolean isShipmentAvailable(List<Shipment> shipments) {
         if (shipments == null) {
             return false;

@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Objects;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.cart.CartDetailsMapper.MappedShipment;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -44,11 +44,11 @@ import butterknife.ButterKnife;
 public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final static int VIEW_TYPE_ITEM = 0;
-    private final static int VIEW_TYPE_FOOTER = 1;
-    private final static int VIEW_TYPE_SPACER = 2;
-    private final static int VIEW_TYPE_LINE = 3;
+    private final static int VIEW_TYPE_ITEM_LARGE = 1;
+    private final static int VIEW_TYPE_FOOTER = 2;
+    private final static int VIEW_TYPE_SPACER = 3;
+    private final static int VIEW_TYPE_LINE = 4;
 
-    private Context mContext;
     private List<MappedShipment> mSourceData;
     private List<ItemData> mFlattenedData;
     private static final int MAX_ITEM_QTY = 5;
@@ -56,7 +56,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     private ItemQuantityChangedListener itemQuantityChangedListener = null;
 
     private final boolean isShippingByPostcodeEnabled;
-    private final String impossibleToDeliverAtLocationText;
+    private final ImpossibleToDeliverAtLocationTextRetriever impossibleToDeliverAtLocationTextRetriever;
 
     private boolean shouldAddSpacerOnTop = false;
 
@@ -68,16 +68,19 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     final private CheckoutOrderPriceHelper checkoutOrderPriceHelper;
 
+    private boolean willShowLargeImages; // TODO
+
     public CheckoutOrderAdapter(Context context,
                                 List<MappedShipment> data,
+                                boolean willShowLargeImages,
                                 boolean isShippingByPostcodeEnabled,
-                                String impossibleToDeliverAtLocationText,
+                                ImpossibleToDeliverAtLocationTextRetriever impossibleToDeliverAtLocationTextRetriever,
                                 CheckoutListener clickListener,
                                 CheckoutOrderPriceInfoClickListener onClickItemPriceInfo) {
-        this.mContext = context;
         this.mSourceData = data;
+        this.willShowLargeImages = willShowLargeImages;
         this.isShippingByPostcodeEnabled = isShippingByPostcodeEnabled;
-        this.impossibleToDeliverAtLocationText = impossibleToDeliverAtLocationText;
+        this.impossibleToDeliverAtLocationTextRetriever = impossibleToDeliverAtLocationTextRetriever;
         this.mClickListener = clickListener;
         checkoutOrderPriceHelper = new CheckoutOrderPriceHelper(context, onClickItemPriceInfo);
     }
@@ -100,6 +103,11 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                         .from(parent.getContext()).inflate(R.layout.partial_checkout_item_line,
                                 parent,
                                 false));
+            case VIEW_TYPE_ITEM_LARGE:
+                return new ItemViewHolder(LayoutInflater
+                        .from(parent.getContext()).inflate(R.layout.partial_checkout_item_large,
+                                parent,
+                                false));
             case VIEW_TYPE_ITEM:
             default:
                 return new ItemViewHolder(LayoutInflater
@@ -120,7 +128,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                 return VIEW_TYPE_LINE;
             case ITEM:
             default:
-                return VIEW_TYPE_ITEM;
+                return willShowLargeImages ? VIEW_TYPE_ITEM_LARGE : VIEW_TYPE_ITEM;
         }
     }
 
@@ -151,6 +159,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     private void setupViewHolderForItem(ItemViewHolder holder, Item item) {
+        final Context context = holder.itemView.getContext();
         //   (1) fix when item.fileName is null
         if (item.fileName != null) {
             if (!item.fileName.isEmpty()) {
@@ -176,7 +185,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         holder.colorText.setVisibility(View.GONE);
 
         if (holder.personalisationLayout != null) {
-            holder.personalisationLayout.inflateForCheckout(mContext, item.getCustomizableItemDetailsList());
+            holder.personalisationLayout.inflateForCheckout(context, item.getCustomizableItemDetailsList());
         }
 
         checkoutOrderPriceHelper.setupPriceTextView(holder.price, item);
@@ -220,17 +229,17 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         holder.titleTextView.setText(title);
     }
 
-    public void replaceData(List<MappedShipment> items) {
-        replaceData(items, true);
+    public void replaceData(Context context, List<MappedShipment> items) {
+        replaceData(context, items, true);
     }
 
-    public void replaceData(List<MappedShipment> items, boolean showFooter) {
+    public void replaceData(Context context, List<MappedShipment> items, boolean showFooter) {
         mSourceData = new ArrayList<>(items);
-        flattenData(showFooter);
+        flattenData(context, showFooter);
         notifyDataSetChanged();
     }
 
-    private void flattenData(boolean showFooter) {
+    private void flattenData(Context context, boolean showFooter) {
         mFlattenedData = new ArrayList<>();
         for (MappedShipment shipment : mSourceData) {
             mFlattenedData.add(new ItemData(ItemData.Type.EMPTY_SPACE));
@@ -241,6 +250,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (showFooter && shipment.getDeliveryPrice() != null) {
                 mFlattenedData.add(new ItemData(
                         createTitleFromShippingFee(
+                                context,
                                 shipment.getDeliveryPrice(),
                                 shipment.getAmountToPromoPrice(),
                                 shipment.getItems().get(0),
@@ -255,19 +265,20 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    private SpannableStringBuilder createTitleFromShippingFee(double fee,
+    private SpannableStringBuilder createTitleFromShippingFee(Context context,
+                                                              double fee,
                                                               double targetPriceForFreeShipping,
                                                               String item,
                                                               String estimateShipmentPostcode,
                                                               boolean shippingAvailability) {
         int start = 0;
-        int color = mContext.getResources().getColor(R.color.checkout_item_footer_other_text_color);
-        int redColor = mContext.getResources().getColor(R.color.checkout_item_footer_red_text_color);
+        int color = context.getResources().getColor(R.color.checkout_item_footer_other_text_color);
+        int redColor = context.getResources().getColor(R.color.checkout_item_footer_red_text_color);
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(" ");
 
         if (fee > 0.0 || !shippingAvailability) {
 
-            spannableStringBuilder.append(mContext.getResources().getString(R.string.shipping_text));
+            spannableStringBuilder.append(context.getResources().getString(R.string.shipping_text));
 
             if (isShippingByPostcodeEnabled &&
                     estimateShipmentPostcode != null) {
@@ -288,7 +299,14 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
             spannableStringBuilder.append(": ");
 
             if (isShippingByPostcodeEnabled && !shippingAvailability) {
-                final String unavailableText = impossibleToDeliverAtLocationText == null ? "Unavailable" : impossibleToDeliverAtLocationText;
+                final String unavailableText;
+                if (impossibleToDeliverAtLocationTextRetriever == null ||
+                        impossibleToDeliverAtLocationTextRetriever.getString() == null) {
+                    unavailableText = "Unavailable";
+                } else {
+                    unavailableText = impossibleToDeliverAtLocationTextRetriever.getString();
+                }
+
                 spannableStringBuilder.append(" \n ");
                 spannableStringBuilder.append(
                         unavailableText,
@@ -307,10 +325,10 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                     spannableStringBuilder.append("\n");
 
-                    String targetPriceString = mContext.getResources().getString(R.string.promo_shipping_text);
+                    String targetPriceString = context.getResources().getString(R.string.promo_shipping_text);
                     String replacementString = PriceUtils.getPriceStringValue(targetPriceForFreeShipping);
                     targetPriceString = targetPriceString.replace(
-                            mContext.getResources().getString(R.string.promo_shipping_text_placeholder),
+                            context.getResources().getString(R.string.promo_shipping_text_placeholder),
                             replacementString);
                     spannableStringBuilder.append(
                             targetPriceString);
@@ -325,7 +343,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                         }
                     };
 
-                    String eligibleProductsString = mContext.getResources().getString(R.string.promo_shipping_eligible_products);
+                    String eligibleProductsString = context.getResources().getString(R.string.promo_shipping_eligible_products);
                     int eligibleProductsStart = targetPriceString.indexOf(eligibleProductsString) + start;
 
                     spannableStringBuilder.setSpan(
@@ -336,7 +354,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                     int imagePosition = spannableStringBuilder.length();
                     String freeShippingString = "   " +
-                            mContext.getResources().getString(R.string.free_shipping_text).toUpperCase();
+                            context.getResources().getString(R.string.free_shipping_text).toUpperCase();
                     spannableStringBuilder.append(
                             freeShippingString,
                             new StyleSpan(BOLD),
@@ -348,7 +366,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                             spannableStringBuilder.length(),
                             SPAN_EXCLUSIVE_INCLUSIVE);
 
-                    Drawable d = ContextCompat.getDrawable(mContext, R.drawable.ic_free_shipping);
+                    Drawable d = ContextCompat.getDrawable(context, R.drawable.ic_free_shipping);
                     if (d != null) {
                         d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
                         ImageSpan imageSpan = new ImageSpan(d, DynamicDrawableSpan.ALIGN_BASELINE);
@@ -358,7 +376,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                     StringUtils.applySpanToSubstringsMatching(
                             spannableStringBuilder,
                             new StyleSpan(BOLD),
-                            mContext.getResources().getString(R.string.regex_currency),
+                            context.getResources().getString(R.string.regex_currency),
                             SPAN_EXCLUSIVE_INCLUSIVE);
                 }
             }
@@ -366,7 +384,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         } else {
             int imagePosition = spannableStringBuilder.length();
             String freeShippingString = "   " +
-                    mContext.getResources().getString(R.string.free_shipping_text).toUpperCase();
+                    context.getResources().getString(R.string.free_shipping_text).toUpperCase();
             spannableStringBuilder.append(
                     freeShippingString,
                     new StyleSpan(BOLD),
@@ -378,7 +396,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                     spannableStringBuilder.length(),
                     SPAN_EXCLUSIVE_INCLUSIVE);
 
-            Drawable d = ContextCompat.getDrawable(mContext, R.drawable.ic_free_shipping);
+            Drawable d = ContextCompat.getDrawable(context, R.drawable.ic_free_shipping);
             if (d != null) {
                 d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
                 ImageSpan imageSpan = new ImageSpan(d, DynamicDrawableSpan.ALIGN_BASELINE);
@@ -405,6 +423,14 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public void setPostcodeOverride(String postcodeOverride) {
         this.postcodeOverride = postcodeOverride;
+    }
+
+    public boolean willShowLargeImages() {
+        return willShowLargeImages;
+    }
+
+    public void setWillShowLargeImages(boolean willShowLargeImages) {
+        this.willShowLargeImages = willShowLargeImages;
     }
 
     @Override
@@ -516,6 +542,10 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         void onIncrease(String itemId, int newCount, ProductQuantityLayout view);
 
         void onDecrease(String itemId, int newCount, ProductQuantityLayout view);
+    }
+
+    public interface ImpossibleToDeliverAtLocationTextRetriever {
+        String getString();
     }
 
     public void setItemQuantityChangedListener(ItemQuantityChangedListener itemQuantityChangedListener) {

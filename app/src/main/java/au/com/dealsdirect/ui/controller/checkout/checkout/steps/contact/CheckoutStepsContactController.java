@@ -33,6 +33,12 @@ public class CheckoutStepsContactController extends BaseController implements Ch
     }
 
     @Override
+    protected void onDestroyView(@NonNull View view) {
+        super.onDestroyView(view);
+        mPresenter.onDetach();
+    }
+
+    @Override
     protected void setUp(View view) {
 
     }

@@ -61,6 +61,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.cart.CartDetailsMapper;
+import au.com.dealsdirect.data.cart.CartDetailsMapper.MappedShipment;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
@@ -89,7 +90,6 @@ import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressControlle
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.bestsellers.BestSellersWidgetHelper;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
-import au.com.dealsdirect.data.cart.CartDetailsMapper.MappedShipment;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostMvpView;
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsController;
@@ -466,9 +466,16 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mAdapter = new CheckoutOrderAdapter(
                     mActivity,
                     mItemList,
+                    false,
                     mPresenter.isShippingByPostcodeEnabled(),
-                    mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation(),
-                    this, priceInfo -> showBottomPopupView(priceInfo));
+                    () -> {
+                        if (mPresenter.getTemplateTextsRepository() == null) {
+                            return null;
+                        }
+                        return mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation();
+                    },
+                    this,
+                    priceInfo -> showBottomPopupView(priceInfo));
             mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
             mAdapter.setItemQuantityChangedListener(new CheckoutOrderAdapter.ItemQuantityChangedListener() {
                 @Override
@@ -654,7 +661,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (mAdapter == null) {
             return;
         }
-        mAdapter.replaceData(mItemList, showFooter);
+        mAdapter.replaceData(mActivity, mItemList, showFooter);
     }
 
     @Override
