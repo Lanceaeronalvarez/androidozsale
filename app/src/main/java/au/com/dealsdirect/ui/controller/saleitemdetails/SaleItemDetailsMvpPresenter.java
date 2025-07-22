@@ -3,32 +3,23 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 import java.util.Map;
 
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
-import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
-
-/**
- * Created by smartwave on 08/06/2017.
- */
 
 public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
     //    void loadProductDetails(GetPublicItemDetailsRequest publicItemDetailsRequest, GetPublicSaleDetailsRequest publicSaleDetailsRequest);
     void loadProductDetails(String saleId, String seoIdentifierId, Map<String, String> utmKeys);
 
-    void loadOurpayData(SaleItemDetails value);
-
     void loadAfterpayData(Double price);
 
     void loadPromoInfo(String skuId);
 
-    void addToCart(AddToCartRequest requestValues);
+    void addToCart(AddToCartRequest requestValues, SaleItemDetails item);
 
     boolean isAuthorized();
-
-    void generateOurpay(SaleItemDetails value, OurpayDataResponse ourpayDataResponse);
 
     void callGetBasketItemsQuantity();
 
@@ -65,6 +56,10 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
     void setDefaultPostcode(String postcode);
 
     void loadPreviewShippingPrice(String postcode, String skuid, float price, int weight, int width, int height, Integer operation);
+
+    String getShippingTemplateText();
+
+    String getShippingTitleText();
 
     String getBuyboxTemplateTextTitle();
 

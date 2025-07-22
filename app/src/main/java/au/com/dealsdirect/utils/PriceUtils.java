@@ -2,6 +2,7 @@ package au.com.dealsdirect.utils;
 
 import java.util.Locale;
 
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.ui.controller.main.Settings;
 
 public class PriceUtils {
@@ -19,12 +20,22 @@ public class PriceUtils {
         return "";
     }
 
+    public static String getPriceStringFromPriceObject(SaleItemProduct.Price price) {
+        if (price == null) {
+            return null;
+        }
+        if (price.getTextForm() != null) {
+            return price.getTextForm();
+        }
+        return PriceUtils.getPriceStringValue(price.getValue());
+    }
+
     public static String getPriceStringValue(Float value) {
         return getPriceStringValue(value, false);
     }
 
-    public static String getPriceStringValue(Float value, boolean alwaysShowDecinal) {
-        return getPriceStringValue(value == null ? 0 : value.doubleValue(), alwaysShowDecinal);
+    public static String getPriceStringValue(Float value, boolean alwaysShowDecimal) {
+        return getPriceStringValue(value == null ? 0 : value.doubleValue(), alwaysShowDecimal);
     }
 
     public static String getPriceStringValue(Double value) {

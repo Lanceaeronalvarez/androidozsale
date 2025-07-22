@@ -1237,14 +1237,31 @@ public class MainController extends BaseController implements MainMvpView {
         mPresenter.callGetBasketItemsQuantity();
     }
 
-    public void updateCheckoutWithCartDetails(CheckoutDetailsMapper cartDetails) {
+    public CheckoutMvpView getCheckoutView() {
         if (getCheckoutRouter() == null) {
+            return null;
+        }
+        final Controller controller = getCheckoutRouter().getControllerWithTag(CheckoutController.TAG);
+        if (controller instanceof CheckoutMvpView) {
+            return (CheckoutMvpView) controller;
+        }
+        return null;
+    }
+
+    public void updateCheckoutWithCartDetails(CheckoutDetailsMapper cartDetails) {
+        final CheckoutMvpView checkoutMvpView = getCheckoutView();
+        if (checkoutMvpView == null) {
             return;
         }
-        Controller controller = getCheckoutRouter().getControllerWithTag(CheckoutController.TAG);
-        if (controller instanceof CheckoutMvpView) {
-            ((CheckoutMvpView) controller).updateCartWithMappedValues(cartDetails);
+        checkoutMvpView.updateCartWithMappedValues(cartDetails);
+    }
+
+    public void clearSelectedPaymentMethod() {
+        final CheckoutMvpView checkoutMvpView = getCheckoutView();
+        if (checkoutMvpView == null) {
+            return;
         }
+        checkoutMvpView.setSelectedPaymentMethod(null);
     }
 
     public void removeBasketItemCount() {

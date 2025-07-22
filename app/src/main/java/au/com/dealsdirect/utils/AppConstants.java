@@ -60,7 +60,6 @@ public final class AppConstants {
 
     public static final String VCO = "VCO";
     public static final String REGULAR = "REGULAR";
-    public static final String OURPAY = "OURPAY";
     public static final String MASTERPASS = "MASTERPASS";
     public static final String PAYPALCREDIT = "PAYPALCREDIT";
     public static final String PAYPAL = "PAYPAL";
@@ -78,6 +77,8 @@ public final class AppConstants {
     public static final String BASKET_CHANGED = "basket_changed";
     public static final String AMEX = "amex";
     public static final String AMERICAN_EXPRESS = "American Express";
+
+    public static final String VISA_CHECKOUT_CYBERSOURCE = "visacheckoutcybersource";
 
     public static final int ADD_TO_CART_PHONE = 6;
     public static final int ADD_TO_CART_TABLET = 7;

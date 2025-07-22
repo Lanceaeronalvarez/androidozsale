@@ -8,6 +8,19 @@ public class SaleItemFooterPlaceholder extends SaleItemProduct {
     private transient int viewType = 0;
 
     public SaleItemFooterPlaceholder(int viewType) {
+        this(viewType, null, null, null, null, null, false, false);
+    }
+
+    public SaleItemFooterPlaceholder(
+            int viewType,
+            String imageURL,
+            String seoIdentifierId,
+            String productName,
+            String productBrand,
+            String price,
+            boolean isFreeDelivery,
+            Boolean isSoldOut) {
+        super(imageURL, seoIdentifierId, productName, productBrand, price, isFreeDelivery, isSoldOut);
         this.viewType = viewType;
     }
 

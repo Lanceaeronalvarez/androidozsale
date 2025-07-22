@@ -7,6 +7,6 @@
     <solid
         android:color="@color/white"/>
     <size
-        android:width="@dimen/ourpay_select_checkbox_size"
-        android:height="@dimen/ourpay_select_checkbox_size" />
+        android:width="@dimen/checkbox_size"
+        android:height="@dimen/checkbox_size" />
 </shape>

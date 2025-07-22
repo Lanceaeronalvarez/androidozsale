@@ -12,9 +12,5 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface DeliveryOptionsMvpView extends MvpView {
 
-    void onDeliveryServicePackageDetailsLoaded(List<GetDeliveryServicePackageDetails.ResponseValue.Value> ourpaySelectDeliveryOptions);
-
     void onSetDeliveryOption(GetCurrentOrder.ResponseValue responseValue);
-
-    void showTermsAndConditionsController();
 }

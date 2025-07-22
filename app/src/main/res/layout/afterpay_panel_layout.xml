@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/ourpay_header_detail_height"
-    android:background="@drawable/ourpay_layout_border">
+    android:layout_height="@dimen/payment_table_header_detail_height"
+    android:background="@drawable/payment_table_layout_border">
 
     <TextView
         android:id="@+id/afterpay_panel_description"
@@ -26,6 +26,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/margin_small"
-        android:background="@drawable/ourpay_info"
+        android:background="@drawable/icon_info"
         android:scaleType="center" />
 </RelativeLayout>

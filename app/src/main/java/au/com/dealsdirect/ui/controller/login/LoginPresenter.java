@@ -67,4 +67,8 @@ public class LoginPresenter<V extends LoginMvpView> extends AuthenticationBasePr
             }
         });
     }
+
+    public boolean isFacebookLoginEnabled(){
+        return getDataManager().getFacebookLoginEnabled();
+    }
 }

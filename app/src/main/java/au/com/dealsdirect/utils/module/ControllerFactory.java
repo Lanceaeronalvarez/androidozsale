@@ -13,7 +13,6 @@ import au.com.dealsdirect.ui.controller.categories.OldCategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
-import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
@@ -35,7 +34,6 @@ import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.notification.NotificationController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
-import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
@@ -147,8 +145,6 @@ public class ControllerFactory {
                 return InformationMenuController.newInstance();
             case TUTORIAL:
                 return TutorialController.newInstance();
-            case MY_ACCOUNTS_OURPAY:
-                return MyAccountsOurpayController.newInstance();
             case COMMON_WEBVIEW:
                 return null;
             default:
@@ -217,8 +213,6 @@ public class ControllerFactory {
                 return new ContactSelectSubjectController(bundle);
             case CONTACT_SELECT_ORDER:
                 return new ContactSelectOrderController(bundle);
-            case SMS_VERIFICATION:
-                return new OurpaySMSVerificationController(bundle);
             case LEGALITIES:
                 return new LegalitiesController(bundle);
             case SEARCH_FILTER_FOR_SHOP:
@@ -234,8 +228,6 @@ public class ControllerFactory {
                 return InformationMenuController.newInstance();
             case TUTORIAL:
                 return TutorialController.newInstance();
-            case MY_ACCOUNTS_OURPAY:
-                return MyAccountsOurpayController.newInstance();
             case COMMON_WEBVIEW:
                 return new WebViewController(bundle);
             default:
@@ -300,16 +292,8 @@ public class ControllerFactory {
             return GateKeeper.Destination.INVITE;
         }
 
-        if (controller instanceof OurpaySMSVerificationController) {
-            return GateKeeper.Destination.SMS_VERIFICATION;
-        }
-
         if (controller instanceof LegalitiesController) {
             return GateKeeper.Destination.LEGALITIES;
-        }
-
-        if (controller instanceof MyAccountsOurpayController) {
-            return GateKeeper.Destination.MY_ACCOUNTS_OURPAY;
         }
 
         return GateKeeper.Destination.EMPTY;

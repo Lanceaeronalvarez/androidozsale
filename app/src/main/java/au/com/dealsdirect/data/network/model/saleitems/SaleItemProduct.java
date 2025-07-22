@@ -3,6 +3,7 @@ package au.com.dealsdirect.data.network.model.saleitems;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import au.com.dealsdirect.data.network.model.saleitemdetails.Attributes;
@@ -94,6 +95,24 @@ public class SaleItemProduct {
     private Double savedMoneyValue;
     @SerializedName("totalPercentOff")
     private Double totalPercentOff;
+
+    public SaleItemProduct(String imageURL,
+                           String seoIdentifierId,
+                           String productName,
+                           String productBrand,
+                           String price,
+                           boolean isFreeDelivery,
+                           boolean isSoldOut) {
+        this.images = new ArrayList<String>() {{
+            add(imageURL);
+        }};
+        this.seoIdentifier = seoIdentifierId;
+        this.name = productName;
+        this.brandName = productBrand;
+        this.price = new Price(price);
+        this.isFreeDelivery = isFreeDelivery;
+        this.isSoldOut = isSoldOut;
+    }
 
     public String getSalePercentOffText() {
         return salePercentOffText;
@@ -207,12 +226,30 @@ public class SaleItemProduct {
         private String currency;
         private double value;
 
+        private transient String textForm;
+
+        public Price(String currency, double value) {
+            this.currency = currency;
+            this.value = value;
+            this.textForm = null;
+        }
+
+        public Price(String textForm) {
+            this.currency = null;
+            this.value = 0;
+            this.textForm = textForm;
+        }
+
         public double getValue() {
             return value;
         }
 
         public String getCurrency() {
             return currency;
+        }
+
+        public String getTextForm() {
+            return textForm;
         }
     }
 
@@ -235,6 +272,13 @@ public class SaleItemProduct {
     }
 
     public static class SalePrice extends Price {
+        public SalePrice(String currency, double value) {
+            super(currency, value);
+        }
+
+        public SalePrice(String textForm) {
+            super(textForm);
+        }
     }
 
     public static class Sku {

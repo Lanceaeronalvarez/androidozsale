@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
@@ -63,6 +64,8 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     private EligibleProductsLinkListener eligibleProductsLinkListener = null;
 
     private String postcodeOverride = null;
+
+    private Item itemDataData;
 
     final private CheckoutOrderPriceHelper checkoutOrderPriceHelper;
 
@@ -126,6 +129,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         switch (itemData.getType()) {
             case ITEM:
+                itemDataData = itemData.getItem();
                 setupViewHolderForItem((ItemViewHolder) holder, itemData.getItem());
                 break;
             case FOOTER:
@@ -238,7 +242,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                         createTitleFromShippingFee(
                                 shipment.getDeliveryPrice(),
                                 shipment.getAmountToPromoPrice(),
-                                shipment.getLocationFilterHash(),
+                                shipment.getItems().get(0),
                                 postcodeOverride != null ? postcodeOverride : shipment.getEstimateShipmentPostcode(),
                                 shipment.getShippingAvailability()
                         )));
@@ -252,7 +256,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private SpannableStringBuilder createTitleFromShippingFee(double fee,
                                                               double targetPriceForFreeShipping,
-                                                              String locationFilterHash,
+                                                              String item,
                                                               String estimateShipmentPostcode,
                                                               boolean shippingAvailability) {
         int start = 0;
@@ -313,7 +317,10 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                     ClickableSpan clickableSpan = new ClickableSpan() {
                         @Override
                         public void onClick(@NonNull View widget) {
-                            onEligibleProductsTapped(locationFilterHash);
+                            if (Objects.equals(item, itemDataData.id)) {
+                                onEligibleProductsTapped(itemDataData.brandName);
+                            }
+
                         }
                     };
 

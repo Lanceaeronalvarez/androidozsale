@@ -1,7 +1,6 @@
 package au.com.dealsdirect.data;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.JsonObject;
 import com.mysale.genie.utility.config.api.GetAppSettings;
@@ -122,17 +121,6 @@ import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedSatisfactionResponse;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
-import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
-import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
-import au.com.dealsdirect.data.network.model.ourpaydata.ProcessOurpayInstallmentRequest;
-import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
-import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
-import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
-import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.data.network.model.preferencecenter.UpdateEmailSubscriptionResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
@@ -172,6 +160,10 @@ import au.com.dealsdirect.data.network.model.userdetails.GetEmailSubscriptionTem
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.userdetails.UpdateUserEmailSubscriptionRequest;
+import au.com.dealsdirect.data.network.model.verificationcodeconfirm.VerificationCodeConfirmRequest;
+import au.com.dealsdirect.data.network.model.verificationcodeconfirm.VerificationCodeConfirmResponseBody;
+import au.com.dealsdirect.data.network.model.verificationnormalizephone.VerificationNormalizePhoneRequest;
+import au.com.dealsdirect.data.network.model.verificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyRequest;
@@ -296,11 +288,6 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<SaleItemDetails> callGetSaleItemDetails(String saleId, String seoIdentifierId) {
         return mApiHelper.callGetSaleItemDetails(saleId, seoIdentifierId);
-    }
-
-    @Override
-    public Observable<OurpayDataResponse> callGetOurpayData(OurpayDataRequest request) {
-        return mApiHelper.callGetOurpayData(request);
     }
 
     @Override
@@ -863,31 +850,6 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String langaugeId) {
-        return mApiHelper.callGetPaymentPlans(countryId, langaugeId);
-    }
-
-    @Override
-    public Observable<GetScheduledPlansResponse> callGetScheduledPlans(String countryId, String langaugeId) {
-        return mApiHelper.callGetScheduledPlans(countryId, langaugeId);
-    }
-
-    @Override
-    public Observable<GetPastPaymentsResponse> callGetPastPayments(String countryId, String langaugeId) {
-        return mApiHelper.callGetPastPayments(countryId, langaugeId);
-    }
-
-    @Override
-    public Observable<GetDeliveryServiceResponse> callGetDeliveryService() {
-        return mApiHelper.callGetDeliveryService();
-    }
-
-    @Override
-    public Observable<GetScheduledPlansResponse> processOurpayInstallment(ProcessOurpayInstallmentRequest request) {
-        return mApiHelper.processOurpayInstallment(request);
-    }
-
-    @Override
     public Observable<CreateAfterpayOrderResponse> createAfterpayOrder(CreateAfterpayOrderRequest request) {
         return mApiHelper.createAfterpayOrder(request);
     }
@@ -1239,16 +1201,6 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void setIsOurpayEnabled(boolean val) {
-        mPreferencesHelper.setIsOurpayEnabled(val);
-    }
-
-    @Override
-    public boolean isOurpayEnabled() {
-        return mPreferencesHelper.isOurpayEnabled();
-    }
-
-    @Override
     public void setIsAfterpayEnabled(boolean val) {
         mPreferencesHelper.setIsAfterpayEnabled(val);
     }
@@ -1394,16 +1346,6 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void setIsMyPayEnabled(boolean isMyPayEnabled) {
-        mPreferencesHelper.setIsMyPayEnabled(isMyPayEnabled);
-    }
-
-    @Override
-    public boolean getIsMyPayEnabled() {
-        return mPreferencesHelper.getIsMyPayEnabled();
-    }
-
-    @Override
     public void setIsVisaCheckoutEnabled(boolean isVisaCheckoutEnabled) {
         mPreferencesHelper.setIsVisaCheckoutEnabled(isVisaCheckoutEnabled);
     }
@@ -1484,20 +1426,13 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
-        Log.d("Checkout", "set my pay template texts");
-        mPreferencesHelper.setMyPayTemplateTexts(value);
-
-    }
-
-    @Override
     public void setDeliveryOptionsTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
         mPreferencesHelper.setDeliveryOptionsTemplateTexts(value);
     }
 
     @Override
-    public String getMyPayTemplateTexts(String detailKey) {
-        return mPreferencesHelper.getMyPayTemplateTexts(detailKey);
+    public String getStoredTemplateTexts(String detailKey) {
+        return mPreferencesHelper.getStoredTemplateTexts(detailKey);
     }
 
     @Override
@@ -1713,16 +1648,6 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean shouldShowStrictConsent() {
         return mPreferencesHelper.shouldShowStrictConsent();
-    }
-
-    @Override
-    public void setIsOurpayDashboardEnabled(boolean enabled) {
-        mPreferencesHelper.setIsOurpayDashboardEnabled(enabled);
-    }
-
-    @Override
-    public boolean getIsOurpayDashboardEnabled() {
-        return mPreferencesHelper.getIsOurpayDashboardEnabled();
     }
 
     @Override
@@ -2138,6 +2063,16 @@ public class AppDataManager implements DataManager {
     @Override
     public int getHoursLeftToDisplayTimer() {
         return mPreferencesHelper.getHoursLeftToDisplayTimer();
+    }
+
+    @Override
+    public void setFacebookLoginEnabled(boolean facebookLoginEnabled) {
+        mPreferencesHelper.setFacebookLoginEnabled(facebookLoginEnabled);
+    }
+
+    @Override
+    public boolean getFacebookLoginEnabled() {
+        return mPreferencesHelper.getFacebookLoginEnabled();
     }
 
     @Override

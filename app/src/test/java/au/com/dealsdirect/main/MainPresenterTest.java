@@ -31,6 +31,7 @@ import au.com.dealsdirect.service.braintree.FetchBraintreeClientTokenHandler;
 import au.com.dealsdirect.ui.main.MainPresenter;
 import au.com.dealsdirect.ui.main.MainMvpPresenter;
 import au.com.dealsdirect.ui.main.MainMvpView;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.TestSchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -414,7 +415,6 @@ public class MainPresenterTest {
         verify(mMockDataManager).setKountMerchantId(responseValue.d.getValue().getPayments().getKount().getMerchantID());
         verify(mMockDataManager).setSearchMaxPrice(responseValue.d.getValue().getSearch().getMaxPrice());
         verify(mMockDataManager).setAccessAnonymousEnabled(responseValue.d.getValue().getAccess().getAnonymousEnabled());
-        verify(mMockDataManager).setIsMyPayEnabled(responseValue.d.getValue().getPayments().getMyPay().getEnabled());
     }
 
     @Test
@@ -428,7 +428,7 @@ public class MainPresenterTest {
         mPresenter.fetchBraintreeClientToken();
         mTestScheduler.triggerActions();
 
-        verify(mMockMainMvpView).onBraintreeAuthorizationFetchSuccess(responseValue.getPaymentToken(),responseValue.getPaymentType());
+        verify(mMockMainMvpView).onBraintreeAuthorizationFetchSuccess(responseValue.getPaymentToken());
         verify(mMockMainMvpView).onBraintreeAuthorizationFetchFail();
 
     }
@@ -463,7 +463,7 @@ public class MainPresenterTest {
         doReturn(Observable.just(jo))
                 .when(mMockDataManager).callGetPaymentMethodNonce(any(GetPaymentMethodNonceRequest.class));
 
-        mPresenter.callGetPaymentMethodNonce("");
+        mPresenter.callGetPaymentMethodNonce(null, "", 0d);
         mTestScheduler.triggerActions();
 
         String nonceString = "";
@@ -473,7 +473,7 @@ public class MainPresenterTest {
 
         }
 
-        verify(mMockMainMvpView).showGetPaymentMethodNonceSuccess(nonceString);
+        verify(mMockMainMvpView).showGetPaymentMethodNonceSuccess(null, nonceString, 0d);
 
     }
 
@@ -485,12 +485,12 @@ public class MainPresenterTest {
         doReturn(Observable.just(responseValue))
                 .when(mMockDataManager).callCreatePaymentTransaction(any(CreatePaymentTransaction.RequestValue.class));
 
-        mPresenter.createPaymentTransaction("","","","", "");
+        mPresenter.createPaymentTransaction("", ,"","","");
         mTestScheduler.triggerActions();
 
         verify(mMockMainMvpView).hideLoading();
         verify(mMockMainMvpView).performResetWithAuthFetch();
-        verify(mMockMainMvpView).showCreatePaymentTransactionSuccess("",responseValue);
+        verify(mMockMainMvpView).showCreatePaymentTransactionSuccess("", , responseValue, );
 
     }
 
@@ -502,12 +502,12 @@ public class MainPresenterTest {
         doReturn(Observable.just(responseValue))
                 .when(mMockDataManager).callCreatePaymentTransaction(any(CreatePaymentTransaction.RequestValue.class));
 
-        mPresenter.createPaymentTransaction("","","","", "");
+        mPresenter.createPaymentTransaction("", ,"","","");
         mTestScheduler.triggerActions();
 
         verify(mMockMainMvpView).hideLoading();
         verify(mMockMainMvpView).performResetWithAuthFetch();
-        verify(mMockMainMvpView).showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
+        verify(mMockMainMvpView).showCreatePaymentTransactionFailure(, responseValue.getD().getMessage());
 
     }
 
@@ -589,7 +589,6 @@ public class MainPresenterTest {
         mPresenter.callGetTemplateTexts();
         mTestScheduler.triggerActions();
 
-        verify(mMockDataManager).setMyPayTemplateTexts(response.getResponse().getValue());
         verify(mMockMainMvpView).storeTemplateTexts(response.getResponse().getValue());
     }
 

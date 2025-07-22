@@ -19,4 +19,5 @@ public interface RegisterMvpPresenter<V extends RegisterMvpView> extends Authent
                       boolean emailsAccepted,
                       String reCaptchaToken);
 
+    boolean isFacebookLoginEnabled();
 }

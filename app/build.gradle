@@ -1,4 +1,6 @@
-import com.android.build.gradle.api.ApplicationVariant
+import groovy.xml.XmlParser
+
+import javax.inject.Inject
 
 plugins {
     id "com.android.application"
@@ -43,7 +45,6 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.releaseConfig
-            zipAlignEnabled true
             ext.debugMode = "false"
 
             resValue "bool", "debug_mode", ext.debugMode
@@ -64,8 +65,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 529
-            versionName "8.15.0"
+            versionCode 533
+            versionName "8.16.0"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -77,7 +78,6 @@ android {
             ext.facebookClientToken = "d5f7ea8f1814ead7a465009de837b890"
 
             resValue "string", "app_name", ext.appName
-            def facebookAppId = "391019637656000"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
             resValue "string", "facebook_client_token", ext.facebookClientToken
@@ -96,8 +96,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 529
-            versionName "8.15.0"
+            versionCode 533
+            versionName "8.16.0"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -123,8 +123,8 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 529
-            versionName "8.15.0"
+            versionCode 533
+            versionName "8.16.0"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -136,7 +136,6 @@ android {
             ext.facebookClientToken = "d5f7ea8f1814ead7a465009de837b890"
 
             resValue "string", "app_name", ext.appName
-            def facebookAppId = "1650094968544406"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
             resValue "string", "facebook_client_token", ext.facebookClientToken
@@ -155,8 +154,8 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 529
-            versionName "8.15.0"
+            versionCode 533
+            versionName "8.16.0"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -182,8 +181,8 @@ android {
         }
 
         ooRC {
-            versionCode 529
-            versionName "8.15.0"
+            versionCode 533
+            versionName "8.16.0"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -195,7 +194,6 @@ android {
             ext.facebookClientToken = "d5f7ea8f1814ead7a465009de837b890"
 
             resValue "string", "app_name", ext.appName
-            def facebookAppId = "1654976038100746"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
             resValue "string", "facebook_client_token", ext.facebookClientToken
@@ -214,8 +212,8 @@ android {
         }
 
         ooTest {
-            versionCode 529
-            versionName "8.15.0"
+            versionCode 533
+            versionName "8.16.0"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -241,8 +239,8 @@ android {
         }
 
         ozsaleRC {
-            versionCode 529
-            versionName "8.15.0"
+            versionCode 533
+            versionName "8.16.0"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -254,7 +252,6 @@ android {
             ext.facebookClientToken = "cf2a2da0be692da07658cfc095e2b1ee"
 
             resValue "string", "app_name", ext.appName
-            def facebookAppId = "421544284547550"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
             resValue "string", "facebook_client_token", ext.facebookClientToken
@@ -273,8 +270,8 @@ android {
         }
 
         ozsaleTest {
-            versionCode 529
-            versionName "8.15.0"
+            versionCode 533
+            versionName "8.16.0"
             applicationId "au.com.ozsale.test"
 
             ext.appName = "OZSALE Test"
@@ -304,8 +301,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 529
-            versionName "8.15.0"
+            versionCode 533
+            versionName "8.16.0"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -317,7 +314,6 @@ android {
             ext.facebookClientToken = "0eb39d9137e988f8afb399387598d356"
 
             resValue "string", "app_name", ext.appName
-            def facebookAppId = "213701285425668"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
             resValue "string", "facebook_client_token", ext.facebookClientToken
@@ -336,8 +332,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 529
-            versionName "8.15.0"
+            versionCode 533
+            versionName "8.16.0"
             applicationId "sg.com.singsale.test"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -363,8 +359,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 529
-            versionName "8.15.0"
+            versionCode 533
+            versionName "8.16.0"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -376,7 +372,6 @@ android {
             ext.facebookClientToken = "3afb4e0406bc0e0bfcb5d87f79c8bafd"
 
             resValue "string", "app_name", ext.appName
-            def facebookAppId = "122094841270614"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
             resValue "string", "facebook_client_token", ext.facebookClientToken
@@ -395,8 +390,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 529
-            versionName "8.15.0"
+            versionCode 533
+            versionName "8.16.0"
             applicationId "nz.co.nzsale.test"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -422,8 +417,8 @@ android {
         }
 
         mysaleRC {
-            versionCode 529
-            versionName "8.15.0"
+            versionCode 533
+            versionName "8.16.0"
             applicationId "my.mysale.mysale"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -435,7 +430,6 @@ android {
             ext.facebookClientToken = "f31b297c05bb3c86769aec298e9ca36e"
 
             resValue "string", "app_name", ext.appName
-            def facebookAppId = "485479254797079"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
             resValue "string", "facebook_client_token", ext.facebookClientToken
@@ -454,8 +448,8 @@ android {
         }
 
         mysaleTest {
-            versionCode 529
-            versionName "8.15.0"
+            versionCode 533
+            versionName "8.16.0"
             applicationId "my.mysale.mysaleTest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -569,6 +563,9 @@ android {
 
     dataBinding {
         enabled = true
+    }
+    buildFeatures {
+        buildConfig true
     }
 }
 
@@ -729,6 +726,9 @@ dependencies {
     //password strength meter
     implementation 'nu.aaro.gustav:passwordstrengthmeter:0.4'
 
+    //zoom image
+    implementation("com.otaliastudios:zoomlayout:1.9.0")
+
     implementation project(path: ':genie-utility')
     implementation project(path: ':genie-animation')
     implementation project(path: ':genie-views')
@@ -742,7 +742,6 @@ dependencies {
     implementation project(path: ':ahbottomnavigation')
 
 
-
 }
 
 // Create New Relic properties file according to flavor
@@ -753,14 +752,15 @@ newRelicProperties.createNewFile()
 android.applicationVariants.configureEach { variant ->
     variant.productFlavors.each { flavor ->
         def variantSuffix = variant.name.capitalize()
-        def generateResourcesTask = project.tasks.getByName("compile${variantSuffix}Sources")
-        def generatePropertiesTask = task("newRelicGenerateProperties${variantSuffix}") doLast {
+        def generateResourcesTask = project.tasks.named("compile${variantSuffix}Sources").get()
+        def generatePropertiesTask = tasks.register("newRelicGenerateProperties${variantSuffix}")
+        {
             Properties properties = new Properties()
             properties.load(newRelicProperties.newDataInputStream())
             properties.setProperty("com.newrelic.application_token", flavor.ext.newRelicAppToken)
             properties.store(newRelicProperties.newWriter(), null)
-        }
-        generateResourcesTask.dependsOn generatePropertiesTask
+        }.get()
+        generateResourcesTask.dependsOn(generatePropertiesTask)
     }
 
     buildType = variant.name
@@ -769,6 +769,12 @@ android.applicationVariants.configureEach { variant ->
 
 configurations.configureEach {
     resolutionStrategy.force "com.android.support:support-annotations:$supportLibrary"
+}
+
+interface InjectedExecOps {
+    @Inject
+    //@javax.inject.Inject
+    ExecOperations getExecOps()
 }
 
 //Below tasks is for automation checklist
@@ -810,7 +816,6 @@ tasks.register('printCompileSdkVersion') {
         android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
-                    def value = project.getProperties().get("APP_NAME")
                     println rootProject.ext.compileSdkVersion
                 }
         }
@@ -909,7 +914,7 @@ tasks.register('printNewRelicAppToken') {
 tasks.register('printDebugMode') {
 
     android.applicationVariants.configureEach {
-        ApplicationVariant variant ->
+        variant ->
 
             doLast {
                 android.productFlavors.configureEach {
@@ -1005,7 +1010,7 @@ tasks.register('parseAdmobAccount') {
 tasks.register('getLegacyVersion') {
 
     android.applicationVariants.configureEach {
-        ApplicationVariant variant ->
+        variant ->
 
             doLast {
                 android.productFlavors.configureEach {
@@ -1013,10 +1018,11 @@ tasks.register('getLegacyVersion') {
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
                             def compileWithJavac = "compile" + buildVariant.capitalize() + "JavaWithJavac"
-                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/";
-                            javaexec {
+                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/"
+                            def injected = project.objects.newInstance(InjectedExecOps)
+                            injected.execOps.javaexec {
                                 classpath = files(path)
-                                main = "au.com.dealsdirect.data.network.ApiEndPoint"
+                                mainClass = "au.com.dealsdirect.data.network.ApiEndPoint"
                             }
                         }
 
@@ -1028,8 +1034,8 @@ tasks.register('getLegacyVersion') {
 }
 
 tasks.register('printCountryId') {
-    android.applicationVariants.all {
-        ApplicationVariant variant ->
+    android.applicationVariants.configureEach {
+        variant ->
 
             doLast {
                 android.productFlavors.configureEach {
@@ -1037,10 +1043,11 @@ tasks.register('printCountryId') {
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
                             def compileWithJavac = "compile" + buildVariant.capitalize() + "JavaWithJavac"
-                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/";
-                            javaexec {
+                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/"
+                            def injected = project.objects.newInstance(InjectedExecOps)
+                            injected.execOps.javaexec {
                                 classpath = files(path)
-                                main = "au.com.dealsdirect.ui.controller.main.Settings"
+                                mainClass = "au.com.dealsdirect.ui.controller.main.Settings"
                                 args countryName, flavorName, "PRINT_COUNTRY_ID"
                             }
                         }
@@ -1053,7 +1060,7 @@ tasks.register('printCountryId') {
 
 tasks.register('printAccountId') {
     android.applicationVariants.configureEach {
-        ApplicationVariant variant ->
+        variant ->
 
             doLast {
                 android.productFlavors.configureEach {
@@ -1061,10 +1068,11 @@ tasks.register('printAccountId') {
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
                             def compileWithJavac = "compile" + buildVariant.capitalize() + "JavaWithJavac"
-                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/";
-                            javaexec {
+                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/"
+                            def injected = project.objects.newInstance(InjectedExecOps)
+                            injected.execOps.javaexec {
                                 classpath = files(path)
-                                main = "au.com.dealsdirect.ui.controller.main.Settings"
+                                mainClass = "au.com.dealsdirect.ui.controller.main.Settings"
                                 args countryName, flavorName, "PRINT_ACCOUNT_ID"
                             }
                         }
@@ -1076,8 +1084,8 @@ tasks.register('printAccountId') {
 }
 
 tasks.register('printGenieApi') {
-    android.applicationVariants.all {
-        ApplicationVariant variant ->
+    android.applicationVariants.configureEach {
+        variant ->
 
             doLast {
                 android.productFlavors.configureEach {
@@ -1085,10 +1093,11 @@ tasks.register('printGenieApi') {
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
                             def compileWithJavac = "compile" + buildVariant.capitalize() + "JavaWithJavac"
-                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/";
-                            javaexec {
+                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/"
+                            def injected = project.objects.newInstance(InjectedExecOps)
+                            injected.execOps.javaexec {
                                 classpath = files(path)
-                                main = "au.com.dealsdirect.ui.controller.main.Settings"
+                                mainClass = "au.com.dealsdirect.ui.controller.main.Settings"
                                 args countryName, flavorName, "PRINT_GENIE_API"
                             }
                         }
@@ -1101,7 +1110,7 @@ tasks.register('printGenieApi') {
 
 tasks.register('printCurrencyCode') {
     android.applicationVariants.configureEach {
-        ApplicationVariant variant ->
+        variant ->
 
             doLast {
                 android.productFlavors.configureEach {
@@ -1109,10 +1118,11 @@ tasks.register('printCurrencyCode') {
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
                             def compileWithJavac = "compile" + buildVariant.capitalize() + "JavaWithJavac"
-                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/";
-                            javaexec {
+                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/"
+                            def injected = project.objects.newInstance(InjectedExecOps)
+                            injected.execOps.javaexec {
                                 classpath = files(path)
-                                main = "au.com.dealsdirect.ui.controller.main.Settings"
+                                mainClass = "au.com.dealsdirect.ui.controller.main.Settings"
                                 args countryName, flavorName, "PRINT_CURRENCY_CODE"
                             }
                         }

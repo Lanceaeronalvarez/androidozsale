@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -152,6 +153,8 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @BindView(R.id.register_voucher_text)
     TextView mRegisterVoucher;
 
+    @BindView(R.id.controller_login_fb_layout)
+    RelativeLayout mfbLoginButton;
 
     private String mRegisterMethod = NO_ACTION;
     private boolean isRegisterSuccess = false;
@@ -209,6 +212,8 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 //        mVcoButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
 //                View.GONE);
         mVcoButton.setVisibility(View.GONE);
+
+        mfbLoginButton.setVisibility(mPresenter.isFacebookLoginEnabled() ? View.VISIBLE : View.GONE);
 
         if(getResources().getBoolean(R.bool.is_registration_voucher_visible)){
             mRegisterVoucher.setVisibility(View.VISIBLE);

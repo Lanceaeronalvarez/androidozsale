@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.checkout.paymentselect;
  * Created by CodeineBot on 1/11/17.
  */
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,24 +38,22 @@ import butterknife.ButterKnife;
 public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdapter.PaymentSelectViewHolder>
         implements SwipeableItemAdapter<PaymentSelectAdapter.PaymentSelectViewHolder> {
 
-    private MainActivity mActivity;
     private ArrayList<PaymentMethod> mData;
     private PaymentSelectMvpPresenter<PaymentSelectMvpView> mPresenter;
-    private boolean isFromCart = false;
+    private boolean isFromCart;
     private boolean isItemViewSelected;
+    private PaymentMethod selectedPaymentMethod = null;
 
-    public PaymentSelectAdapter(MainActivity activity,
-                                ArrayList<PaymentMethod> data,
+    public PaymentSelectAdapter(ArrayList<PaymentMethod> data,
                                 PaymentSelectMvpPresenter<PaymentSelectMvpView> presenter,
                                 boolean fromCart) {
-
-        this.mActivity = activity;
         this.mData = data;
         this.mPresenter = presenter;
         this.isFromCart = fromCart;
         setHasStableIds(true);
     }
 
+    @NonNull
     @Override
     public PaymentSelectAdapter.PaymentSelectViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.partial_payment_select_item, parent, false);
@@ -61,7 +61,8 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
     }
 
     @Override
-    public void onBindViewHolder(PaymentSelectAdapter.PaymentSelectViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PaymentSelectAdapter.PaymentSelectViewHolder holder, int position) {
+        final Context context = holder.itemView.getContext();
 
         PaymentMethod item = mData.get(position);
 
@@ -81,10 +82,10 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
         holder.nameTextView.setText(item.getPaymentType());
         holder.detailsText.setText(item.getDescription());
 
-        holder.itemView.setBackground(mActivity.getResources().getDrawable(R.drawable.bg_swipe_item_neutral));
-        holder.container.setBackgroundColor(mActivity.getResources().getColor(R.color.transparent));
+        holder.itemView.setBackgroundResource(R.drawable.bg_swipe_item_neutral);
+        holder.container.setBackgroundColor(context.getResources().getColor(R.color.transparent));
 
-        isItemViewSelected = mActivity.getPaymentMethodSelected() != null && mActivity.getPaymentMethodSelected().equals(item);
+        isItemViewSelected = selectedPaymentMethod != null && selectedPaymentMethod.equals(item);
         holder.itemView.setSelected(isFromCart && isItemViewSelected);
         holder.nameTextView.setSelected(isFromCart && isItemViewSelected);
 
@@ -129,14 +130,16 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
 
     @Override
     public void onSetSwipeBackground(PaymentSelectViewHolder holder, int position, int type) {
+        final Context context = holder.itemView.getContext();
+
         if (type == SwipeableItemConstants.DRAWABLE_SWIPE_LEFT_BACKGROUND) {
             holder.mDeleteText.setVisibility(View.VISIBLE);
-            holder.container.setBackgroundColor(mActivity.getResources().getColor(isFromCart && holder.itemView.isSelected() ? R.color.item_view_selected_color : R.color.white));
-            holder.parent.setBackground(mActivity.getResources().getDrawable(R.drawable.bg_swipe_item_right, null));
+            holder.container.setBackgroundColor(context.getResources().getColor(isFromCart && holder.itemView.isSelected() ? R.color.item_view_selected_color : R.color.white));
+            holder.parent.setBackground(context.getResources().getDrawable(R.drawable.bg_swipe_item_right, null));
         } else {
             holder.mDeleteText.setVisibility(View.GONE);
-            holder.container.setBackgroundColor(mActivity.getResources().getColor(R.color.transparent));
-            holder.parent.setBackground(mActivity.getResources().getDrawable(isItemViewSelected ? R.drawable.bg_checkout_options : R.drawable.bg_swipe_item_neutral, null));
+            holder.container.setBackgroundColor(context.getResources().getColor(R.color.transparent));
+            holder.parent.setBackground(context.getResources().getDrawable(isItemViewSelected ? R.drawable.bg_checkout_options : R.drawable.bg_swipe_item_neutral, null));
         }
     }
 
@@ -223,6 +226,13 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
         }
     }
 
+    public PaymentMethod getSelectedPaymentMethod() {
+        return selectedPaymentMethod;
+    }
+
+    public void setSelectedPaymentMethod(PaymentMethod selectedPaymentMethod) {
+        this.selectedPaymentMethod = selectedPaymentMethod;
+    }
 
     private static class PaymentSelectDiffUtils extends DiffUtil.Callback {
         List<PaymentMethod> oldList;

@@ -39,7 +39,7 @@ public interface MainMvpView extends MvpView {
     void callLogout(AuthHandler handler);
 
     // Braintree methods
-    void onBraintreeAuthorizationFetchSuccess(String paymentToken, String paymentMethod);
+    void onBraintreeAuthorizationFetchSuccess(String paymentToken);
 
     void onBraintreeAuthorizationFetchFail();
 
@@ -49,8 +49,6 @@ public interface MainMvpView extends MvpView {
 
     void fetchBraintreeAuthorization(FetchBraintreeClientTokenHandler fetchBraintreeClientTokenHandler);
 
-    void setPaymentMethodSelected(PaymentMethod paymentMethodSelected);
-
     boolean isBraintreeInitialized();
 
 //    void setVisaCheckoutActionType(int visaCheckoutActionType);
@@ -58,27 +56,23 @@ public interface MainMvpView extends MvpView {
 //    int getVisaCheckoutActionType();
 
     // Payment methods
-    void showGetPaymentMethodNonceSuccess(String nonce);
+    void showGetPaymentMethodNonceSuccess(PaymentMethod paymentMethod, String nonce, double cartTotalAmount);
 
     void showCreatePaymentMethodSuccess(PaymentMethod lastPaymentMethod);
 
-    void callCreatePaymentTransaction(String type, String nonce, String token);
+    void callCreatePaymentTransaction(PaymentMethod paymentMethod, String nonce, boolean isThreeDSecureRequired, double cartTotalAmount);
 
     //void callCreatePaymentTransactionVco(VisaPaymentSummary visaPaymentSummary);
 
     void callCreatePaymentTransactionStripe(String paymentType, String paymentMethodId);
 
-    void showCreatePaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue);
+    void showCreatePaymentTransactionSuccess(String paymentType, String provider, boolean is3DSRequired, CreatePaymentTransaction.ResponseValue responseValue);
 
-    void showCreatePaymentTransactionFailure(String errorMessage);
+    void showCreatePaymentTransactionFailure(String paymentType, String provider, boolean is3DSRequired, String errorMessage);
 
     void refreshWishlist();
 
     void updateWishlistCounter(int count);
-
-    PaymentMethod getPaymentMethodSelected();
-
-    boolean getIsMyPayEnabled();
 
     void startPaypalPayment();
 

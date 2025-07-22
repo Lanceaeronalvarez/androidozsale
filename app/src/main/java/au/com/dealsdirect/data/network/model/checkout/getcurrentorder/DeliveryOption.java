@@ -3,13 +3,14 @@ package au.com.dealsdirect.data.network.model.checkout.getcurrentorder;
 /**
  * Created by smartwave on 29/05/2018.
  */
+import androidx.annotation.NonNull;
+
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class DeliveryOption {
     public static final String DELIVERY_OPTION_STANDARD = "STANDARD";
-    public static final String DELIVERY_OPTION_OURPAY_SELECT = "OURPAYSELECT";
     public static final String DELIVERY_OPTION_EXPRESS = "EXPRESS";
 
     @SerializedName(value = "DeliveryOptions")
@@ -30,9 +31,6 @@ public class DeliveryOption {
     @SerializedName(value = "Description", alternate = {"description"})
     @Expose
     private String description;
-    @SerializedName(value = "OurpaySelect", alternate = {"ourpaySelect"})
-    @Expose
-    private boolean ourPaySelect;
     @SerializedName(value = "AgreedWithTerms", alternate = {"agreedWithTerms"})
     @Expose
     private boolean agreedWithTerms;
@@ -78,10 +76,6 @@ public class DeliveryOption {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void setOurPaySelect(boolean ourPaySelect) {
-        this.ourPaySelect = ourPaySelect;
     }
 
     public void setAgreedWithTerms(boolean agreedWithTerms) {

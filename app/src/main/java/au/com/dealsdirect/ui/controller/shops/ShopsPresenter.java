@@ -383,6 +383,16 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     }
 
     @Override
+    public String getShippingTemplateText() {
+        return getDataManager().getShippingHover();
+    }
+
+    @Override
+    public String getShippingTitleText() {
+        return getDataManager().getShippingTitle();
+    }
+
+    @Override
     public void getNotifications() {
         GetNotificationsRequest request = new GetNotificationsRequest();
         String loginTicket = getDataManager().getLoginTicket();

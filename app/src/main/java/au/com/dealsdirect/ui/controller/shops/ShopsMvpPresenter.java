@@ -49,6 +49,10 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
 
     void getPricingInfoText(String seoIdentifier);
 
+    String getShippingTemplateText();
+
+    String getShippingTitleText();
+
     interface WishlistDelayedCallback {
         void performDelayedAction();
     }

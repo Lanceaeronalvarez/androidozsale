@@ -46,33 +46,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:id="@+id/delivery_option_ourpay_select_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:id="@+id/delivery_option_ourpay_logo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_select_checkout_big" />
-
-                    <TextView
-                        android:id="@+id/delivery_option_ourpay_select_description_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxLines="2"
-                        android:textColor="@color/row_checkout_text_light_color"
-                        android:textSize="@dimen/text_size_caption2"
-                        tools:text="Subscription for 5, 12 or 25 free delivery per year" />
-
-
-                </LinearLayout>
-
                 <TextView
-                    android:id="@+id/delivery_option_non_ourpay_text_view"
+                    android:id="@+id/delivery_option_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/checkout_selected_text_color"

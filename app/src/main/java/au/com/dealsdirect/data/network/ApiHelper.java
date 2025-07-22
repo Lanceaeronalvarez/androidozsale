@@ -109,17 +109,10 @@ import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedSatisfactionResponse;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
-import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
-import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
-import au.com.dealsdirect.data.network.model.ourpaydata.ProcessOurpayInstallmentRequest;
-import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
-import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
-import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
-import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
+import au.com.dealsdirect.data.network.model.verificationcodeconfirm.VerificationCodeConfirmRequest;
+import au.com.dealsdirect.data.network.model.verificationcodeconfirm.VerificationCodeConfirmResponseBody;
+import au.com.dealsdirect.data.network.model.verificationnormalizephone.VerificationNormalizePhoneRequest;
+import au.com.dealsdirect.data.network.model.verificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.data.network.model.preferencecenter.UpdateEmailSubscriptionResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
@@ -173,13 +166,13 @@ import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.wishlist.GetWishlistIdResponse;
-import au.com.dealsdirect.data.network.model.zippay.ZipPayConfirmNzOrderRequest;
 import au.com.dealsdirect.data.network.model.zippay.ZipCreateChargeRequest;
 import au.com.dealsdirect.data.network.model.zippay.ZipCreateCheckoutRequest;
 import au.com.dealsdirect.data.network.model.zippay.ZipCreateCheckoutResponse;
-import au.com.dealsdirect.data.network.model.zippay.ZipPayCreateNzOrderRequest;
 import au.com.dealsdirect.data.network.model.zippay.ZipCreatePublicChargeRequest;
 import au.com.dealsdirect.data.network.model.zippay.ZipCreatePublicCheckoutRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayConfirmNzOrderRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayCreateNzOrderRequest;
 import au.com.dealsdirect.data.network.model.zippay.ZipPayCreateNzOrderResponse;
 import io.reactivex.Observable;
 
@@ -210,8 +203,6 @@ public interface ApiHelper {
     Observable<SaleItemDetails> callGetSaleItemDetails(String saleId, String seoIdentifierId);
 
     Observable<SaleItemDetails> callGetSaleItemDetails(String seoIdentifierId);
-
-    Observable<OurpayDataResponse> callGetOurpayData(OurpayDataRequest request);
 
     Observable<GetPublicSaleDetailsResponse> callGetPublicSaleDetails(GetPublicSaleDetailsRequest request);
 
@@ -475,17 +466,6 @@ public interface ApiHelper {
 
     Observable<String> callSellerLinkEvent(SellerLinkEventRequest request);
 
-    // OURPAY
-    Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String languageId);
-
-    Observable<GetScheduledPlansResponse> callGetScheduledPlans(String countryId, String languageId);
-
-    Observable<GetPastPaymentsResponse> callGetPastPayments(String countryId, String languageId);
-
-    Observable<GetDeliveryServiceResponse> callGetDeliveryService();
-
-    Observable<GetScheduledPlansResponse> processOurpayInstallment(ProcessOurpayInstallmentRequest request);
-
     // AFTERPAY
 
     Observable<CreateAfterpayOrderResponse> createAfterpayOrder(CreateAfterpayOrderRequest request);
@@ -546,6 +526,7 @@ public interface ApiHelper {
 
     // Zip Payment
     Observable<ZipCreateCheckoutResponse> callCreateZipCheckout(ZipCreateCheckoutRequest request);
+
     Observable<JSONObject> callCreateZipCharge(ZipCreateChargeRequest request);
 
     Observable<JSONObject> callCreatePublicZipCheckout(ZipCreatePublicCheckoutRequest request);

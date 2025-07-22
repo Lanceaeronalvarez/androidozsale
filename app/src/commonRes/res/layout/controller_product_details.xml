@@ -158,14 +158,30 @@
                                     android:layout_height="match_parent"
                                     android:orientation="vertical">
 
-                                    <ImageView
-                                        android:id="@+id/product_details_shared_image"
+                                    <RelativeLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        android:layout_alignParentTop="true"
-                                        android:layout_gravity="center"
-                                        android:layout_weight="1"
-                                        android:paddingTop="@dimen/margin_extra_small" />
+                                        android:layout_weight="1">
+
+                                        <ImageView
+                                            android:id="@+id/product_details_shared_image"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_alignParentTop="true"
+                                            android:layout_gravity="center"
+                                            android:layout_weight="1"
+                                            android:paddingTop="@dimen/margin_extra_small" />
+
+                                        <ImageButton
+                                            android:id="@+id/product_details_zoom"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentEnd="true"
+                                            android:layout_alignParentBottom="true"
+                                            android:backgroundTint="@color/white"
+                                            android:src="@drawable/zoom_btn" />
+
+                                    </RelativeLayout>
 
                                     <RelativeLayout
                                         android:id="@+id/productImageRecyclerViewSelectorLayout"
@@ -359,18 +375,6 @@
                                     android:visibility="gone" />
 
                             </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/partial_item_details_ourpay_panel_holder"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@color/white"
-                                android:orientation="vertical"
-                                android:paddingLeft="@dimen/margin_small"
-                                android:paddingTop="@dimen/margin_extra_small"
-                                android:paddingRight="@dimen/margin_small"
-                                android:paddingBottom="@dimen/margin_extra_small"
-                                android:visibility="gone" />
 
                             <LinearLayout
                                 android:id="@+id/partial_item_details_afterpay_panel_holder"

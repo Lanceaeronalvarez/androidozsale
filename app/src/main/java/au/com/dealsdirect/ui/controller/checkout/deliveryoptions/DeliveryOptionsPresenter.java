@@ -5,8 +5,8 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
-import au.com.dealsdirect.data.network.model.checkout.GetDeliveryServicePackageDetails;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
+import au.com.dealsdirect.service.deliveryoptions.DeliveryOptions;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.LoadingDialogType;
@@ -21,19 +21,18 @@ public class DeliveryOptionsPresenter<V extends DeliveryOptionsMvpView> extends 
     }
 
     @Override
-    public void getDeliveryServicePackageDetails() {
-        doApiCallForResponse(getDataManager().
-                        callGetDeliveryServicePackageDetails(new GetDeliveryServicePackageDetails.RequestValue(getDataManager().getCountryId(), getDataManager().getLanguageId())),
-                new AppApiCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        super.onSuccess(response);
-                        GetDeliveryServicePackageDetails.ResponseValue responseValue = (GetDeliveryServicePackageDetails.ResponseValue) response;
-                        if (responseValue.getD().isAuthenticated() && responseValue.getD().getResult()) {
-                            getMvpView().onDeliveryServicePackageDetailsLoaded(responseValue.getD().getValue());
-                        }
-                    }
-                });
+    public String getStandardTitleText() {
+        return getDataManager().getStoredTemplateTexts(DeliveryOptions.KEY_DELIVERYOPTION_STANDARD_TITLE);
+    }
+
+    @Override
+    public String getExpressTitleText() {
+        return getDataManager().getStoredTemplateTexts(DeliveryOptions.KEY_DELIVERYOPTION_EXPRESS_TITLE);
+    }
+
+    @Override
+    public String getExpressDescriptionText() {
+        return getDataManager().getStoredTemplateTexts(DeliveryOptions.KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION);
     }
 
     @Override
@@ -58,10 +57,4 @@ public class DeliveryOptionsPresenter<V extends DeliveryOptionsMvpView> extends 
             }
         });
     }
-
-    @Override
-    public void onTermsAndConditionsClicked() {
-        getMvpView().showTermsAndConditionsController();
-    }
-
 }

@@ -44,17 +44,18 @@ public class BundleKeys {
     public static final String SHOP_SALEITEMS_KEY_END_DATE = "SaleItemsController.SHOP_KEY_END_DATE";
 
     //sale item details
-    public static final String SALEITEMDETAILS_KEY_POSITION = "KEY_POSITION";
-    public static final String SALEITEMDETAILS_KEY_SKU_ID = "KEY_SKU_ID";
-    public static final String SALEITEMDETAILS_KEY_SALE_ID = "KEY_SALE_ID";
-    public static final String SALEITEMDETAILS_KEY_ITEM_IMAGE_ID = "KEY_IMAGE_ID";
-    public static final String SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID = "KEY_SEO_IDENTIFIER";
-    public static final String SALEITEMDETAILS_KEY_ITEM_NAME = "KEY_SALE_NAME";
-    public static final String SALEITEMDETAILS_KEY_ITEM_PRICE = "KEY_SALE_PRICE";
-    public static final String SALEITEMDETAILS_KEY_ITEM_OLD_PRICE = "KEY_SALE_OLD_PRICE";
-    public static final String SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE = "KEY_IS_DEEP_LINKED_WITH_SALE";
-    public static final String SALEITEMDETAILS_KEY_SALE_ORIGIN = "KEY_SALE_ORIGIN";
-    public static final String SALEITEMDETAILS_KEY_END_DATE = "KEY_END_DATE";
+    public static final String SALEITEMDETAILS_KEY_POSITION = "SaleItemDetailsController.KEY_POSITION";
+    public static final String SALEITEMDETAILS_KEY_SKU_ID = "SaleItemDetailsController.KEY_SKU_ID";
+    public static final String SALEITEMDETAILS_KEY_SALE_ID = "SaleItemDetailsController.KEY_SALE_ID";
+    public static final String SALEITEMDETAILS_KEY_ITEM_IMAGE_ID = "SaleItemDetailsController.KEY_IMAGE_ID";
+    public static final String SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID = "SaleItemDetailsController.KEY_SEO_IDENTIFIER";
+    public static final String SALEITEMDETAILS_KEY_ITEM_NAME = "SaleItemDetailsController.KEY_SALE_NAME";
+    public static final String SALEITEMDETAILS_KEY_ITEM_BRAND = "SaleItemDetailsController.KEY_SALE_BRAND";
+    public static final String SALEITEMDETAILS_KEY_ITEM_PRICE = "SaleItemDetailsController.KEY_SALE_PRICE";
+    public static final String SALEITEMDETAILS_KEY_SALE_ORIGIN = "SaleItemDetailsController.KEY_SALE_ORIGIN";
+    public static final String SALEITEMDETAILS_KEY_END_DATE = "SaleItemDetailsController.KEY_END_DATE";
+    public static final String SALEITEMDETAILS_KEY_IS_FREE_DELIVERY = "SaleItemDetailsController.KEY_IS_FREE_DELIVERY";
+    public static final String SALEITEMDETAILS_KEY_END_IS_SOLD_OUT = "SaleItemDetailsController.KEY_IS_SOLD_OUT";
 
     //search filters
     public static final String FACET_FILTER_TYPE = "FACET_FILTER_TYPE";
@@ -101,7 +102,6 @@ public class BundleKeys {
     public static final String PAYMENT_METHODS = "payment_methods";
     public static final String IS_FROM_CART = "is_from_cart";
     public static final String CART_TOTAL_COST = "cart_total_cost";
-    public static final String IS_OURPAY_SELECT_DELIVERY_METHOD = "is_ourpay_select_delivery_method";
     public static final String CURRENT_ORDER_VALUE = "current_order_value";
 
     //payment success
@@ -111,14 +111,12 @@ public class BundleKeys {
     public static final String KEY_INVOICE = "Invoice";
     public static final String KEY_INVOICE_NUMBER = "InvoiceNumber";
     public static final String KEY_ESTIMATED_DELIVERY = "EstimatedDelivery";
-    public static final String KEY_IS_OURPAY_USED = "IsOurpayUsed";
 
     //legalities
     public static final String TEMPLATE_KEY = "TEMPLATE_KEY";
     public static final String TEMPLATE_KEY_ABOUT_US = "aboutus";
     public static final String TEMPLATE_KEY_PRIVACY = "mobilePrivacyPolicy_Text";
     public static final String TEMPLATE_KEY_TNC = "TermsAndConditions_Text";
-    public static final String TEMPLATE_KEY_OURPAY_TNC = "_OurPayTermsAndConditionsBody";
     public static final String LEGALITIES_TITLE = "LEGALITIES_TITLE";
     public static final String STRING_RESOURCE = "STRING_RESOURCE";
 
@@ -142,9 +140,6 @@ public class BundleKeys {
     public static final String CONTACT_IS_INVOICE_REQUIRED = "CONTACT_IS_INVOICE_REQUIRED";
     public static final String CONTACT_ACTIONS = "CONTACT_ACTIONS";
     public static final String CONTACT_TIME_STAMP = "CONTACT_TIME_STAMP";
-
-    //Ourpay SMS Verification
-    public static final String PHONE_KEY = "PHONE_KEY";
 
     //Returns
     public static final String KEY_ORDER_NUMBER = "ReturnDetailsController.KEY_ORDER_NUMBER";

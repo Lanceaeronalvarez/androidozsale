@@ -4,25 +4,20 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
-import au.com.dealsdirect.service.ourpay.Ourpay;
-import au.com.dealsdirect.service.ourpay.OurpayPanel;
-import au.com.dealsdirect.service.ourpay.OurpayState;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.main.CardInfo;
-import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DialogUtils;
@@ -31,13 +26,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import timber.log.Timber;
 
-/*
- * Created by smartwave on 30/06/2017.
- */
-
 public class PaymentSuccessController extends BaseController implements PaymentSuccessMvpView {
-
-    private static final int KEY_PLANNED_TRANSACTION_STATE_PAID = 2;
 
     @Inject
     PaymentSuccessMvpPresenter<PaymentSuccessMvpView> mPresenter;
@@ -56,11 +45,6 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     private String mInvoiceString;
     private String mEstimatedDeliveryString;
 
-    private boolean mIsOurpayUsed;
-
-    @BindView(R.id.ourpay_panel_holder)
-    ViewGroup mOurpayDetailsContainer;
-
     @BindView(R.id.thank_you_for_shopping_textview)
     TextView mThankyouTextview;
 
@@ -76,18 +60,6 @@ public class PaymentSuccessController extends BaseController implements PaymentS
                         .build());
     }
 
-    public static PaymentSuccessController newInstance(String address, String price, String invoice, String delivery, boolean isOurpayUsed) {
-
-        return new PaymentSuccessController(
-                new BundleBuilder(new Bundle())
-                        .putString(BundleKeys.KEY_ADDRESS, address)
-                        .putString(BundleKeys.KEY_PRICE, price)
-                        .putString(BundleKeys.KEY_INVOICE, invoice)
-                        .putString(BundleKeys.KEY_ESTIMATED_DELIVERY, delivery)
-                        .putBoolean(BundleKeys.KEY_IS_OURPAY_USED, isOurpayUsed)
-                        .build());
-    }
-
     public PaymentSuccessController(CreatePaymentTransaction.ResponseValue responseValue) {
         this(new BundleBuilder(new Bundle())
                 .putString(BundleKeys.KEY_ADDRESS, responseValue.getD().getValue().getAddressString())
@@ -95,7 +67,6 @@ public class PaymentSuccessController extends BaseController implements PaymentS
                 .putDouble(BundleKeys.KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping())
                 .putString(BundleKeys.KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()) : responseValue.getD().getValue().getInvoiceNo())
                 .putString(BundleKeys.KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText())
-                .putBoolean(BundleKeys.KEY_IS_OURPAY_USED, responseValue.getD().getValue().getPlannedTransactions() != null && !responseValue.getD().getValue().getPlannedTransactions().isEmpty())
                 .build());
     }
 
@@ -106,16 +77,11 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         mShippingFee = args.getDouble(BundleKeys.KEY_SHIPPING_FEE);
         mInvoiceString = args.getString(BundleKeys.KEY_INVOICE, "");
         mEstimatedDeliveryString = args.getString(BundleKeys.KEY_ESTIMATED_DELIVERY, "");
-        mIsOurpayUsed = args.getBoolean(BundleKeys.KEY_IS_OURPAY_USED, false);
     }
 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
-        if (mIsOurpayUsed && PaymentInfo.getOurpay() != null && PaymentInfo.getOurpay().isCanUse()) {
-            mPresenter.generateOurpay();
-        }
 
         setUp(view);
     }
@@ -191,22 +157,9 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     }
 
     @Override
-    public void showOurpay() {
-        mOurpayDetailsContainer.setVisibility(View.VISIBLE);
-        PaymentInfo.getOurpay().setState(OurpayState.POSTCART);
-        if (PaymentInfo.getOurpay() != null) {
-            OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity());
-            mOurpayDetailsContainer.removeAllViews();
-            mOurpayDetailsContainer.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay()));
-        }
-    }
-
-    @Override
     public boolean handleBack() {
-        PaymentInfo.resetPaymentInfo();
-
         mActivity.getMainController().showShopController();
-
+        mActivity.getMainController().resetCheckoutRouter();
         return true;
     }
 
@@ -215,16 +168,4 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         mActivity.onBackPressed();
     }
 
-    //    Unused function, price table container is hidden.
-    //    *May be used in the future
-    private void getTotalPayment(Ourpay ourpay) {
-        double totalPayment = 0;
-        for (int i = 0; i < ourpay.getPlannedTransactions().size(); i++) {
-            if (ourpay.getPlannedTransactions().get(i).getState() == KEY_PLANNED_TRANSACTION_STATE_PAID) {
-                totalPayment = ourpay.getPlannedTransactions().get(i).getAmount();
-            }
-        }
-
-//        mPriceTextView.setText(Double.toString(totalPayment));
-    }
 }

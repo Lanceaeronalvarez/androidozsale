@@ -56,7 +56,6 @@ import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.notification.NotificationController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
-import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.returns.returnspolicy.ReturnsPolicyViewController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
@@ -274,10 +273,6 @@ public class AccountController extends BaseController implements AccountMvpView,
                 continue;
             }
 
-            if (!mPresenter.isOurpayEnabled() && option.equals(AccountOption.OURPAY)) {
-                continue;
-            }
-
             //skip if multi country not enabled
             if (!Settings.getIsMultiCountry() && option.equals(AccountOption.COUNTRY)) {
                 continue;
@@ -462,31 +457,6 @@ public class AccountController extends BaseController implements AccountMvpView,
 
         logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.PAYMENTS_MENU);
     }
-
-    @Override
-    public void showMyAccountsOurpay() {
-        if (!mPresenter.isTablet()) {
-            GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.MY_ACCOUNTS_OURPAY, new HorizontalChangeHandler(), new HorizontalChangeHandler());
-        } else {
-            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.MY_ACCOUNTS_OURPAY, RouterTransaction.with(MyAccountsOurpayController.newInstance()));
-        }
-
-        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_ourpay)));
-
-        logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.OURPAY_MENU);
-    }
-
-    @Override
-    public void showMyAccountsSelect() {
-        /* TODO
-        if (!mPresenter.isTablet()) {
-            GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.MY_ACCOUNTS_SELECT, new HorizontalChangeHandler(), new HorizontalChangeHandler());
-        } else {
-            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.MY_ACCOUNTS_SELECT, RouterTransaction.with(MyAccountsSelectController.newInstance()));
-        }
-        */
-    }
-
 
     @Override
     public void showLanguage() {
@@ -707,6 +677,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                     mActivity.getMainController().resetAccountRouter();
                     mActivity.getMainController().resetWishlistRouter();
                     mActivity.getMainController().resetBrandsRouter();
+                    mActivity.getMainController().resetCheckoutRouter();
 
                     userDetailsLoggedOut = null;
                 }

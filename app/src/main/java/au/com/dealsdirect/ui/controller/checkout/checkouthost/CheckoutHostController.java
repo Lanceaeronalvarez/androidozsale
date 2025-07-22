@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,7 +32,6 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAd
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
@@ -43,7 +41,6 @@ import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
-import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.bestsellers.BestSellersWidgetHelper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -69,10 +66,6 @@ import au.com.dealsdirect.utils.ScrollingImageHorizontal.HorizontalRecyclerItems
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.Optional;
-
-/**
- * Created by smartwave on 13/06/2018.
- */
 
 public class CheckoutHostController extends BaseController implements CheckoutHostMvpView, CheckoutListener {
 
@@ -239,13 +232,6 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         final List<RouterTransaction> backstack = mCheckoutDetailRouter.getBackstack();
         ((BaseController) backstack.get(0).controller()).onOrientationChanged(newConfiguration);
         ((BaseController) backstack.get(backstack.size() - 1).controller()).onOrientationChanged(newConfiguration);
-    }
-
-    @Override
-    public void showMyPayDetails(CheckoutDetailsMapper value, Ourpay ourpay) {
-        if (mCheckoutDetailView != null) {
-            mCheckoutDetailView.showMyPayDetails(value, ourpay);
-        }
     }
 
     @Override
@@ -446,15 +432,6 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
-    public boolean isOurPaySelectDeliveryMethod() {
-        if (mCheckoutDetailView != null) {
-            return mCheckoutDetailView.isOurPaySelectDeliveryMethod();
-        } else {
-            return false;
-        }
-    }
-
-    @Override
     public Router getDisplayRouter() {
         return mCheckoutDetailRouter;
     }
@@ -486,8 +463,8 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
             return;
         }
 
-        SaleItemDetailsController.Parameters.FromCheckout parameters = new SaleItemDetailsController.Parameters.FromCheckout(position,
-                null,
+        SaleItemDetailsController.Parameters.FromCheckout parameters = new SaleItemDetailsController.Parameters.FromCheckout(
+                position,
                 imageUrl,
                 CommonUtils.loadSaleItem(mActivity, productID),
                 skuId,
@@ -495,8 +472,10 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
                 itemName,
                 brandName,
                 price,
-                oldPrice,
-                "", "", isFreeDelivery, false);
+                "",
+                "",
+                isFreeDelivery,
+                false);
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));
@@ -735,5 +714,20 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Override
     public Router getDetailRouter() {
         return mCheckoutDetailRouter;
+    }
+
+    @Override
+    public PaymentMethod getSelectedPaymentMethod() {
+        if (mCheckoutDetailView == null) {
+            return null;
+        }
+        return mCheckoutDetailView.getSelectedPaymentMethod();
+    }
+
+    @Override
+    public void setSelectedPaymentMethod(PaymentMethod selectedPaymentMethod) {
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.setSelectedPaymentMethod(selectedPaymentMethod);
+        }
     }
 }

@@ -13,6 +13,10 @@ public class RecentlyViewedItemResponse extends SaleItemProduct {
     @Expose
     private String masterProductId;
 
+    public RecentlyViewedItemResponse(String imageURL, String seoIdentifierId, String productName, String productBrand, String price, boolean isFreeDelivery, boolean isSoldOut) {
+        super(imageURL, seoIdentifierId, productName, productBrand, price, isFreeDelivery, isSoldOut);
+    }
+
     public String getMasterProductId() {
         return masterProductId;
     }
