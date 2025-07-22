@@ -42,8 +42,8 @@ copy_to_output_folder(){
 	fi
 }
 
-expectedVersionName="8.15.0"
-expectedVersionCode="529"
+expectedVersionName="8.16.0"
+expectedVersionCode="533"
 expectedMinSDK="21"
 expectedCompileSDK="35"
 expectedTargetSDK="35"
