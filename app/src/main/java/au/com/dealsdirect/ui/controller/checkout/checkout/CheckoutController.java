@@ -1157,7 +1157,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void updateCheckoutBadge() {
         if (mActivity.isAuthorized()) {
-            mActivity.getMainController().updateBasketItemsQuantity();
+            mActivity.getMainController().updatePartialCartItemsSize();
         }
     }
 

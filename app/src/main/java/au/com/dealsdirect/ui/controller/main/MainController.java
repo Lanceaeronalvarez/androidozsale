@@ -51,12 +51,8 @@ import au.com.dealsdirect.ui.controller.account.model.AccountOption;
 import au.com.dealsdirect.ui.controller.brands.TopBrandsController;
 import au.com.dealsdirect.ui.controller.categories.NewSaleCategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
-import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.empty.CheckoutEmptyController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.split.CheckoutSplitController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.steps.CheckoutStepsController;
-import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -64,7 +60,6 @@ import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.DelayedMethodExecutionManager;
 import au.com.dealsdirect.utils.ScreenUtils;
@@ -1172,18 +1167,18 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     @Override
-    public void showBasketItemCount() {
-        final int count = CartUtil.getCartValue();
-        updateBasketItemCount(count);
+    public void showCartItemsSize() {
+        int count = mPresenter.getCartItemsSize();
+        updateCartItemsSizeBadge(count);
     }
 
-    private void updateBasketItemCount(int count) {
+    private void updateCartItemsSizeBadge(int count) {
         if (mPresenter == null || mBottomNavigationView == null) {
             DelayedMethodExecutionManager.getInstance()
                     .queueDelayedMethodCall(
                             this.getClass().getName(),
                             "showBasketItemCount",
-                            this::showBasketItemCount);
+                            this::showCartItemsSize);
             return;
         }
 
@@ -1228,8 +1223,8 @@ public class MainController extends BaseController implements MainMvpView {
         wishlistCount = count;
     }
 
-    public void updateBasketItemsQuantity() {
-        mPresenter.callGetBasketItemsQuantity();
+    public void updatePartialCartItemsSize() {
+        mPresenter.updatePartialCartItemsSize();
     }
 
     public CheckoutMvpView getCheckoutView() {
@@ -1243,14 +1238,6 @@ public class MainController extends BaseController implements MainMvpView {
         return null;
     }
 
-    public void updateCheckoutWithCartDetails(CartDetailsMapper cartDetails) {
-        final CheckoutMvpView checkoutMvpView = getCheckoutView();
-        if (checkoutMvpView == null) {
-            return;
-        }
-        checkoutMvpView.updateCartWithMappedValues(cartDetails);
-    }
-
     public void clearSelectedPaymentMethod() {
         final CheckoutMvpView checkoutMvpView = getCheckoutView();
         if (checkoutMvpView == null) {
@@ -1260,7 +1247,7 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     public void removeBasketItemCount() {
-        updateBasketItemCount(0);
+        updateCartItemsSizeBadge(0);
     }
 
     @Override

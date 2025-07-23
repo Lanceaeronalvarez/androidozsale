@@ -38,7 +38,7 @@ public interface MainMvpView extends MvpView {
 
     void showCheckoutController();
 
-    void showBasketItemCount();
+    void showCartItemsSize();
 
     void showWishlistItemCount(int count);
 

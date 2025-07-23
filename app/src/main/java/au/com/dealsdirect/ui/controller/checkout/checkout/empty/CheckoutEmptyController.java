@@ -114,6 +114,7 @@ public class CheckoutEmptyController extends BaseController implements CheckoutE
 
     @Override
     public void showCart() {
+        mActivity.getMainController().showCartItemsSize();
         if (mPresenter.getCart() == null ||
                 mPresenter.getCart().getItems() == null ||
                 mPresenter.getCart().getItems().isEmpty()) {

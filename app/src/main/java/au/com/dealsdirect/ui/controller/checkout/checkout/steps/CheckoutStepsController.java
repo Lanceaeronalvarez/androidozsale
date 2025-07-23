@@ -25,7 +25,6 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.empty.CheckoutEmptyController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartitems.CheckoutStepsCartItemsController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartreview.CheckoutStepsCartReviewController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.contact.CheckoutStepsContactController;
@@ -233,6 +232,7 @@ public class CheckoutStepsController extends BaseController implements CheckoutS
 
     @Override
     public void showCart() {
+        mActivity.getMainController().showCartItemsSize();
         if (mPresenter.getCart() == null ||
                 mPresenter.getCart().getItems() == null ||
                 mPresenter.getCart().getItems().isEmpty()) {

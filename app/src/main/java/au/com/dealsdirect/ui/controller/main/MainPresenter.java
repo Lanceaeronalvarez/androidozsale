@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -26,18 +25,24 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
+
     @Override
-    public void callGetBasketItemsQuantity() {
+    public int getCartItemsSize() {
+        return getDataManager().getCartItemsSize();
+    }
+
+    @Override
+    public void updatePartialCartItemsSize() {
         getCompositeDisposable().add(getDataManager()
                 .callGetBasketItemsQuantity()
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(basketQuantityResponse -> {
+                    getDataManager().savePartialCartItemsSize(basketQuantityResponse.getItemQuantity());
                     if (!isViewAttached()) {
                         return;
                     }
-                    CartUtil.setValueToCart(basketQuantityResponse.getItemQuantity());
-                    getMvpView().showBasketItemCount();
+                    getMvpView().showCartItemsSize();
                 }, throwable -> {
                     if (!isViewAttached()) {
                         return;

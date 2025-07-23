@@ -135,7 +135,6 @@ import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -1855,6 +1854,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showAddToCartResponse(CartDetailsMapper cartDetailsResponse, SaleItemDetails item) {
+        mActivity.getMainController().showCartItemsSize();
 
         if (mSharedImageLocation == null) {
             mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
@@ -1901,10 +1901,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         mAttempts = 0;
-        //notify bottom navigation view(checkout) with success.
-        CartUtil.addValueToCart(1);
-        mActivity.getMainController().updateBasketItemsQuantity();
-        mActivity.getMainController().updateCheckoutWithCartDetails(cartDetailsResponse);
 
         if (isBuyNow) {
             isBuyNow = false;
@@ -2044,11 +2040,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mAfterpayHolder.removeAllViews();
         mAfterpayHolder.addView(viewHolder.getView());
-    }
-
-    @Override
-    public void onCallGetBasketItemsQuantity() {
-
     }
 
     @Override

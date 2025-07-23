@@ -25,8 +25,6 @@ public interface SaleItemDetailsMvpView extends MvpView {
 
     void showAfterpayDetails(int installmentsCount, double installmentAmount, String currency);
 
-    void onCallGetBasketItemsQuantity();
-
     void setDynamicDiscount(String discountText);
 
     void setIsAfterpayDetailsVisible(boolean visible);

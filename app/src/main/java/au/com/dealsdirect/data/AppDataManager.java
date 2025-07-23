@@ -2127,6 +2127,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public int getCartItemsSize() {
+        return mCartHelper.getCartItemsSize();
+    }
+
+    @Override
+    public void savePartialCartItemsSize(int size) {
+        mCartHelper.savePartialCartItemsSize(size);
+    }
+
+    @Override
     public CartDetailsMapper getCart() {
         return mCartHelper.getCart();
     }

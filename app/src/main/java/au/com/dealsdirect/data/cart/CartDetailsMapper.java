@@ -66,6 +66,10 @@ public class CartDetailsMapper {
         init();
     }
 
+    public long getTimeCreated() {
+        return timeCreated;
+    }
+
     public boolean isOld() {
         final long now = System.currentTimeMillis();
         final long elapsed = now - timeCreated;
