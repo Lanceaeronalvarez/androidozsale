@@ -28,7 +28,6 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.cart.CartDetailsMapper;
-import au.com.dealsdirect.data.cart.CartDetailsMapper.MappedShipment;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
@@ -104,7 +103,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     private Router mCheckoutDetailRouter;
     private CheckoutMvpView mCheckoutDetailView;
     private CheckoutOrderAdapter mAdapter;
-    private List<MappedShipment> mItemList = new ArrayList<>();
+    private CartDetailsMapper mCartDetails = null;
 
     private boolean hasDeliveryAddress = false;
     private boolean mIsCheckoutHostUpdated;
@@ -164,7 +163,6 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
         mAdapter = new CheckoutOrderAdapter(
                 mActivity,
-                mItemList,
                 false,
                 mPresenter.isShippingByPostcodeEnabled(),
                 () -> {
@@ -173,8 +171,13 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
                     }
                     return mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation();
                 },
-                this,
-                priceInfo -> showBottomPopupView(priceInfo));
+                () -> {
+                    if (mPresenter.getTemplateTextsRepository() == null) {
+                        return null;
+                    }
+                    return mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation();
+                },
+                this, priceInfo -> showBottomPopupView(priceInfo));
         mAdapter.setShouldAddSpacerOnTop(mPresenter.isTablet());
         mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
         mAdapter.setItemQuantityChangedListener(new CheckoutOrderAdapter.ItemQuantityChangedListener() {
@@ -242,27 +245,27 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
-    public void showCartDetails(List<MappedShipment> items) {
+    public void showCartDetails(CartDetailsMapper cart) {
 
-        showCartDetailsOnChild(items);
+        showCartDetailsOnChild(cart);
 
-        showCartDetailsOnHost(items);
+        showCartDetailsOnHost(cart);
     }
 
     @Override
-    public void showCartDetailsOnChild(List<MappedShipment> items) {
+    public void showCartDetailsOnChild(CartDetailsMapper cart) {
         if (mCheckoutDetailView != null) {
-            mCheckoutDetailView.showCartDetailsOnChild(items);
+            mCheckoutDetailView.showCartDetailsOnChild(cart);
         }
     }
 
     @Override
-    public void showCartDetailsOnHost(List<MappedShipment> items) {
-        if (items == null || items.isEmpty()) {
+    public void showCartDetailsOnHost(CartDetailsMapper cart) {
+        if (cart == null || cart.isEmpty()) {
             showNoCartItemsLayout();
             return;
         }
-        mItemList = items;
+        mCartDetails = cart;
 
         refreshItemList(hasDeliveryAddress);
 
@@ -299,7 +302,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         if (mAdapter == null) {
             return;
         }
-        mAdapter.replaceData(mActivity, mItemList, showFooter);
+        mAdapter.replaceData(mActivity, mCartDetails, showFooter);
     }
 
 

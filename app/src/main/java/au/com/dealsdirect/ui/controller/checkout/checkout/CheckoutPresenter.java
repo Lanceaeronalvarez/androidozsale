@@ -303,7 +303,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
 //            getMvpView().initializeVisaCheckout();
 
-            getMvpView().showCartDetails(mappedValues.getMappedShipments());
+            getMvpView().showCartDetails(mappedValues);
 
             if (getDataManager().isAfterpayEnabled() &&
                     mappedValues.getAfterpay() != null &&
@@ -345,7 +345,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             }
         } else {
             getDataManager().setCheckoutHasWishlistItem(false);
-            getMvpView().showCartDetails(new ArrayList<>());
+            getMvpView().showCartDetails(null);
             getMvpView().hideAfterpayPanel();
             getMvpView().hideLPayPanel();
             getMvpView().hideKlarnaPanel();

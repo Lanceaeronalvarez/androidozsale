@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.data.cart.CartDetailsMapper.MappedShipment;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
@@ -48,8 +49,9 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final static int VIEW_TYPE_FOOTER = 2;
     private final static int VIEW_TYPE_SPACER = 3;
     private final static int VIEW_TYPE_LINE = 4;
+    private final static int VIEW_TYPE_SUMMARY = 5;
 
-    private List<MappedShipment> mSourceData;
+    private CartDetailsMapper mSourceData = null;
     private List<ItemData> mFlattenedData;
     private static final int MAX_ITEM_QTY = 5;
     private final CheckoutListener mClickListener;
@@ -57,6 +59,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private final boolean isShippingByPostcodeEnabled;
     private final ImpossibleToDeliverAtLocationTextRetriever impossibleToDeliverAtLocationTextRetriever;
+    private final UnavailableTextRetriever unavailableTextRetriever;
 
     private boolean shouldAddSpacerOnTop = false;
 
@@ -64,30 +67,34 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private String postcodeOverride = null;
 
-    private Item itemDataData;
-
     final private CheckoutOrderPriceHelper checkoutOrderPriceHelper;
 
     private boolean willShowLargeImages; // TODO
+    private boolean willShowItems = true;
+    private boolean willShowSummary = false;
+    private View.OnClickListener onAddVoucherClickListener = null;
 
     public CheckoutOrderAdapter(Context context,
-                                List<MappedShipment> data,
                                 boolean willShowLargeImages,
                                 boolean isShippingByPostcodeEnabled,
                                 ImpossibleToDeliverAtLocationTextRetriever impossibleToDeliverAtLocationTextRetriever,
+                                UnavailableTextRetriever unavailableTextRetriever,
                                 CheckoutListener clickListener,
                                 CheckoutOrderPriceInfoClickListener onClickItemPriceInfo) {
-        this.mSourceData = data;
         this.willShowLargeImages = willShowLargeImages;
         this.isShippingByPostcodeEnabled = isShippingByPostcodeEnabled;
         this.impossibleToDeliverAtLocationTextRetriever = impossibleToDeliverAtLocationTextRetriever;
+        this.unavailableTextRetriever = unavailableTextRetriever;
         this.mClickListener = clickListener;
         checkoutOrderPriceHelper = new CheckoutOrderPriceHelper(context, onClickItemPriceInfo);
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
+            case VIEW_TYPE_SUMMARY:
+                return new CheckoutOrderSummaryItemView(parent);
             case VIEW_TYPE_FOOTER:
                 return new FooterViewHolder(LayoutInflater
                         .from(parent.getContext()).inflate(R.layout.partial_checkout_item_footer,
@@ -119,6 +126,9 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemViewType(int position) {
+        if (position == getItemCount() - 1 && willShowSummary) {
+            return VIEW_TYPE_SUMMARY;
+        }
         switch (mFlattenedData.get(position).getType()) {
             case FOOTER:
                 return VIEW_TYPE_FOOTER;
@@ -134,18 +144,32 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ItemData itemData = mFlattenedData.get(position);
-
-        switch (itemData.getType()) {
-            case ITEM:
-                itemDataData = itemData.getItem();
-                setupViewHolderForItem((ItemViewHolder) holder, itemData.getItem());
+        switch (holder.getItemViewType()) {
+            case VIEW_TYPE_ITEM:
+            case VIEW_TYPE_ITEM_LARGE:
+                setupViewHolderForItem((ItemViewHolder) holder, mFlattenedData.get(position).getItem());
                 break;
-            case FOOTER:
-                setupViewHolderForTitle((FooterViewHolder) holder, itemData.getFooterTitle());
+            case VIEW_TYPE_FOOTER:
+                setupViewHolderForTitle((FooterViewHolder) holder, mFlattenedData.get(position).getFooterTitle());
                 break;
-            case LINE:
-            case EMPTY_SPACE:
+            case VIEW_TYPE_SUMMARY:
+                if (holder instanceof CheckoutOrderSummaryItemView) {
+                    final CheckoutOrderSummaryItemView summaryItemView = (CheckoutOrderSummaryItemView) holder;
+                    summaryItemView.setOnAddVoucherClickListener(onAddVoucherClickListener);
+                    String unavailableText;
+                    if (unavailableTextRetriever == null ||
+                            unavailableTextRetriever.getString() == null) {
+                        unavailableText = "Unavailable";
+                    } else {
+                        unavailableText = unavailableTextRetriever.getString();
+                    }
+                    summaryItemView.setupSummaryShipping(mSourceData, isShippingByPostcodeEnabled, unavailableText);
+                    summaryItemView.setupSummaryVouchers(mSourceData);
+                }
+                break;
+            case VIEW_TYPE_LINE:
+            case VIEW_TYPE_SPACER:
+            default:
                 break;
         }
     }
@@ -174,7 +198,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         holder.name.setText(item.item);
-        if (item.size == null || item.size.length() < 0) {
+        if (item.size == null || item.size.isEmpty()) {
             holder.sizeText.setVisibility(View.INVISIBLE);
             holder.sizeValue.setVisibility(View.INVISIBLE);
         } else {
@@ -229,19 +253,23 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         holder.titleTextView.setText(title);
     }
 
-    public void replaceData(Context context, List<MappedShipment> items) {
-        replaceData(context, items, true);
+    public void replaceData(Context context, CartDetailsMapper cart) {
+        replaceData(context, cart, true);
     }
 
-    public void replaceData(Context context, List<MappedShipment> items, boolean showFooter) {
-        mSourceData = new ArrayList<>(items);
+    public void replaceData(Context context, CartDetailsMapper cart, boolean showFooter) {
+        mSourceData = cart;
         flattenData(context, showFooter);
         notifyDataSetChanged();
     }
 
     private void flattenData(Context context, boolean showFooter) {
         mFlattenedData = new ArrayList<>();
-        for (MappedShipment shipment : mSourceData) {
+        final List<MappedShipment> shipments = new ArrayList<>();
+        if (mSourceData != null) {
+            shipments.addAll(mSourceData.getMappedShipments());
+        }
+        for (MappedShipment shipment : shipments) {
             mFlattenedData.add(new ItemData(ItemData.Type.EMPTY_SPACE));
             mFlattenedData.add(new ItemData(ItemData.Type.LINE));
             for (Item item : shipment.getMappedItems()) {
@@ -253,7 +281,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 context,
                                 shipment.getDeliveryPrice(),
                                 shipment.getAmountToPromoPrice(),
-                                shipment.getItems().get(0),
+                                shipment.getMappedItems().get(0),
                                 postcodeOverride != null ? postcodeOverride : shipment.getEstimateShipmentPostcode(),
                                 shipment.getShippingAvailability()
                         )));
@@ -268,7 +296,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     private SpannableStringBuilder createTitleFromShippingFee(Context context,
                                                               double fee,
                                                               double targetPriceForFreeShipping,
-                                                              String item,
+                                                              Item item,
                                                               String estimateShipmentPostcode,
                                                               boolean shippingAvailability) {
         int start = 0;
@@ -333,13 +361,10 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                     spannableStringBuilder.append(
                             targetPriceString);
 
-                    ClickableSpan clickableSpan = new ClickableSpan() {
+                    final ClickableSpan clickableSpan = new ClickableSpan() {
                         @Override
                         public void onClick(@NonNull View widget) {
-                            if (Objects.equals(item, itemDataData.id)) {
-                                onEligibleProductsTapped(itemDataData.brandName);
-                            }
-
+                                onEligibleProductsTapped(item.brandName);
                         }
                     };
 
@@ -431,28 +456,46 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public void setWillShowLargeImages(boolean willShowLargeImages) {
         this.willShowLargeImages = willShowLargeImages;
+        notifyDataSetChanged();
+    }
+
+    public void setWillShowSummary(boolean willShowSummary) {
+        this.willShowSummary = willShowSummary;
+        notifyDataSetChanged();
+    }
+
+    public void setWillShowItems(boolean willShowItems) {
+        this.willShowItems = willShowItems;
+        notifyDataSetChanged();
+    }
+
+    public void setOnAddVoucherClickListener(View.OnClickListener onAddVoucherClickListener) {
+        this.onAddVoucherClickListener = onAddVoucherClickListener;
+        if (willShowSummary) {
+            notifyItemChanged(getItemCount() - 1);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mFlattenedData == null ? 0 : mFlattenedData.size();
+        return (mFlattenedData == null || !willShowItems ? 0 : mFlattenedData.size()) + (willShowSummary ? 1 : 0);
     }
 
-    public class LineViewHolder extends RecyclerView.ViewHolder {
+    public static class LineViewHolder extends RecyclerView.ViewHolder {
         public LineViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
     }
 
-    public class SpacerViewHolder extends RecyclerView.ViewHolder {
+    public static class SpacerViewHolder extends RecyclerView.ViewHolder {
         public SpacerViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
     }
 
-    public class FooterViewHolder extends RecyclerView.ViewHolder {
+    public static class FooterViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.partial_checkout_item_footer_title)
         TextView titleTextView;
 
@@ -463,7 +506,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
+    public static class ItemViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.item_checkout_image)
         ImageView image;
@@ -503,21 +546,25 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
             ITEM, FOOTER, EMPTY_SPACE, LINE
         }
 
-        private Type type;
-        private Item item = null;
-        private SpannableStringBuilder footerTitle = null;
+        private final Type type;
+        private final Item item;
+        private final SpannableStringBuilder footerTitle;
 
         ItemData(Type type) {
             this.type = type;
+            this.item = null;
+            this.footerTitle = null;
         }
 
         ItemData(Item item) {
             type = Type.ITEM;
             this.item = item;
+            this.footerTitle = null;
         }
 
         ItemData(SpannableStringBuilder footerTitle) {
             type = Type.FOOTER;
+            this.item = null;
             this.footerTitle = footerTitle;
         }
 
@@ -545,6 +592,10 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public interface ImpossibleToDeliverAtLocationTextRetriever {
+        String getString();
+    }
+
+    public interface UnavailableTextRetriever {
         String getString();
     }
 

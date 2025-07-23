@@ -290,7 +290,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private DeliveryOption mSelectedDeliveryOption;
     private DeliveryServicePackageDetail mDeliveryServicePackageDetail;
 
-    private List<MappedShipment> mItemList = new ArrayList<>();
+    private CartDetailsMapper mCartDetails = null;
     private List<PaymentMethod> mPaymentList = new ArrayList<>();
     private DeliveryAddress mDeliveryAddress = null;
     private List<DecorationInfoList> mDecorationInfoList = new ArrayList<>();
@@ -465,7 +465,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mRecyclerView.setVisibility(View.VISIBLE);
             mAdapter = new CheckoutOrderAdapter(
                     mActivity,
-                    mItemList,
                     false,
                     mPresenter.isShippingByPostcodeEnabled(),
                     () -> {
@@ -474,8 +473,13 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                         }
                         return mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation();
                     },
-                    this,
-                    priceInfo -> showBottomPopupView(priceInfo));
+                    () -> {
+                        if (mPresenter.getTemplateTextsRepository() == null) {
+                            return null;
+                        }
+                        return mPresenter.getTemplateTextsRepository().getUnavailable();
+                    },
+                    this, priceInfo -> showBottomPopupView(priceInfo));
             mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
             mAdapter.setItemQuantityChangedListener(new CheckoutOrderAdapter.ItemQuantityChangedListener() {
                 @Override
@@ -631,24 +635,20 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     @Override
-    public void showCartDetails(List<MappedShipment> items) {
+    public void showCartDetails(CartDetailsMapper cart) {
 
-        showCartDetailsOnHost(items);
+        showCartDetailsOnHost(cart);
 
-        showCartDetailsOnChild(items);
+        showCartDetailsOnChild(cart);
     }
 
     @Override
-    public void showCartDetailsOnChild(List<MappedShipment> items) {
-        if (items == null) { //do nothing (ie. when increasing order quantity, returns a soldout/out of stock message)
-            return;
-        }
-
-        mItemList = items;
+    public void showCartDetailsOnChild(CartDetailsMapper cart) {
+        mCartDetails = cart;
 
         refreshItemList(mDeliveryAddress != null);
 
-        if (items.isEmpty()) {
+        if (cart == null || cart.isEmpty()) {
             //no items
             showNoCartItemsLayout();
             CommonUtils.clearSaleItem(mActivity);
@@ -661,13 +661,13 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (mAdapter == null) {
             return;
         }
-        mAdapter.replaceData(mActivity, mItemList, showFooter);
+        mAdapter.replaceData(mActivity, mCartDetails, showFooter);
     }
 
     @Override
-    public void showCartDetailsOnHost(List<MappedShipment> items) {
+    public void showCartDetailsOnHost(CartDetailsMapper cart) {
         if (mCheckoutHostView != null) {
-            mCheckoutHostView.showCartDetails(items);
+            mCheckoutHostView.showCartDetails(cart);
         }
     }
 
@@ -1084,7 +1084,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void onKlarnaButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Klarna"));
-        logInitiateCheckout(mActivity, AppConstants.KLARNA, mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.KLARNA, mCartDetails != null ? mCartDetails.getMappedShipments().size() : 0,
                 mValue.getSummary().getTotal(), AppConstants.KLARNA);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1203,7 +1203,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             logInitiateCheckout(
                     mActivity,
                     paymentProviderType,
-                    mItemList.size(),
+                    mCartDetails != null ? mCartDetails.getMappedShipments().size() : 0,
                     mValue.getSummary().getTotal(),
                     paymentLogType);
             return;
@@ -1253,14 +1253,14 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         logInitiateCheckout(
                 mActivity,
                 paymentProviderType,
-                mItemList.size(),
+                mCartDetails != null ? mCartDetails.getMappedShipments().size() : 0,
                 mValue.getSummary().getTotal(),
                 paymentLogType);
     }
 
     private void onGPayButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Google Pay"));
-        logInitiateCheckout(mActivity, AppConstants.GPAY, mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.GPAY, mCartDetails != null ? mCartDetails.getMappedShipments().size() : 0,
                 mValue.getSummary().getTotal(), AppConstants.GPAY);
 
         MainActivity activity = (MainActivity) getActivity();
@@ -1272,7 +1272,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void onPaypalButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Paypal"));
-        logInitiateCheckout(mActivity, AppConstants.PAYPAL, mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.PAYPAL, mCartDetails != null ? mCartDetails.getMappedShipments().size() : 0,
                 mValue.getSummary().getTotal(), AppConstants.PAYPAL);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1299,7 +1299,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void onPaypalCreditButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Paypal Credit"));
-        logInitiateCheckout(mActivity, AppConstants.PAYPALCREDIT, mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.PAYPALCREDIT, mCartDetails != null ? mCartDetails.getMappedShipments().size() : 0,
                 mValue.getSummary().getTotal(), AppConstants.PAYPALCREDIT);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1325,7 +1325,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void onMasterpassButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Masterpass"));
-        logInitiateCheckout(mActivity, AppConstants.MASTERPASS, mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.MASTERPASS, mCartDetails != null ? mCartDetails.getMappedShipments().size() : 0,
                 mValue.getSummary().getTotal(), AppConstants.MASTERPASS);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1366,7 +1366,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void onAfterpayButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Afterpay"));
-        logInitiateCheckout(mActivity, AppConstants.AFTERPAY, mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.AFTERPAY, mCartDetails != null ? mCartDetails.getMappedShipments().size() : 0,
                 mValue.getSummary().getTotal(), AppConstants.AFTERPAY);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1398,7 +1398,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void onLPayButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("LPay"));
-        logInitiateCheckout(mActivity, AppConstants.LPAY, mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.LPAY, mCartDetails != null ? mCartDetails.getMappedShipments().size() : 0,
                 mValue.getSummary().getTotal(), AppConstants.LPAY);
 
         logCommonCheckoutEvent(mActivity, CheckoutUserActivityOperationType.LPAY_BUTTON_CLICK.getValue());
@@ -1443,7 +1443,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void onZipPayButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("ZipPay"));
-        logInitiateCheckout(mActivity, AppConstants.ZIPPAY, mItemList.size(),
+        logInitiateCheckout(mActivity, AppConstants.ZIPPAY, mCartDetails != null ? mCartDetails.getMappedShipments().size() : 0,
                 mValue.getSummary().getTotal(), AppConstants.ZIPPAY);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -2046,8 +2046,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void prepareItemsForGA4EventParams(GA4EventParams params) {
+        if (mCartDetails == null) {
+            return;
+        }
         final ArrayList<GA4EventParams.Item> ga4Items = new ArrayList<>();
-        for (MappedShipment shipment : mItemList) {
+        for (MappedShipment shipment : mCartDetails.getMappedShipments()) {
             for (Item item : shipment.getMappedItems()) {
                 GA4EventParams.Item ga4Item = new GA4EventParams.Item();
                 ga4Item.setItemId(item.getItemID());

@@ -103,12 +103,11 @@ public class CheckoutStepsCartItemsController extends BaseController implements 
         if (mRecyclerViewItemsAdapter == null) {
             mRecyclerViewItemsAdapter = new CheckoutOrderAdapter(
                     mActivity,
-                    null,
                     true,
                     mPresenter.isShippingByPostcodeEnabled(),
                     () -> mPresenter.getImpossibleToDeliverAtLocationText(),
-                    this,
-                    this::showBottomPopupView);
+                    () -> mPresenter.getUnavailableText(),
+                    this, this::showBottomPopupView);
             mRecyclerViewItemsAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
             mRecyclerViewItemsAdapter.setItemQuantityChangedListener(new CheckoutOrderAdapter.ItemQuantityChangedListener() {
                 @Override
@@ -131,9 +130,9 @@ public class CheckoutStepsCartItemsController extends BaseController implements 
             mRecyclerViewItems.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         }
         if (mPresenter.getCart() == null) {
-            mRecyclerViewItemsAdapter.replaceData(mActivity, Collections.emptyList());
+            mRecyclerViewItemsAdapter.replaceData(mActivity, null);
         } else {
-            mRecyclerViewItemsAdapter.replaceData(mActivity, mPresenter.getCart().getMappedShipments(), mPresenter.getCart().getDeliveryAddress() != null);
+            mRecyclerViewItemsAdapter.replaceData(mActivity, mPresenter.getCart(), mPresenter.getCart().getDeliveryAddress() != null);
         }
     }
 

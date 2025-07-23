@@ -25,7 +25,6 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartitems.CheckoutStepsCartItemsController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartreview.CheckoutStepsCartReviewController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.contact.CheckoutStepsContactController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.payment.CheckoutStepsPaymentController;
@@ -206,10 +205,10 @@ public class CheckoutStepsController extends BaseController implements CheckoutS
         mToolbarRightView.setImageResource(R.drawable.ic_cart_placeholder);
         mToolbarRightView.setVisibility(View.VISIBLE);
         mToolbarTitle.setText(view.getResources().getText(R.string.checkout));
-        mPageButtonCart.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.CART_INDEX, false));
-        mPageButtonContact.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.CONTACT_INDEX, false));
-        mPageButtonShipping.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.SHIPPING_INDEX, false));
-        mPageButtonPayment.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.PAYMENT_INDEX, false));
+        mPageButtonCart.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.CART_INDEX, true));
+        mPageButtonContact.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.CONTACT_INDEX, true));
+        mPageButtonShipping.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.SHIPPING_INDEX, true));
+        mPageButtonPayment.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.PAYMENT_INDEX, true));
 
         stepCircleImageViews.add(mStepCircleImageView1);
         stepCircleImageViews.add(mStepCircleImageView2);
@@ -277,13 +276,19 @@ public class CheckoutStepsController extends BaseController implements CheckoutS
             cartListener.stepChanged(currentStep);
         }
 
-        mToolbarLeftView.setVisibility(currentStep.getPosition() == 0 ? View.GONE : View.VISIBLE);
-        mToolbarRightView.setVisibility(currentStep.getPosition() == Step.CART_INDEX ? View.GONE : View.VISIBLE);
+        final int currentPosition = currentStep.getPosition();
 
-        refreshCurrentController(currentStep.getPosition());
+        if (currentPosition == Step.CART_INDEX || currentPosition == Step.PAYMENT_INDEX) {
+            mPresenter.loadCart(mPostcode, mPickupPoint, false);
+        }
+
+        mToolbarLeftView.setVisibility(currentPosition == 0 ? View.GONE : View.VISIBLE);
+        mToolbarRightView.setVisibility(currentPosition == Step.CART_INDEX ? View.GONE : View.VISIBLE);
+
+        refreshCurrentController(currentPosition);
 
         for (int i = 0; i < Step.ORDERED_LIST.length; i++) {
-            if (i <= currentStep.getPosition()) {
+            if (i <= currentPosition) {
                 stepCircleImageViews.get(i).setImageResource(R.drawable.checkout_step_circle_active);
                 stepCircleTextViews.get(i).setTextColor(mActivity.getResources().getColor(R.color.white));
                 stepTextViews.get(i).setTextColor(mActivity.getResources().getColor(R.color.colorPrimaryDark));
@@ -408,21 +413,15 @@ public class CheckoutStepsController extends BaseController implements CheckoutS
             return;
         }
 
-        if (mPresenter.isTablet()) {
-            router.setRoot(RouterTransaction.with(new CheckoutStepsCartItemsController())
-                    .tag(CheckoutStepsCartItemsController.TAG)
-                    .popChangeHandler(new HorizontalChangeHandler())
-                    .pushChangeHandler(new HorizontalChangeHandler()));
-        } else {
-            CheckoutStepsCartReviewController controller = new CheckoutStepsCartReviewController();
-            controller.setWillShowLargeImages(true);
-            controller.setShouldShowToolbar(false);
-            controller.setShouldShowSummary(false);
-            router.setRoot(RouterTransaction.with(controller)
-                    .tag(CheckoutStepsCartReviewController.TAG)
-                    .popChangeHandler(new HorizontalChangeHandler())
-                    .pushChangeHandler(new HorizontalChangeHandler()));
-        }
+        CheckoutStepsCartReviewController controller = new CheckoutStepsCartReviewController();
+        controller.setWillShowLargeImages(true);
+        controller.setShouldShowToolbar(false);
+        controller.setShouldShowSummary(!mPresenter.isTablet());
+
+        router.setRoot(RouterTransaction.with(controller)
+                .tag(CheckoutStepsCartReviewController.TAG)
+                .popChangeHandler(new HorizontalChangeHandler())
+                .pushChangeHandler(new HorizontalChangeHandler()));
     }
 
     private void setupContactRouter(Router router) {
