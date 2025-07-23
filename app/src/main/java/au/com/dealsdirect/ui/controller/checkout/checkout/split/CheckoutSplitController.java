@@ -54,6 +54,21 @@ public class CheckoutSplitController extends BaseController implements CheckoutS
     }
 
     @Override
+    protected void onDestroyView(@NonNull View view) {
+        super.onDestroyView(view);
+        mPresenter.onDetach();
+    }
+
+    @Override
+    public void refreshContents() {
+        super.refreshContents();
+        Controller controller = mLeftRouter.getControllerWithTag(CheckoutStepsController.TAG);
+        if (controller instanceof CheckoutStepsController) {
+            ((CheckoutStepsController) controller).refreshContents();
+        }
+    }
+
+    @Override
     protected void setUp(View view) {
         mLeftRouter = getChildRouter(mLeftContainer);
         mRightRouter = getChildRouter(mRightContainer);

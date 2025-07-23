@@ -39,7 +39,7 @@ import au.com.dealsdirect.utils.JsonUtils;
 
 public class CartDetailsMapper {
 
-    private static final long OLD_AGE = 60000;
+    private static final long OLD_AGE = 120000;
 
     private final Value sourceValue;
 

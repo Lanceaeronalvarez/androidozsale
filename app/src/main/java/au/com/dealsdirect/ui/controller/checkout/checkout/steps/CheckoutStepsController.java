@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.empty.CheckoutEmptyController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartitems.CheckoutStepsCartItemsController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartreview.CheckoutStepsCartReviewController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.contact.CheckoutStepsContactController;
@@ -185,16 +186,31 @@ public class CheckoutStepsController extends BaseController implements CheckoutS
     }
 
     @Override
-    protected void setUp(View view) {
+    public void refreshContents() {
+        super.refreshContents();
+        if (mPresenter.checkIsLoggedIn()) {
+            mPresenter.loadCart(mPostcode, mPickupPoint, false);
+        } else {
+            gotoCheckoutEmpty();
+        }
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
         mPresenter.loadCart(mPostcode, mPickupPoint, false);
+    }
+
+    @Override
+    protected void setUp(View view) {
         mToolbarContainer.setVisibility(shouldShowToolbar ? View.VISIBLE : View.GONE);
         mToolbarRightView.setImageResource(R.drawable.ic_cart_placeholder);
         mToolbarRightView.setVisibility(View.VISIBLE);
         mToolbarTitle.setText(view.getResources().getText(R.string.checkout));
-        mPageButtonCart.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.CART_INDEX, true));
-        mPageButtonContact.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.CONTACT_INDEX, true));
-        mPageButtonShipping.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.SHIPPING_INDEX, true));
-        mPageButtonPayment.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.PAYMENT_INDEX, true));
+        mPageButtonCart.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.CART_INDEX, false));
+        mPageButtonContact.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.CONTACT_INDEX, false));
+        mPageButtonShipping.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.SHIPPING_INDEX, false));
+        mPageButtonPayment.setOnClickListener(v -> mPagerContainer.setCurrentItem(Step.PAYMENT_INDEX, false));
 
         stepCircleImageViews.add(mStepCircleImageView1);
         stepCircleImageViews.add(mStepCircleImageView2);
@@ -217,6 +233,13 @@ public class CheckoutStepsController extends BaseController implements CheckoutS
 
     @Override
     public void showCart() {
+        if (mPresenter.getCart() == null ||
+                mPresenter.getCart().getItems() == null ||
+                mPresenter.getCart().getItems().isEmpty()) {
+            gotoCheckoutEmpty();
+            return;
+        }
+
         for (CartListener cartListener : cartListeners) {
             cartListener.cartLoaded(currentStep);
         }
@@ -433,6 +456,10 @@ public class CheckoutStepsController extends BaseController implements CheckoutS
                 .tag(CheckoutStepsPaymentController.TAG)
                 .popChangeHandler(new HorizontalChangeHandler())
                 .pushChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    private void gotoCheckoutEmpty() {
+        mActivity.getMainController().resetCheckoutRouter();
     }
 
     public interface CartListener {

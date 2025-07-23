@@ -53,6 +53,7 @@ import au.com.dealsdirect.ui.controller.categories.NewSaleCategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkout.empty.CheckoutEmptyController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.split.CheckoutSplitController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.CheckoutStepsController;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
@@ -628,16 +629,8 @@ public class MainController extends BaseController implements MainMvpView {
             return;
         }
 
-        Controller controller;
-
-        if (mPresenter.isTablet()) {
-            controller = new CheckoutSplitController();
-        } else {
-            controller = new CheckoutStepsController();
-        }
-
-        router.setRoot(RouterTransaction.with(controller)
-                .tag(CheckoutController.TAG)
+        router.setRoot(RouterTransaction.with(new CheckoutEmptyController())
+                .tag(CheckoutEmptyController.TAG)
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 

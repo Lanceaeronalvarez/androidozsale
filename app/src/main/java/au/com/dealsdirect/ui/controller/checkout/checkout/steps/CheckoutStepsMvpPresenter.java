@@ -9,4 +9,6 @@ public interface CheckoutStepsMvpPresenter<V extends MvpView> extends MvpPresent
     CartDetailsMapper getCart();
 
     void loadCart(String postcode, String pickupPoint, boolean willForceLoad);
+
+    boolean checkIsLoggedIn();
 }

@@ -35,6 +35,9 @@ import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.empty.CheckoutEmptyMvpPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.empty.CheckoutEmptyMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkout.empty.CheckoutEmptyPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.split.CheckoutSplitMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.split.CheckoutSplitMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.split.CheckoutSplitPresenter;
@@ -455,6 +458,11 @@ public class ControllerModule {
 
     @Provides
     ReturnsPolicyMvpPresenter<ReturnsPolicyMvpView> provideReturnsPolicyMvpPresenter(ReturnsPolicyPresenter<ReturnsPolicyMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    CheckoutEmptyMvpPresenter<CheckoutEmptyMvpView> provideCheckoutEmptyMvpPresenter(CheckoutEmptyPresenter<CheckoutEmptyMvpView> presenter) {
         return presenter;
     }
 

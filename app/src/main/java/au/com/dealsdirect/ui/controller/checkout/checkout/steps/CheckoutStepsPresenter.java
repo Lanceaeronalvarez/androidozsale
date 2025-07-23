@@ -72,6 +72,11 @@ public class CheckoutStepsPresenter<V extends CheckoutStepsMvpView> extends Base
         );
     }
 
+    @Override
+    public boolean checkIsLoggedIn() {
+        return getDataManager().isAuthorized();
+    }
+
     private void loadPaymentMethods() {
         if (getDataManager().getSelectedPaymentMethod() != null) {
             return;

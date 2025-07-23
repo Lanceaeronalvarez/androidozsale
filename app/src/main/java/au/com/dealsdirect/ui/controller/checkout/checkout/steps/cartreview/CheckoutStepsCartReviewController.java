@@ -43,6 +43,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutListener;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutOrderAdapter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.empty.CheckoutEmptyController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
@@ -228,6 +229,13 @@ public class CheckoutStepsCartReviewController extends BaseController implements
 
     @Override
     public void refreshCart() {
+        if (mPresenter.getCart() == null ||
+                mPresenter.getCart().getItems() == null ||
+                mPresenter.getCart().getItems().isEmpty()) {
+            gotoCheckoutEmpty();
+            return;
+        }
+
         resetProductQuantityLayoutLoaders();
 
         setupRecyclerViewItems();
@@ -481,5 +489,9 @@ public class CheckoutStepsCartReviewController extends BaseController implements
         mActivity.getMainController().resetShopRouter();
         mActivity.getMainController().showShopController();
         mActivity.getMainController().getShopRouter().pushController(routerTransaction);
+    }
+
+    private void gotoCheckoutEmpty() {
+        mActivity.getMainController().resetCheckoutRouter();
     }
 }
