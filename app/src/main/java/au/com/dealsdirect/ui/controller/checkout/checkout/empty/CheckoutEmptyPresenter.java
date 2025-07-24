@@ -54,6 +54,11 @@ public class CheckoutEmptyPresenter<V extends CheckoutEmptyMvpView> extends Base
 
     @Override
     public void loadCart(String postcode, String pickupPoint, boolean willForceLoad) {
+        if (!getDataManager().isAuthorized()) {
+            getDataManager().saveCart(null);
+            getMvpView().showCart();
+            return;
+        }
         if ((getCart() != null && !getCart().isOld()) && !willForceLoad) {
             if (isViewAttached()) {
                 getMvpView().showCart();

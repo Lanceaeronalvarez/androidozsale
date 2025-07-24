@@ -127,8 +127,10 @@ public class CheckoutEmptyController extends BaseController implements CheckoutE
             reloadWidget();
             loggedInStatus = mPresenter.checkIsLoggedIn();
 
-            layout.setVisibility(View.VISIBLE);
-            CommonUtils.fadeInView(layout, null);
+            if (layout.getVisibility() != View.VISIBLE) {
+                layout.setVisibility(View.VISIBLE);
+                CommonUtils.fadeInView(layout, null);
+            }
         } else {
             gotoCheckoutSteps();
         }
