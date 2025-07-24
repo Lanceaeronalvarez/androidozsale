@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class AdjustOrderItem {
 
+    public static final String INCREASE = "IncreaseOrderItem";
+    public static final String DECREASE = "DecreaseOrderItem";
+
     public static class RequestValue {
         @SerializedName("languageID")
         @Expose

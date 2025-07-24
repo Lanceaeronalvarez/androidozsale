@@ -24,7 +24,7 @@ public class CheckoutStepsCartReviewPresenter<V extends CheckoutStepsCartReviewM
     }
 
     @Override
-    public void fetchAdjustItemQuantity(String url, String itemID, String postcode) {
+    public void adjustItemQuantity(String url, String itemID, String postcode) {
         getCompositeDisposable().add(getDataManager()
                 .callAdjustQuantityOrderItem(url, new AdjustOrderItem.RequestValue(itemID, postcode, null, getDataManager().getLanguageId()))
                 .subscribeOn(getSchedulerProvider().io())
@@ -36,7 +36,7 @@ public class CheckoutStepsCartReviewPresenter<V extends CheckoutStepsCartReviewM
                     }
 
                     getDataManager().saveCart(new CartDetailsMapper(responseValue));
-                    getMvpView().refreshCart();
+                    getMvpView().showItemQuantityChange();
                 }, throwable -> {
 
                     if (!isViewAttached()) {

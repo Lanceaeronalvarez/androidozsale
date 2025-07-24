@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.cart.CartDetailsMapper;
+import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.events.GA4EventParams;
@@ -165,7 +166,7 @@ public class CheckoutStepsCartReviewController extends BaseController implements
     public void onViewWillAppear(Controller previousController) {
         super.onViewWillAppear(previousController);
         if (previousController instanceof AddVouchersController) {
-            refreshCart();
+            setupRecyclerViewItems();
         }
     }
 
@@ -176,8 +177,18 @@ public class CheckoutStepsCartReviewController extends BaseController implements
         }
     }
 
-    @Override
     public void refreshCart() {
+        if (mPresenter.getCart() == null ||
+                mPresenter.getCart().getItems() == null ||
+                mPresenter.getCart().getItems().isEmpty()) {
+            return;
+        }
+
+        setupRecyclerViewItems();
+    }
+
+    @Override
+    public void showItemQuantityChange() {
         if (mPresenter.getCart() == null ||
                 mPresenter.getCart().getItems() == null ||
                 mPresenter.getCart().getItems().isEmpty()) {
@@ -188,6 +199,8 @@ public class CheckoutStepsCartReviewController extends BaseController implements
         resetProductQuantityLayoutLoaders();
 
         setupRecyclerViewItems();
+
+        mActivity.getMainController().showCartItemsSize();
     }
 
     private void setupRecyclerViewItems() {
@@ -203,13 +216,13 @@ public class CheckoutStepsCartReviewController extends BaseController implements
                 @Override
                 public void onIncrease(String itemId, int newCount, ProductQuantityLayout view) {
                     productQuantityLayouts.add(view);
-                    mPresenter.fetchAdjustItemQuantity("IncreaseOrderItem", itemId, null);
+                    mPresenter.adjustItemQuantity(AdjustOrderItem.INCREASE, itemId, null);
                 }
 
                 @Override
                 public void onDecrease(String itemId, int newCount, ProductQuantityLayout view) {
                     productQuantityLayouts.add(view);
-                    mPresenter.fetchAdjustItemQuantity("DecreaseOrderItem", itemId, null);
+                    mPresenter.adjustItemQuantity(AdjustOrderItem.DECREASE, itemId, null);
 
                     if (newCount == 0) {
                         logRemoveItemFromCart(view.getContext());
