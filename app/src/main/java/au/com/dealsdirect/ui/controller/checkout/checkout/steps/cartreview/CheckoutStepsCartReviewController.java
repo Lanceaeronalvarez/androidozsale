@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.cart.CartDetailsMapper;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
@@ -32,6 +33,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutListener;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutOrderAdapter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutTitleFromShippingFeeHelper;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
@@ -77,6 +79,8 @@ public class CheckoutStepsCartReviewController extends BaseController implements
 
     private List<ProductQuantityLayout> productQuantityLayouts = new ArrayList<>();
 
+    private CheckoutTitleFromShippingFeeHelper titleFromShippingFeeHelper = null;
+
     public boolean isShouldShowToolbar() {
         return shouldShowToolbar;
     }
@@ -91,9 +95,7 @@ public class CheckoutStepsCartReviewController extends BaseController implements
 
     public void setShouldShowItems(boolean shouldShowItems) {
         this.shouldShowItems = shouldShowItems;
-        if (isViewAttached()) {
-            mRecyclerViewItems.setVisibility(shouldShowItems ? View.VISIBLE : View.GONE);
-        }
+        replaceAdapterData();
     }
 
     public boolean isShouldShowSummary() {
@@ -102,9 +104,7 @@ public class CheckoutStepsCartReviewController extends BaseController implements
 
     public void setShouldShowSummary(boolean shouldShowSummary) {
         this.shouldShowSummary = shouldShowSummary;
-        if (mRecyclerViewItemsAdapter != null) {
-            mRecyclerViewItemsAdapter.setWillShowSummary(shouldShowSummary);
-        }
+        replaceAdapterData();
     }
 
     public boolean isWillShowLargeImages() {
@@ -196,10 +196,9 @@ public class CheckoutStepsCartReviewController extends BaseController implements
                     mActivity,
                     willShowLargeImages,
                     mPresenter.isShippingByPostcodeEnabled(),
-                    () -> mPresenter.getImpossibleToDeliverAtLocationText(),
+                    getTitleFromShippingFeeHelper(),
                     () -> mPresenter.getUnavailableText(),
                     this, this::showBottomPopupView);
-            mRecyclerViewItemsAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
             mRecyclerViewItemsAdapter.setItemQuantityChangedListener(new CheckoutOrderAdapter.ItemQuantityChangedListener() {
                 @Override
                 public void onIncrease(String itemId, int newCount, ProductQuantityLayout view) {
@@ -224,16 +223,37 @@ public class CheckoutStepsCartReviewController extends BaseController implements
                         .pushChangeHandler(new HorizontalChangeHandler(false))
                         .popChangeHandler(new HorizontalChangeHandler()));
             });
-            mRecyclerViewItemsAdapter.setWillShowSummary(shouldShowSummary);
-            mRecyclerViewItemsAdapter.setWillShowItems(shouldShowItems);
             mRecyclerViewItems.setAdapter(mRecyclerViewItemsAdapter);
             mRecyclerViewItems.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         }
-        if (mPresenter.getCart() == null) {
-            mRecyclerViewItemsAdapter.replaceData(mActivity, null);
+
+        if (mPresenter.getCart() != null) {
+            final DeliveryAddress deliveryAddress = mPresenter.getCart().getDeliveryAddress();
+            final String postcodeOverride = deliveryAddress != null ? deliveryAddress.getPostcode() : null;
+            getTitleFromShippingFeeHelper().setPostcodeOverride(postcodeOverride);
         } else {
-            mRecyclerViewItemsAdapter.replaceData(mActivity, mPresenter.getCart(), mPresenter.getCart().getDeliveryAddress() != null);
+            getTitleFromShippingFeeHelper().setPostcodeOverride(null);
         }
+        getTitleFromShippingFeeHelper().setShippingByPostcodeEnabled(mPresenter.isShippingByPostcodeEnabled());
+
+        replaceAdapterData();
+    }
+
+    private void replaceAdapterData() {
+        if (mRecyclerViewItemsAdapter == null) {
+            return;
+        }
+        mRecyclerViewItemsAdapter.setShippingByPostcodeEnabled(mPresenter.isShippingByPostcodeEnabled());
+        if (mPresenter.getCart() == null) {
+            mRecyclerViewItemsAdapter.replaceData(null, false, false, false);
+        } else {
+            mRecyclerViewItemsAdapter.replaceData(
+                    mPresenter.getCart(),
+                    shouldShowItems,
+                    shouldShowSummary,
+                    mPresenter.getCart().getDeliveryAddress() != null);
+        }
+
     }
 
     private void showBottomPopupView(String textContent) {
@@ -329,5 +349,24 @@ public class CheckoutStepsCartReviewController extends BaseController implements
 
     private void gotoCheckoutEmpty() {
         mActivity.getMainController().resetCheckoutRouter();
+    }
+
+    private CheckoutTitleFromShippingFeeHelper getTitleFromShippingFeeHelper() {
+        if (titleFromShippingFeeHelper == null) {
+            String impossibleToDeliverAtLocationText;
+            if (mPresenter.getImpossibleToDeliverAtLocationText() == null) {
+                impossibleToDeliverAtLocationText = "Unavailable";
+            } else {
+                impossibleToDeliverAtLocationText = mPresenter.getImpossibleToDeliverAtLocationText();
+            }
+
+            titleFromShippingFeeHelper = new CheckoutTitleFromShippingFeeHelper(
+                    mActivity,
+                    null,
+                    mPresenter.isShippingByPostcodeEnabled(),
+                    impossibleToDeliverAtLocationText,
+                    locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
+        }
+        return titleFromShippingFeeHelper;
     }
 }

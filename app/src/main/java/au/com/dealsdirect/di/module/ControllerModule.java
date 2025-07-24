@@ -44,9 +44,6 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.split.CheckoutSplitPre
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.CheckoutStepsMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.CheckoutStepsMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.CheckoutStepsPresenter;
-import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartitems.CheckoutStepsCartItemsMvpPresenter;
-import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartitems.CheckoutStepsCartItemsMvpView;
-import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartitems.CheckoutStepsCartItemsPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartreview.CheckoutStepsCartReviewMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartreview.CheckoutStepsCartReviewMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartreview.CheckoutStepsCartReviewPresenter;
@@ -468,11 +465,6 @@ public class ControllerModule {
 
     @Provides
     CheckoutStepsMvpPresenter<CheckoutStepsMvpView> provideCheckoutStepsMvpPresenter(CheckoutStepsPresenter<CheckoutStepsMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides
-    CheckoutStepsCartItemsMvpPresenter<CheckoutStepsCartItemsMvpView> provideCheckoutStepsCartMvpPresenter(CheckoutStepsCartItemsPresenter<CheckoutStepsCartItemsMvpView> presenter) {
         return presenter;
     }
 

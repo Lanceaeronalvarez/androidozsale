@@ -3,6 +3,8 @@ package au.com.dealsdirect.ui.controller.checkout.checkout.split;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -21,6 +23,15 @@ import butterknife.BindView;
 public class CheckoutSplitController extends BaseController implements CheckoutSplitMvpView {
 
     public static final String TAG = "CheckoutSplitController";
+
+    @BindView(R.id.partial_toolbar_left_view)
+    ImageButton mToolbarLeftView;
+
+    @BindView(R.id.partial_toolbar_right_view)
+    ImageButton mToolbarRightView;
+
+    @BindView(R.id.partial_toolbar_title)
+    TextView mToolbarTitle;
 
     @BindView(R.id.checkout_split_left_container)
     ViewGroup mLeftContainer;
@@ -69,7 +80,16 @@ public class CheckoutSplitController extends BaseController implements CheckoutS
     }
 
     @Override
+    public Router getDetailRouter() {
+        return mLeftRouter;
+    }
+
+    @Override
     protected void setUp(View view) {
+        mToolbarLeftView.setVisibility(View.INVISIBLE);
+        mToolbarRightView.setVisibility(View.INVISIBLE);
+        mToolbarTitle.setText(mActivity.getResources().getText(R.string.checkout));
+
         mLeftRouter = getChildRouter(mLeftContainer);
         mRightRouter = getChildRouter(mRightContainer);
 
@@ -87,11 +107,16 @@ public class CheckoutSplitController extends BaseController implements CheckoutS
             }
         });
         mLeftRouter.setRoot(RouterTransaction.with(stepsController).tag(CheckoutStepsController.TAG));
+        CommonControllerChangeListener.addToRouter(mLeftRouter);
 
         final CheckoutStepsCartReviewController cartReviewController = new CheckoutStepsCartReviewController();
         cartReviewController.setShouldShowToolbar(false);
         cartReviewController.setBottomPopupViewRoot(rootView);
         mRightRouter.setRoot(RouterTransaction.with(cartReviewController).tag(CheckoutStepsCartReviewController.TAG));
+        CommonControllerChangeListener.addToRouter(mRightRouter);
+
+        refreshCart(false);
+        refreshCartReview(false, true);
     }
 
     public void refreshCart(boolean willForceRefresh) {

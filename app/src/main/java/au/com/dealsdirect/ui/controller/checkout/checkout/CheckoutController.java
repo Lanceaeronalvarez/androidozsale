@@ -467,12 +467,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                     mActivity,
                     false,
                     mPresenter.isShippingByPostcodeEnabled(),
-                    () -> {
-                        if (mPresenter.getTemplateTextsRepository() == null) {
-                            return null;
-                        }
-                        return mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation();
-                    },
+                    getTitleFromShippingFeeHelper(),
                     () -> {
                         if (mPresenter.getTemplateTextsRepository() == null) {
                             return null;
@@ -480,7 +475,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                         return mPresenter.getTemplateTextsRepository().getUnavailable();
                     },
                     this, priceInfo -> showBottomPopupView(priceInfo));
-            mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
             mAdapter.setItemQuantityChangedListener(new CheckoutOrderAdapter.ItemQuantityChangedListener() {
                 @Override
                 public void onIncrease(String itemId, int newCount, ProductQuantityLayout view) {
@@ -661,7 +655,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (mAdapter == null) {
             return;
         }
-        mAdapter.replaceData(mActivity, mCartDetails, showFooter);
+        mAdapter.replaceData(mCartDetails, true, false, showFooter);
     }
 
     @Override
@@ -2459,6 +2453,22 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
 
         DataCollector.logEvent(Events.WishlistEvent, parameters);
+    }
+
+    private CheckoutTitleFromShippingFeeHelper getTitleFromShippingFeeHelper() {
+        String impossibleToDeliverAtLocationText;
+        if (mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation() == null) {
+            impossibleToDeliverAtLocationText = "Unavailable";
+        } else {
+            impossibleToDeliverAtLocationText = mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation();
+        }
+
+        return new CheckoutTitleFromShippingFeeHelper(
+                mActivity,
+                null,
+                mPresenter.isShippingByPostcodeEnabled(),
+                impossibleToDeliverAtLocationText,
+                locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
     }
 }
 

@@ -49,6 +49,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutListener;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutOrderAdapter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutTitleFromShippingFeeHelper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.RecentlyViewedWidgetHelper;
 import au.com.dealsdirect.ui.controller.saleitemdetails.HorizontalScrollingItemsAdapter;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
@@ -116,6 +117,9 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     private BestSellersWidgetHelper bestSellersWidgetHelper = null;
     private RecentlyViewedWidgetHelper recentlyViewedWidgetHelper = null;
 
+    private String postcodeOverride = null;
+    private CheckoutTitleFromShippingFeeHelper titleFromShippingFeeHelper = null;
+
 
     public static CheckoutHostController newInstance() {
         return new CheckoutHostController(
@@ -165,12 +169,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
                 mActivity,
                 false,
                 mPresenter.isShippingByPostcodeEnabled(),
-                () -> {
-                    if (mPresenter.getTemplateTextsRepository() == null) {
-                        return null;
-                    }
-                    return mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation();
-                },
+                getTitleFromShippingFeeHelper(),
                 () -> {
                     if (mPresenter.getTemplateTextsRepository() == null) {
                         return null;
@@ -179,7 +178,6 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
                 },
                 this, priceInfo -> showBottomPopupView(priceInfo));
         mAdapter.setShouldAddSpacerOnTop(mPresenter.isTablet());
-        mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
         mAdapter.setItemQuantityChangedListener(new CheckoutOrderAdapter.ItemQuantityChangedListener() {
             @Override
             public void onIncrease(String itemId, int newCount, ProductQuantityLayout view) {
@@ -294,7 +292,8 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         if (mAdapter == null) {
             return;
         }
-        mAdapter.setPostcodeOverride(postcode);
+        postcodeOverride = postcode;
+        getTitleFromShippingFeeHelper().setPostcodeOverride(postcodeOverride);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -302,7 +301,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         if (mAdapter == null) {
             return;
         }
-        mAdapter.replaceData(mActivity, mCartDetails, showFooter);
+        mAdapter.replaceData(mCartDetails, true, false, showFooter);
     }
 
 
@@ -739,5 +738,24 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         if (mCheckoutDetailView != null) {
             mCheckoutDetailView.setSelectedPaymentMethod(selectedPaymentMethod);
         }
+    }
+
+    private CheckoutTitleFromShippingFeeHelper getTitleFromShippingFeeHelper() {
+        if (titleFromShippingFeeHelper == null) {
+            String impossibleToDeliverAtLocationText;
+            if (mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation() == null) {
+                impossibleToDeliverAtLocationText = "Unavailable";
+            } else {
+                impossibleToDeliverAtLocationText = mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation();
+            }
+
+            titleFromShippingFeeHelper = new CheckoutTitleFromShippingFeeHelper(
+                    mActivity,
+                    postcodeOverride,
+                    mPresenter.isShippingByPostcodeEnabled(),
+                    impossibleToDeliverAtLocationText,
+                    locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
+        }
+        return titleFromShippingFeeHelper;
     }
 }

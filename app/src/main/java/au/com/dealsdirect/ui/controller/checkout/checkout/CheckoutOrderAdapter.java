@@ -1,19 +1,8 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
-import static android.graphics.Typeface.BOLD;
-import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
-import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
-
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.DynamicDrawableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +11,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.AsyncListDiffer;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.cart.CartDetailsMapper;
@@ -37,8 +26,6 @@ import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.LegacyStringImageUtils;
-import au.com.dealsdirect.utils.PriceUtils;
-import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -51,39 +38,62 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final static int VIEW_TYPE_LINE = 4;
     private final static int VIEW_TYPE_SUMMARY = 5;
 
+    private final AsyncListDiffer<ItemData> asyncListDiffer = new AsyncListDiffer<>(this, new DiffUtil.ItemCallback<ItemData>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull ItemData oldItem, @NonNull ItemData newItem) {
+            if (oldItem.getType().equals(newItem.getType())) {
+                if (oldItem.getType().equals(ItemData.Type.ITEM)) {
+                    return oldItem.getItem().equals(newItem.getItem());
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull ItemData oldItem, @NonNull ItemData newItem) {
+            if (oldItem.getType().equals(newItem.getType())) {
+                if (oldItem.getType().equals(ItemData.Type.ITEM)) {
+                    final String oldItemId = oldItem.getItem().getId();
+                    final String newItemId = newItem.getItem().getId();
+                    return (oldItemId == null && newItemId == null) ||
+                            (oldItemId != null && oldItemId.equals(newItemId));
+                } else {
+                    return !oldItem.getType().equals(ItemData.Type.SUMMARY);
+                }
+            } else {
+                return false;
+            }
+        }
+    });
     private CartDetailsMapper mSourceData = null;
     private List<ItemData> mFlattenedData;
     private static final int MAX_ITEM_QTY = 5;
     private final CheckoutListener mClickListener;
     private ItemQuantityChangedListener itemQuantityChangedListener = null;
 
-    private final boolean isShippingByPostcodeEnabled;
-    private final ImpossibleToDeliverAtLocationTextRetriever impossibleToDeliverAtLocationTextRetriever;
+    private boolean isShippingByPostcodeEnabled;
     private final UnavailableTextRetriever unavailableTextRetriever;
-
+    private final CheckoutTitleFromShippingFeeHelper titleFromShippingFeeHelper;
     private boolean shouldAddSpacerOnTop = false;
-
-    private EligibleProductsLinkListener eligibleProductsLinkListener = null;
-
-    private String postcodeOverride = null;
 
     final private CheckoutOrderPriceHelper checkoutOrderPriceHelper;
 
     private boolean willShowLargeImages; // TODO
-    private boolean willShowItems = true;
-    private boolean willShowSummary = false;
     private View.OnClickListener onAddVoucherClickListener = null;
 
     public CheckoutOrderAdapter(Context context,
                                 boolean willShowLargeImages,
                                 boolean isShippingByPostcodeEnabled,
-                                ImpossibleToDeliverAtLocationTextRetriever impossibleToDeliverAtLocationTextRetriever,
+                                CheckoutTitleFromShippingFeeHelper titleFromShippingFeeHelper,
                                 UnavailableTextRetriever unavailableTextRetriever,
                                 CheckoutListener clickListener,
                                 CheckoutOrderPriceInfoClickListener onClickItemPriceInfo) {
         this.willShowLargeImages = willShowLargeImages;
         this.isShippingByPostcodeEnabled = isShippingByPostcodeEnabled;
-        this.impossibleToDeliverAtLocationTextRetriever = impossibleToDeliverAtLocationTextRetriever;
+        this.titleFromShippingFeeHelper = titleFromShippingFeeHelper;
         this.unavailableTextRetriever = unavailableTextRetriever;
         this.mClickListener = clickListener;
         checkoutOrderPriceHelper = new CheckoutOrderPriceHelper(context, onClickItemPriceInfo);
@@ -126,10 +136,9 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemViewType(int position) {
-        if (position == getItemCount() - 1 && willShowSummary) {
-            return VIEW_TYPE_SUMMARY;
-        }
         switch (mFlattenedData.get(position).getType()) {
+            case SUMMARY:
+                return VIEW_TYPE_SUMMARY;
             case FOOTER:
                 return VIEW_TYPE_FOOTER;
             case EMPTY_SPACE:
@@ -253,201 +262,47 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         holder.titleTextView.setText(title);
     }
 
-    public void replaceData(Context context, CartDetailsMapper cart) {
-        replaceData(context, cart, true);
-    }
-
-    public void replaceData(Context context, CartDetailsMapper cart, boolean showFooter) {
+    public void replaceData(CartDetailsMapper cart, boolean showItems, boolean showSummary, boolean showFooter) {
         mSourceData = cart;
-        flattenData(context, showFooter);
-        notifyDataSetChanged();
+        mFlattenedData = flattenData(showItems, showSummary, showFooter);
+        asyncListDiffer.submitList(mFlattenedData);
     }
 
-    private void flattenData(Context context, boolean showFooter) {
-        mFlattenedData = new ArrayList<>();
-        final List<MappedShipment> shipments = new ArrayList<>();
-        if (mSourceData != null) {
-            shipments.addAll(mSourceData.getMappedShipments());
-        }
-        for (MappedShipment shipment : shipments) {
-            mFlattenedData.add(new ItemData(ItemData.Type.EMPTY_SPACE));
-            mFlattenedData.add(new ItemData(ItemData.Type.LINE));
-            for (Item item : shipment.getMappedItems()) {
-                mFlattenedData.add(new ItemData(item));
+    private List<ItemData> flattenData(boolean showItems, boolean showSummary, boolean showFooter) {
+        final List<ItemData> flattenedData = new ArrayList<>();
+        if (showItems) {
+            final List<MappedShipment> shipments = new ArrayList<>();
+            if (mSourceData != null) {
+                shipments.addAll(mSourceData.getMappedShipments());
             }
-            if (showFooter && shipment.getDeliveryPrice() != null) {
-                mFlattenedData.add(new ItemData(
-                        createTitleFromShippingFee(
-                                context,
-                                shipment.getDeliveryPrice(),
-                                shipment.getAmountToPromoPrice(),
-                                shipment.getMappedItems().get(0),
-                                postcodeOverride != null ? postcodeOverride : shipment.getEstimateShipmentPostcode(),
-                                shipment.getShippingAvailability()
-                        )));
-            }
-            mFlattenedData.add(new ItemData(ItemData.Type.LINE));
-        }
-        if (!shouldAddSpacerOnTop && !mFlattenedData.isEmpty()) {
-            mFlattenedData.remove(0);
-        }
-    }
-
-    private SpannableStringBuilder createTitleFromShippingFee(Context context,
-                                                              double fee,
-                                                              double targetPriceForFreeShipping,
-                                                              Item item,
-                                                              String estimateShipmentPostcode,
-                                                              boolean shippingAvailability) {
-        int start = 0;
-        int color = context.getResources().getColor(R.color.checkout_item_footer_other_text_color);
-        int redColor = context.getResources().getColor(R.color.checkout_item_footer_red_text_color);
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(" ");
-
-        if (fee > 0.0 || !shippingAvailability) {
-
-            spannableStringBuilder.append(context.getResources().getString(R.string.shipping_text));
-
-            if (isShippingByPostcodeEnabled &&
-                    estimateShipmentPostcode != null) {
-                spannableStringBuilder.append(" (");
-                start = spannableStringBuilder.length();
-                spannableStringBuilder.append(
-                        estimateShipmentPostcode,
-                        new StyleSpan(BOLD),
-                        SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableStringBuilder.setSpan(
-                        new ForegroundColorSpan(color),
-                        start,
-                        spannableStringBuilder.length(),
-                        SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableStringBuilder.append(")");
-            }
-
-            spannableStringBuilder.append(": ");
-
-            if (isShippingByPostcodeEnabled && !shippingAvailability) {
-                final String unavailableText;
-                if (impossibleToDeliverAtLocationTextRetriever == null ||
-                        impossibleToDeliverAtLocationTextRetriever.getString() == null) {
-                    unavailableText = "Unavailable";
-                } else {
-                    unavailableText = impossibleToDeliverAtLocationTextRetriever.getString();
+            for (MappedShipment shipment : shipments) {
+                flattenedData.add(new ItemData(ItemData.Type.EMPTY_SPACE));
+                flattenedData.add(new ItemData(ItemData.Type.LINE));
+                for (Item item : shipment.getMappedItems()) {
+                    flattenedData.add(new ItemData(item));
                 }
-
-                spannableStringBuilder.append(" \n ");
-                spannableStringBuilder.append(
-                        unavailableText,
-                        new ForegroundColorSpan(redColor),
-                        SPAN_EXCLUSIVE_INCLUSIVE);
-            } else {
-                spannableStringBuilder.append(
-                        PriceUtils.getPriceStringValue(fee),
-                        new StyleSpan(BOLD),
-                        SPAN_EXCLUSIVE_INCLUSIVE);
-
-                spannableStringBuilder.append(" ");
-
-                if (targetPriceForFreeShipping > 0) {
-                    start = spannableStringBuilder.length() + 1;
-
-                    spannableStringBuilder.append("\n");
-
-                    String targetPriceString = context.getResources().getString(R.string.promo_shipping_text);
-                    String replacementString = PriceUtils.getPriceStringValue(targetPriceForFreeShipping);
-                    targetPriceString = targetPriceString.replace(
-                            context.getResources().getString(R.string.promo_shipping_text_placeholder),
-                            replacementString);
-                    spannableStringBuilder.append(
-                            targetPriceString);
-
-                    final ClickableSpan clickableSpan = new ClickableSpan() {
-                        @Override
-                        public void onClick(@NonNull View widget) {
-                                onEligibleProductsTapped(item.brandName);
-                        }
-                    };
-
-                    String eligibleProductsString = context.getResources().getString(R.string.promo_shipping_eligible_products);
-                    int eligibleProductsStart = targetPriceString.indexOf(eligibleProductsString) + start;
-
-                    spannableStringBuilder.setSpan(
-                            clickableSpan,
-                            eligibleProductsStart,
-                            eligibleProductsStart + eligibleProductsString.length(),
-                            SPAN_EXCLUSIVE_INCLUSIVE);
-
-                    int imagePosition = spannableStringBuilder.length();
-                    String freeShippingString = "   " +
-                            context.getResources().getString(R.string.free_shipping_text).toUpperCase();
-                    spannableStringBuilder.append(
-                            freeShippingString,
-                            new StyleSpan(BOLD),
-                            SPAN_EXCLUSIVE_INCLUSIVE);
-
-                    spannableStringBuilder.setSpan(
-                            new ForegroundColorSpan(color),
-                            start,
-                            spannableStringBuilder.length(),
-                            SPAN_EXCLUSIVE_INCLUSIVE);
-
-                    Drawable d = ContextCompat.getDrawable(context, R.drawable.ic_free_shipping);
-                    if (d != null) {
-                        d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-                        ImageSpan imageSpan = new ImageSpan(d, DynamicDrawableSpan.ALIGN_BASELINE);
-                        spannableStringBuilder.setSpan(imageSpan, imagePosition + 1, imagePosition + 2, SPAN_INCLUSIVE_EXCLUSIVE);
-                    }
-
-                    StringUtils.applySpanToSubstringsMatching(
-                            spannableStringBuilder,
-                            new StyleSpan(BOLD),
-                            context.getResources().getString(R.string.regex_currency),
-                            SPAN_EXCLUSIVE_INCLUSIVE);
+                if (showFooter && shipment.getDeliveryPrice() != null) {
+                    flattenedData.add(new ItemData(titleFromShippingFeeHelper.getTitle(shipment)));
                 }
+                flattenedData.add(new ItemData(ItemData.Type.LINE));
             }
-
-        } else {
-            int imagePosition = spannableStringBuilder.length();
-            String freeShippingString = "   " +
-                    context.getResources().getString(R.string.free_shipping_text).toUpperCase();
-            spannableStringBuilder.append(
-                    freeShippingString,
-                    new StyleSpan(BOLD),
-                    SPAN_EXCLUSIVE_INCLUSIVE);
-
-            spannableStringBuilder.setSpan(
-                    new ForegroundColorSpan(color),
-                    start,
-                    spannableStringBuilder.length(),
-                    SPAN_EXCLUSIVE_INCLUSIVE);
-
-            Drawable d = ContextCompat.getDrawable(context, R.drawable.ic_free_shipping);
-            if (d != null) {
-                d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-                ImageSpan imageSpan = new ImageSpan(d, DynamicDrawableSpan.ALIGN_BASELINE);
-                spannableStringBuilder.setSpan(imageSpan, imagePosition + 1, imagePosition + 2, SPAN_INCLUSIVE_EXCLUSIVE);
+            if (!shouldAddSpacerOnTop && !flattenedData.isEmpty()) {
+                flattenedData.remove(0);
             }
         }
-
-        return spannableStringBuilder;
-    }
-
-    private void onEligibleProductsTapped(String locationFilterHash) {
-        if (eligibleProductsLinkListener != null) {
-            eligibleProductsLinkListener.onTapped(locationFilterHash);
+        if (showSummary) {
+            flattenedData.add(new ItemData(ItemData.Type.SUMMARY));
         }
+        return flattenedData;
     }
 
-    public void setEligibleProductsLinkListener(EligibleProductsLinkListener eligibleProductsLinkListener) {
-        this.eligibleProductsLinkListener = eligibleProductsLinkListener;
+    public boolean isShippingByPostcodeEnabled() {
+        return isShippingByPostcodeEnabled;
     }
 
-    public String getPostcodeOverride() {
-        return postcodeOverride;
-    }
-
-    public void setPostcodeOverride(String postcodeOverride) {
-        this.postcodeOverride = postcodeOverride;
+    public void setShippingByPostcodeEnabled(boolean shippingByPostcodeEnabled) {
+        isShippingByPostcodeEnabled = shippingByPostcodeEnabled;
+        asyncListDiffer.submitList(mFlattenedData);
     }
 
     public boolean willShowLargeImages() {
@@ -456,29 +311,17 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public void setWillShowLargeImages(boolean willShowLargeImages) {
         this.willShowLargeImages = willShowLargeImages;
-        notifyDataSetChanged();
-    }
-
-    public void setWillShowSummary(boolean willShowSummary) {
-        this.willShowSummary = willShowSummary;
-        notifyDataSetChanged();
-    }
-
-    public void setWillShowItems(boolean willShowItems) {
-        this.willShowItems = willShowItems;
-        notifyDataSetChanged();
+        asyncListDiffer.submitList(mFlattenedData);
     }
 
     public void setOnAddVoucherClickListener(View.OnClickListener onAddVoucherClickListener) {
         this.onAddVoucherClickListener = onAddVoucherClickListener;
-        if (willShowSummary) {
-            notifyItemChanged(getItemCount() - 1);
-        }
+        asyncListDiffer.submitList(mFlattenedData);
     }
 
     @Override
     public int getItemCount() {
-        return (mFlattenedData == null || !willShowItems ? 0 : mFlattenedData.size()) + (willShowSummary ? 1 : 0);
+        return mFlattenedData.size();
     }
 
     public static class LineViewHolder extends RecyclerView.ViewHolder {
@@ -543,7 +386,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private static class ItemData {
         enum Type {
-            ITEM, FOOTER, EMPTY_SPACE, LINE
+            ITEM, FOOTER, EMPTY_SPACE, LINE, SUMMARY
         }
 
         private final Type type;
@@ -581,18 +424,10 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public interface EligibleProductsLinkListener {
-        void onTapped(String locationFilterHash);
-    }
-
     public interface ItemQuantityChangedListener {
         void onIncrease(String itemId, int newCount, ProductQuantityLayout view);
 
         void onDecrease(String itemId, int newCount, ProductQuantityLayout view);
-    }
-
-    public interface ImpossibleToDeliverAtLocationTextRetriever {
-        String getString();
     }
 
     public interface UnavailableTextRetriever {

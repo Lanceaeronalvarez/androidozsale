@@ -17,7 +17,6 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.empty.CheckoutEmptyController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.split.CheckoutSplitController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.CheckoutStepsController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartitems.CheckoutStepsCartItemsController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartreview.CheckoutStepsCartReviewController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.contact.CheckoutStepsContactController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.steps.payment.CheckoutStepsPaymentController;
@@ -186,8 +185,6 @@ public interface ControllerComponent {
     void inject(CheckoutEmptyController controller);
 
     void inject(CheckoutStepsController controller);
-
-    void inject(CheckoutStepsCartItemsController controller);
 
     void inject(CheckoutStepsCartReviewController controller);
 

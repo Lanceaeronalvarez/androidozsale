@@ -278,7 +278,8 @@ public class CheckoutStepsController extends BaseController implements CheckoutS
 
         final int currentPosition = currentStep.getPosition();
 
-        if (currentPosition == Step.CART_INDEX || currentPosition == Step.PAYMENT_INDEX) {
+        if (mPresenter.getCart().isOld() &&
+                (currentPosition == Step.CART_INDEX || currentPosition == Step.PAYMENT_INDEX)) {
             mPresenter.loadCart(mPostcode, mPickupPoint, false);
         }
 
