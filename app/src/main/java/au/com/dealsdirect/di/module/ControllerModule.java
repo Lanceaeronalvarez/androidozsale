@@ -35,6 +35,27 @@ import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.empty.CheckoutEmptyMvpPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.empty.CheckoutEmptyMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkout.empty.CheckoutEmptyPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.split.CheckoutSplitMvpPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.split.CheckoutSplitMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkout.split.CheckoutSplitPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.CheckoutStepsMvpPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.CheckoutStepsMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.CheckoutStepsPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartreview.CheckoutStepsCartReviewMvpPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartreview.CheckoutStepsCartReviewMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.cartreview.CheckoutStepsCartReviewPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.contact.CheckoutStepsContactMvpPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.contact.CheckoutStepsContactMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.contact.CheckoutStepsContactPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.payment.CheckoutStepsPaymentMvpPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.payment.CheckoutStepsPaymentMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.payment.CheckoutStepsPaymentPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.shipping.CheckoutStepsShippingMvpPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.shipping.CheckoutStepsShippingMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkout.steps.shipping.CheckoutStepsShippingPresenter;
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsMvpView;
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsPresenter;
@@ -158,10 +179,6 @@ import au.com.dealsdirect.ui.sample.SampleMvpView;
 import au.com.dealsdirect.ui.sample.SamplePresenter;
 import dagger.Module;
 import dagger.Provides;
-
-/*
- * Created by Ayi on 05/06/2017.
- */
 
 @Module
 public class ControllerModule {
@@ -438,6 +455,41 @@ public class ControllerModule {
 
     @Provides
     ReturnsPolicyMvpPresenter<ReturnsPolicyMvpView> provideReturnsPolicyMvpPresenter(ReturnsPolicyPresenter<ReturnsPolicyMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    CheckoutEmptyMvpPresenter<CheckoutEmptyMvpView> provideCheckoutEmptyMvpPresenter(CheckoutEmptyPresenter<CheckoutEmptyMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    CheckoutStepsMvpPresenter<CheckoutStepsMvpView> provideCheckoutStepsMvpPresenter(CheckoutStepsPresenter<CheckoutStepsMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    CheckoutStepsCartReviewMvpPresenter<CheckoutStepsCartReviewMvpView> provideCheckoutStepsCartReviewMvpPresenter(CheckoutStepsCartReviewPresenter<CheckoutStepsCartReviewMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    CheckoutStepsContactMvpPresenter<CheckoutStepsContactMvpView> provideCheckoutStepsContactMvpPresenter(CheckoutStepsContactPresenter<CheckoutStepsContactMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    CheckoutStepsShippingMvpPresenter<CheckoutStepsShippingMvpView> provideCheckoutStepsShippingMvpPresenter(CheckoutStepsShippingPresenter<CheckoutStepsShippingMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    CheckoutStepsPaymentMvpPresenter<CheckoutStepsPaymentMvpView> provideCheckoutStepsPaymentMvpPresenter(CheckoutStepsPaymentPresenter<CheckoutStepsPaymentMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    CheckoutSplitMvpPresenter<CheckoutSplitMvpView> provideCheckoutSplitMvpPresenter(CheckoutSplitPresenter<CheckoutSplitMvpView> presenter) {
         return presenter;
     }
 }

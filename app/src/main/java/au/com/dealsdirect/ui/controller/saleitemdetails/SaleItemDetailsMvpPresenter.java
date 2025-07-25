@@ -21,8 +21,6 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
 
     boolean isAuthorized();
 
-    void callGetBasketItemsQuantity();
-
     String getPersonalisationErrorText();
 
     void getDynamicDiscount(String skuId);

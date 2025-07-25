@@ -118,7 +118,7 @@ import au.com.dealsdirect.service.datacollection.enums.EventRecommendedField;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.priceblock.SaleItemProductPriceBlockHelper;
@@ -136,7 +136,6 @@ import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -1855,7 +1854,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public void showAddToCartResponse(CheckoutDetailsMapper cartDetailsResponse, SaleItemDetails item) {
+    public void showAddToCartResponse(CartDetailsMapper cartDetailsResponse, SaleItemDetails item) {
+        mActivity.getMainController().showCartItemsSize();
 
         if (mSharedImageLocation == null) {
             mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
@@ -1902,10 +1902,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         mAttempts = 0;
-        //notify bottom navigation view(checkout) with success.
-        CartUtil.addValueToCart(1);
-        mActivity.getMainController().updateBasketItemsQuantity();
-        mActivity.getMainController().updateCheckoutWithCartDetails(cartDetailsResponse);
 
         if (isBuyNow) {
             isBuyNow = false;
@@ -2050,11 +2046,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mAfterpayHolder.removeAllViews();
         mAfterpayHolder.addView(viewHolder.getView());
-    }
-
-    @Override
-    public void onCallGetBasketItemsQuantity() {
-
     }
 
     @Override

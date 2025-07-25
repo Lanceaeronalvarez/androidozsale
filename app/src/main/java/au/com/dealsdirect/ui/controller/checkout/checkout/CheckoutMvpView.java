@@ -4,6 +4,7 @@ import com.bluelinelabs.conductor.Router;
 
 import java.util.List;
 
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
@@ -14,7 +15,6 @@ import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerRespons
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.ui.base.MvpView;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.MappedShipment;
 
 public interface CheckoutMvpView extends MvpView {
 
@@ -26,11 +26,11 @@ public interface CheckoutMvpView extends MvpView {
 
     void loadCart();
 
-    void showCartDetails(List<MappedShipment> items);
+    void showCartDetails(CartDetailsMapper cart);
 
-    void showCartDetailsOnChild(List<MappedShipment> items);
+    void showCartDetailsOnChild(CartDetailsMapper cart);
 
-    void showCartDetailsOnHost(List<MappedShipment> items);
+    void showCartDetailsOnHost(CartDetailsMapper cart);
 
     void showCartDetailsFooter(boolean show);
 
@@ -64,7 +64,7 @@ public interface CheckoutMvpView extends MvpView {
 
     void hideZipPayPanel();
 
-    void storeCartDetails(CheckoutDetailsMapper mappedValues);
+    void storeCartDetails(CartDetailsMapper mappedValues);
 
     void triggerLoginTicket();
 
@@ -82,7 +82,7 @@ public interface CheckoutMvpView extends MvpView {
 
     void showAgeRestriction(boolean hasAgeRestriction);
 
-    void updateCartWithMappedValues(CheckoutDetailsMapper mappedValues);
+    void updateCartWithMappedValues(CartDetailsMapper mappedValues);
 
     void showBestSellers(List<GetBestSellerResponse> getBestSellerResponses);
 

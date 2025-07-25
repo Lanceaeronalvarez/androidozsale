@@ -106,6 +106,8 @@
     <dimen name="horizontal_banner_header_title_height">56dp</dimen>
 
     <!-- Checkout -->
+    <dimen name="row_checkout_image_large_width">200dp</dimen>
+    <dimen name="row_checkout_image_large_height">260dp</dimen>
     <dimen name="row_checkout_image_width">100dp</dimen>
     <dimen name="row_checkout_image_height">130dp</dimen>
     <dimen name="row_checkout_drawable_width">30dp</dimen>

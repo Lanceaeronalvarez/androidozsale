@@ -1294,6 +1294,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public void callLogout(AuthHandler handler) {
 
+        getDataManager().saveCart(null);
         getMvpView().showLoading(LoadingDialogType.DEFAULT);
         getCompositeDisposable().add(getDataManager()
                 .callLogout(new Logout.RequestValue())

@@ -19,7 +19,6 @@ import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
-import androidx.webkit.internal.ApiFeature;
 import androidx.window.java.layout.WindowInfoTrackerCallbackAdapter;
 import androidx.window.layout.WindowInfoTracker;
 import androidx.window.layout.WindowLayoutInfo;
@@ -120,7 +119,6 @@ import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.DelayedMethodExecutionManager;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
@@ -1000,7 +998,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.callLogout(new AuthHandler() {
             @Override
             public void success() {
-                CartUtil.setValueToCart(0);
                 getMainController().removeBasketItemCount();
                 mPresenter.setHasActiveCheckoutSession(false);
                 ga4PurchaseParams = null;
@@ -1180,7 +1177,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
         mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
         if (isAuthorized()) {
-            mMainController.updateBasketItemsQuantity();
+            mMainController.updatePartialCartItemsSize();
         } else if (!hasShownSignupModal && getResources().getBoolean(R.bool.will_show_signup_modal)) {
             new Handler(getMainLooper()).post(() -> {
                 Controller controller = mMainController.getShopRouter().getControllerWithTag(ShopsController.TAG);
@@ -1285,7 +1282,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
         hideKeyboard();
         CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.POSITIVE, successMessage);
-        mMainController.updateBasketItemsQuantity();
+        mMainController.updatePartialCartItemsSize();
         mMainController.showBottomNav();
     }
 

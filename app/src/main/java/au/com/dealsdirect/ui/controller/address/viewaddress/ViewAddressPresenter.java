@@ -54,8 +54,8 @@ public class ViewAddressPresenter<V extends ViewAddressMvpView> extends BasePres
                 super.onSuccess(response);
                 if (response instanceof ApplyAddressResponse) {
                     ApplyAddressResponse applyAddressResponse = (ApplyAddressResponse) response;
-                    if (applyAddressResponse.d.getResult()) {
-                        getMvpView().backToCheckout(applyAddressResponse.d.value);
+                    if (applyAddressResponse.getD().getResult()) {
+                        getMvpView().backToCheckout(applyAddressResponse.getD().getValue());
                     }
                 }
             }

@@ -9,7 +9,9 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface MainMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
-    void callGetBasketItemsQuantity();
+    int getCartItemsSize();
+
+    void updatePartialCartItemsSize();
 
     boolean isAuthorized();
 

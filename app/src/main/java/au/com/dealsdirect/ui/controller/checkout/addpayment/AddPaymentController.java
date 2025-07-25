@@ -1,7 +1,7 @@
 package au.com.dealsdirect.ui.controller.checkout.addpayment;
 
-import static au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.PaymentOption;
-import static au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.decompress;
+import static au.com.dealsdirect.data.cart.CartDetailsMapper.PaymentOption;
+import static au.com.dealsdirect.data.cart.CartDetailsMapper.decompress;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -47,7 +47,7 @@ import au.com.dealsdirect.service.braintree.FetchBraintreeClientTokenHandler;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -68,10 +68,10 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
         public static final class FromCheckout extends Parameters {
             private String mCartTotalCost;
-            private CheckoutDetailsMapper mCurrentOrderValue;
+            private CartDetailsMapper mCurrentOrderValue;
 
             public FromCheckout(String cartTotalCost,
-                                CheckoutDetailsMapper currentOrderValue) {
+                                CartDetailsMapper currentOrderValue) {
                 mCartTotalCost = cartTotalCost;
                 mCurrentOrderValue = currentOrderValue;
             }
@@ -80,7 +80,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
                 return mCartTotalCost;
             }
 
-            public CheckoutDetailsMapper getCurrentOrderValue() {
+            public CartDetailsMapper getCurrentOrderValue() {
                 return mCurrentOrderValue;
             }
         }
@@ -146,7 +146,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     private boolean isFromCart;
     private boolean isPayPalSubmitClicked = false;
     private String mCartTotalCost;
-    private CheckoutDetailsMapper mCurrentOrderValue;
+    private CartDetailsMapper mCurrentOrderValue;
     private GA4EventParams.GA4AddPaymentInfoParams ga4AddPaymentInfoParams = null;
 
     public static AddPaymentController newInstance() {

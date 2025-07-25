@@ -14,11 +14,27 @@ public class ApplyAddressResponse {
 
     @SerializedName("d")
     @Expose
-    public Response d;
+    private Response d;
+
+    public Response getD() {
+        return d;
+    }
+
+    public void setD(Response d) {
+        this.d = d;
+    }
 
     public static class Response extends LegacyBaseResponseValue {
         @SerializedName("Value")
         @Expose
-        public Value value;
+        private Value value;
+
+        public Value getValue() {
+            return value;
+        }
+
+        public void setValue(Value value) {
+            this.value = value;
+        }
     }
 }

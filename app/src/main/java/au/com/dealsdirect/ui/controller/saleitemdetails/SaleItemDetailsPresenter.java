@@ -16,7 +16,6 @@ import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetLeaderboardBannerRequest;
-import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
 import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
@@ -31,10 +30,9 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.priceinfo.PricingInfoLoaderHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.ui.controller.leaderboardbanner.LeaderboardPresenterHelper;
 import au.com.dealsdirect.utils.AppLogger;
-import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -189,10 +187,14 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onSuccess(Object response) {
                 super.onSuccess(response);
 
+                final CartDetailsMapper cartDetailsMapper = new CartDetailsMapper((AddToCartResponse.Response) response);
+
+                getDataManager().saveCart(cartDetailsMapper);
+
                 if (!isViewAttached()) {
                     return;
                 }
-                getMvpView().showAddToCartResponse(new CheckoutDetailsMapper((AddToCartResponse.Response) response), item);
+                getMvpView().showAddToCartResponse(cartDetailsMapper, item);
                 getDataManager().setHasActiveCheckoutSession(false);
             }
 
@@ -221,39 +223,6 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     @Override
     public boolean isAuthorized() {
         return getDataManager().isAuthorized();
-    }
-
-    @Override
-    public void callGetBasketItemsQuantity() {
-
-        doApiCallForResponse(getDataManager().callGetBasketItemsQuantity(), new AppApiCallback() {
-            @Override
-            public void onSuccess(Object o) {
-                super.onSuccess(o);
-
-                CartUtil.setValueToCart(((BasketQuantityResponse) o).getItemQuantity());
-                if (!isViewAttached()) {
-                    return;
-                }
-                getMvpView().onCallGetBasketItemsQuantity();
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                super.onFailure(throwable);
-
-                // handle load accounts error here
-                if (throwable instanceof ANError) {
-                    ANError anError = (ANError) throwable;
-                    handleApiError(anError);
-                }
-
-                if (!isViewAttached()) {
-                    return;
-                }
-                getMvpView().onError(throwable.getMessage());
-            }
-        });
     }
 
     @Override

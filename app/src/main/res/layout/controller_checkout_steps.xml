@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/controller_checkout_steps_toolbar_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/partial_toolbar_arrow" />
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/controller_checkout_steps_pager_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/border_gray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/controller_checkout_steps_step_cart"
+            app:layout_constraintRight_toLeftOf="@id/controller_checkout_steps_step_payment"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/controller_checkout_steps_step_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingLeft="3dp"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingRight="3dp"
+            android:paddingBottom="@dimen/margin_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/controller_checkout_steps_step_contact"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/checkout_steps_step_circle_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/checkout_step_circle_active" />
+
+                <TextView
+                    android:id="@+id/checkout_steps_step_circle_text_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_caption2" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/checkout_steps_step_text_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cart"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_caption2" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/controller_checkout_steps_step_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingLeft="3dp"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingRight="3dp"
+            android:paddingBottom="@dimen/margin_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/controller_checkout_steps_step_cart"
+            app:layout_constraintRight_toLeftOf="@id/controller_checkout_steps_step_shipping"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/checkout_steps_step_circle_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/checkout_step_circle_active" />
+
+                <TextView
+                    android:id="@+id/checkout_steps_step_circle_text_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="2"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_caption2" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/checkout_steps_step_text_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contact"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_caption2" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/controller_checkout_steps_step_shipping"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingLeft="3dp"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingRight="3dp"
+            android:paddingBottom="@dimen/margin_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/controller_checkout_steps_step_contact"
+            app:layout_constraintRight_toLeftOf="@id/controller_checkout_steps_step_payment"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/checkout_steps_step_circle_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/checkout_step_circle_active"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/checkout_steps_step_circle_text_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="3"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_caption2" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/checkout_steps_step_text_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shipping"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_caption2" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/controller_checkout_steps_step_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingLeft="3dp"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingRight="3dp"
+            android:paddingBottom="@dimen/margin_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/controller_checkout_steps_step_shipping"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/checkout_steps_step_circle_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/checkout_step_circle_active" />
+
+                <TextView
+                    android:id="@+id/checkout_steps_step_circle_text_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="4"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_caption2" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/checkout_steps_step_text_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Payment"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_caption2" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <au.com.dealsdirect.ui.controller.main.MainCustomViewPager
+        android:id="@+id/controller_checkout_steps_pager_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </au.com.dealsdirect.ui.controller.main.MainCustomViewPager>
+</LinearLayout>

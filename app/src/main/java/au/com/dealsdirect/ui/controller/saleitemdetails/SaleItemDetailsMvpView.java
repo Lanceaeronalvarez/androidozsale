@@ -9,7 +9,7 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemR
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.ui.base.MvpView;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 
 /**
  * Created by smartwave on 08/06/2017.
@@ -19,13 +19,11 @@ public interface SaleItemDetailsMvpView extends MvpView {
 
     void showProductDetails(SaleItemDetails saleDetail);
 
-    void showAddToCartResponse(CheckoutDetailsMapper addToCartDetailsResponse, SaleItemDetails item);
+    void showAddToCartResponse(CartDetailsMapper addToCartDetailsResponse, SaleItemDetails item);
 
     void showAddToCartResponseFailed();
 
     void showAfterpayDetails(int installmentsCount, double installmentAmount, String currency);
-
-    void onCallGetBasketItemsQuantity();
 
     void setDynamicDiscount(String discountText);
 

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.data.network.ApiEndPoint;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.agerestriction.SaveAgeRestrictedConsentDataRequest;
@@ -252,7 +253,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     private void updateCart(GetCurrentOrder.ResponseValue response) {
-        CheckoutDetailsMapper mappedValues = new CheckoutDetailsMapper(response);
+        CartDetailsMapper mappedValues = new CartDetailsMapper(response);
         if (!response.getD().isAuthenticated()) {
             getMvpView().triggerLoginTicket();
             return;
@@ -272,7 +273,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public void updateCartValues(CheckoutDetailsMapper mappedValues) {
+    public void updateCartValues(CartDetailsMapper mappedValues) {
 
         if (!isViewAttached()) {
             return;
@@ -302,7 +303,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
 //            getMvpView().initializeVisaCheckout();
 
-            getMvpView().showCartDetails(mappedValues.getMappedShipments());
+            getMvpView().showCartDetails(mappedValues);
 
             if (getDataManager().isAfterpayEnabled() &&
                     mappedValues.getAfterpay() != null &&
@@ -316,7 +317,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
             if (getDataManager().isLPayEnabled() &&
                     mappedValues.getAvailablePaymentOptions() != null &&
-                    mappedValues.getAvailablePaymentOptions().contains(CheckoutDetailsMapper.PaymentOption.LATITUDEPAY)) {
+                    mappedValues.getAvailablePaymentOptions().contains(CartDetailsMapper.PaymentOption.LATITUDEPAY)) {
                 getMvpView().showLPayPanel();
             } else {
                 getMvpView().hideLPayPanel();
@@ -324,7 +325,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
             if (getDataManager().isKlarnaEnabled() &&
                     mappedValues.getAvailablePaymentOptions() != null &&
-                    mappedValues.getAvailablePaymentOptions().contains(CheckoutDetailsMapper.PaymentOption.KLARNA)
+                    mappedValues.getAvailablePaymentOptions().contains(CartDetailsMapper.PaymentOption.KLARNA)
             ) {
                 getMvpView().showKlarnaPanel(getDataManager().getTemplateTextsRepository().getKlarnaDescription());
             } else {
@@ -335,8 +336,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                     mappedValues.getAvailablePaymentOptions() != null &&
                     mappedValues.getAvailablePaymentOptions().contains(
                             getDataManager().getCountryId().equalsIgnoreCase("AS") ?
-                                    CheckoutDetailsMapper.PaymentOption.ZIPPAYAU :
-                                    CheckoutDetailsMapper.PaymentOption.ZIPPAYNZ)
+                                    CartDetailsMapper.PaymentOption.ZIPPAYAU :
+                                    CartDetailsMapper.PaymentOption.ZIPPAYNZ)
             ) {
                 getMvpView().showZipPayPanel();
             } else {
@@ -344,7 +345,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             }
         } else {
             getDataManager().setCheckoutHasWishlistItem(false);
-            getMvpView().showCartDetails(new ArrayList<>());
+            getMvpView().showCartDetails(null);
             getMvpView().hideAfterpayPanel();
             getMvpView().hideLPayPanel();
             getMvpView().hideKlarnaPanel();
@@ -451,7 +452,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         return getDataManager().getStripePublicKey();
     }
 
-    private void checkIfCartIsChanged(CheckoutDetailsMapper mappedValues) {
+    private void checkIfCartIsChanged(CartDetailsMapper mappedValues) {
         if (mappedValues == null || mappedValues.getItems() == null) {
             getDataManager().setHasActiveCheckoutSession(false);
             return;

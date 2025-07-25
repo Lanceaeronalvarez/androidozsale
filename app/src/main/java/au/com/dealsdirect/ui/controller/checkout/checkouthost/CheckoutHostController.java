@@ -27,6 +27,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
@@ -44,12 +45,11 @@ import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.bestsellers.BestSellersWidgetHelper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.MappedShipment;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutListener;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutOrderAdapter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutTitleFromShippingFeeHelper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.RecentlyViewedWidgetHelper;
 import au.com.dealsdirect.ui.controller.saleitemdetails.HorizontalScrollingItemsAdapter;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
@@ -104,7 +104,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     private Router mCheckoutDetailRouter;
     private CheckoutMvpView mCheckoutDetailView;
     private CheckoutOrderAdapter mAdapter;
-    private List<MappedShipment> mItemList = new ArrayList<>();
+    private CartDetailsMapper mCartDetails = null;
 
     private boolean hasDeliveryAddress = false;
     private boolean mIsCheckoutHostUpdated;
@@ -116,6 +116,9 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     private HorizontalRecyclerItemsViewHolder widgetAreaHorizontalRecyclerItemsViewHolder = null;
     private BestSellersWidgetHelper bestSellersWidgetHelper = null;
     private RecentlyViewedWidgetHelper recentlyViewedWidgetHelper = null;
+
+    private String postcodeOverride = null;
+    private CheckoutTitleFromShippingFeeHelper titleFromShippingFeeHelper = null;
 
 
     public static CheckoutHostController newInstance() {
@@ -164,12 +167,17 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
         mAdapter = new CheckoutOrderAdapter(
                 mActivity,
-                mItemList,
-                mPresenter,
-                this,
-                priceInfo -> showBottomPopupView(priceInfo));
+                false,
+                mPresenter.isShippingByPostcodeEnabled(),
+                getTitleFromShippingFeeHelper(),
+                () -> {
+                    if (mPresenter.getTemplateTextsRepository() == null) {
+                        return null;
+                    }
+                    return mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation();
+                },
+                this, priceInfo -> showBottomPopupView(priceInfo));
         mAdapter.setShouldAddSpacerOnTop(mPresenter.isTablet());
-        mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
         mAdapter.setItemQuantityChangedListener(new CheckoutOrderAdapter.ItemQuantityChangedListener() {
             @Override
             public void onIncrease(String itemId, int newCount, ProductQuantityLayout view) {
@@ -235,27 +243,27 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
-    public void showCartDetails(List<MappedShipment> items) {
+    public void showCartDetails(CartDetailsMapper cart) {
 
-        showCartDetailsOnChild(items);
+        showCartDetailsOnChild(cart);
 
-        showCartDetailsOnHost(items);
+        showCartDetailsOnHost(cart);
     }
 
     @Override
-    public void showCartDetailsOnChild(List<MappedShipment> items) {
+    public void showCartDetailsOnChild(CartDetailsMapper cart) {
         if (mCheckoutDetailView != null) {
-            mCheckoutDetailView.showCartDetailsOnChild(items);
+            mCheckoutDetailView.showCartDetailsOnChild(cart);
         }
     }
 
     @Override
-    public void showCartDetailsOnHost(List<MappedShipment> items) {
-        if (items == null || items.isEmpty()) {
+    public void showCartDetailsOnHost(CartDetailsMapper cart) {
+        if (cart == null || cart.isEmpty()) {
             showNoCartItemsLayout();
             return;
         }
-        mItemList = items;
+        mCartDetails = cart;
 
         refreshItemList(hasDeliveryAddress);
 
@@ -284,7 +292,8 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         if (mAdapter == null) {
             return;
         }
-        mAdapter.setPostcodeOverride(postcode);
+        postcodeOverride = postcode;
+        getTitleFromShippingFeeHelper().setPostcodeOverride(postcodeOverride);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -292,7 +301,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         if (mAdapter == null) {
             return;
         }
-        mAdapter.replaceData(mItemList, showFooter);
+        mAdapter.replaceData(mCartDetails, true, false, showFooter);
     }
 
 
@@ -395,7 +404,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
-    public void storeCartDetails(CheckoutDetailsMapper value) {
+    public void storeCartDetails(CartDetailsMapper value) {
         if (mCheckoutDetailView != null) {
             mCheckoutDetailView.storeCartDetails(value);
         }
@@ -506,7 +515,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
-    public void updateCartWithMappedValues(CheckoutDetailsMapper mappedValues) {
+    public void updateCartWithMappedValues(CartDetailsMapper mappedValues) {
         if (mCheckoutDetailView != null) {
             mCheckoutDetailView.updateCartWithMappedValues(mappedValues);
         }
@@ -729,5 +738,24 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         if (mCheckoutDetailView != null) {
             mCheckoutDetailView.setSelectedPaymentMethod(selectedPaymentMethod);
         }
+    }
+
+    private CheckoutTitleFromShippingFeeHelper getTitleFromShippingFeeHelper() {
+        if (titleFromShippingFeeHelper == null) {
+            String impossibleToDeliverAtLocationText;
+            if (mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation() == null) {
+                impossibleToDeliverAtLocationText = "Unavailable";
+            } else {
+                impossibleToDeliverAtLocationText = mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation();
+            }
+
+            titleFromShippingFeeHelper = new CheckoutTitleFromShippingFeeHelper(
+                    mActivity,
+                    postcodeOverride,
+                    mPresenter.isShippingByPostcodeEnabled(),
+                    impossibleToDeliverAtLocationText,
+                    locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
+        }
+        return titleFromShippingFeeHelper;
     }
 }

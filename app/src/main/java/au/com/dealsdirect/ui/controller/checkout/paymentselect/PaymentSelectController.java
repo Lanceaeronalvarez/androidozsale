@@ -27,7 +27,7 @@ import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
@@ -62,7 +62,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     private String mCartTotalCost;
     private ArrayList<PaymentMethod> mPaymentMethods;
     private boolean isFromCart;
-    private CheckoutDetailsMapper mValue;
+    private CartDetailsMapper mValue;
     private GA4EventParams.GA4AddPaymentInfoParams ga4AddPaymentInfoParams = null;
 
     private boolean isPaymentMethodChanged = false;
@@ -85,7 +85,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
         isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
         mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
-        mValue = CheckoutDetailsMapper.decompress(args.getByteArray(BundleKeys.CURRENT_ORDER_VALUE));
+        mValue = CartDetailsMapper.decompress(args.getByteArray(BundleKeys.CURRENT_ORDER_VALUE));
     }
 
     @Override

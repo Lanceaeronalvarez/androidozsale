@@ -29,7 +29,7 @@ import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
+import au.com.dealsdirect.data.cart.CartDetailsMapper;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import butterknife.BindView;
 
@@ -81,7 +81,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     private String postcode = null;
 
-    private CheckoutDetailsMapper mappedCheckoutDetails = null;
+    private CartDetailsMapper mappedCheckoutDetails = null;
     private NewCartDetailsListener cartDetailsListener = null;
 
     private boolean isVouchersApplyButtonEnabled = true;
@@ -109,6 +109,11 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     @Override
     protected void setUp(View view) {
+        if (mPresenter.getCart() != null) {
+            setVouchers(mPresenter.getCart().getVouchers());
+            setAppliedPromoCodes(mPresenter.getCart().getPromoCodeList());
+        }
+
         mTitleText.setText(getString(R.string.add_new_voucher));
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setOnClickListener(action -> mActivity.onBackPressed());
@@ -160,12 +165,23 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     @Override
     public void onVouchersApplied(ApplyVouchersResponse applyVouchersResponseBody) {
+        // TODO: remove this
+        if (applyVouchersResponseBody == null) {
+            setAllButtonsEnabled(true);
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    mActivity.getString(R.string.unable_to_apply_voucher)
+            );
+            return;
+        }
+
         final String responseMessage = applyVouchersResponseBody.getD().getMessage();
         final boolean responseResult = applyVouchersResponseBody.getD().getResult();
         final boolean responseIsAuthenticated = applyVouchersResponseBody.getD().isAuthenticated();
 
         if (responseMessage.isEmpty() && responseResult && responseIsAuthenticated) {
-            mappedCheckoutDetails = new CheckoutDetailsMapper(applyVouchersResponseBody.getD().value);
+            mappedCheckoutDetails = new CartDetailsMapper(applyVouchersResponseBody.getD().getValue());
             informNewCartDetailsListener();
 
             CustomAlertDialog.showCustomAlertDialog(
@@ -188,7 +204,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @Override
     public void onVouchersCleared(ClearVouchersResponse clearVouchersResponse) {
         if (clearVouchersResponse.getD().getResult()) {
-            mappedCheckoutDetails = new CheckoutDetailsMapper(clearVouchersResponse.getD().getValue());
+            mappedCheckoutDetails = new CartDetailsMapper(clearVouchersResponse.getD().getValue());
             informNewCartDetailsListener();
         }
 
@@ -215,7 +231,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @Override
     public void onAddAndAppliedVoucher(AddAndApplyVoucherByKeyResponse response) {
         if (response.getD().getResult()) {
-            mappedCheckoutDetails = new CheckoutDetailsMapper(response.getD().getValue());
+            mappedCheckoutDetails = new CartDetailsMapper(response.getD().getValue());
             informNewCartDetailsListener();
 
             CustomAlertDialog.showCustomAlertDialog(
@@ -238,7 +254,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
     public void onRemoveVoucherByKey(RemoveVoucherByKeyResponse response) {
         setAllButtonsEnabled(true);
         if (response.d.getResult()) {
-            mappedCheckoutDetails = new CheckoutDetailsMapper(response.getD().getValue());
+            mappedCheckoutDetails = new CartDetailsMapper(response.getD().getValue());
             informNewCartDetailsListener();
         } else {
             final String message = response.d.getMessage();
@@ -372,6 +388,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
     }
 
     public interface NewCartDetailsListener {
-        void onNewCartDetailsReceived(CheckoutDetailsMapper mappedValues);
+        void onNewCartDetailsReceived(CartDetailsMapper mappedValues);
     }
 }
