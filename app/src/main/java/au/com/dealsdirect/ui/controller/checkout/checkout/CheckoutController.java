@@ -1188,7 +1188,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void onPayButtonClick() {
-        String paymentProviderType = selectedPaymentMethod.getProviderType();
+        String paymentProviderType = selectedPaymentMethod != null ? selectedPaymentMethod.getProviderType() : "";
         String paymentLogType = AppConstants.REGULAR;
 
         if (!commonPaymentAbilityDetermination()) {
