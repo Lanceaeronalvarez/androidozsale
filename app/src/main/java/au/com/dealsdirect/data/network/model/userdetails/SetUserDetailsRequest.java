@@ -36,6 +36,9 @@ public class SetUserDetailsRequest {
     @SerializedName("new_password")
     @Expose
     private String newPassword;
+    @SerializedName("mobile_number")
+    @Expose
+    private String mobileNumber;
     @SerializedName("languageID")
     @Expose
     private String languageID;
@@ -118,5 +121,13 @@ public class SetUserDetailsRequest {
 
     public void setLanguageID(String languageID) {
         this.languageID = languageID;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
     }
 }
