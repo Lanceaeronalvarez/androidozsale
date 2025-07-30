@@ -121,14 +121,14 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 parent,
                                 false));
             case VIEW_TYPE_ITEM_LARGE:
-                return new ItemViewHolder(LayoutInflater
+                return new ItemLargeViewHolder(LayoutInflater
                         .from(parent.getContext()).inflate(R.layout.partial_checkout_item_large,
                                 parent,
                                 false));
             case VIEW_TYPE_ITEM:
             default:
                 return new ItemViewHolder(LayoutInflater
-                        .from(parent.getContext()).inflate(R.layout.partial_checkout_item,
+                        .from(parent.getContext()).inflate(R.layout.shopping_cart_item,
                                 parent,
                                 false));
         }
@@ -155,8 +155,10 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_ITEM:
-            case VIEW_TYPE_ITEM_LARGE:
                 setupViewHolderForItem((ItemViewHolder) holder, mFlattenedData.get(position).getItem());
+                break;
+            case VIEW_TYPE_ITEM_LARGE:
+                setupViewHolderForLargeItem((ItemLargeViewHolder) holder, mFlattenedData.get(position).getItem());
                 break;
             case VIEW_TYPE_FOOTER:
                 setupViewHolderForTitle((FooterViewHolder) holder, mFlattenedData.get(position).getFooterTitle());
@@ -191,7 +193,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         this.shouldAddSpacerOnTop = shouldAddSpacerOnTop;
     }
 
-    private void setupViewHolderForItem(ItemViewHolder holder, Item item) {
+    private void setupViewHolderForLargeItem(ItemLargeViewHolder holder, Item item) {
         final Context context = holder.itemView.getContext();
         //   (1) fix when item.fileName is null
         if (item.fileName != null) {
@@ -252,6 +254,57 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         holder.itemView.setOnClickListener(v -> {
             mClickListener.showItemDetail(holder.image, 0, "",
+                    LegacyStringImageUtils.generateImageUrl(item.brandID, item.imageID, item.fileName),
+                    "", item.getSaleID(), false, item.getItem(), item.getItem(),
+                    String.valueOf(item.getPrice()), String.valueOf(item.getPrice()), item.getItemID());
+        });
+    }
+
+    private void setupViewHolderForItem(ItemViewHolder holder, Item item) {
+        final Context context = holder.itemView.getContext();
+        //   (1) fix when item.fileName is null
+        if (item.fileName != null) {
+            if (!item.fileName.isEmpty()) {
+                String newImageFilename = LegacyStringImageUtils.generateImageUrl(item.brandID, item.imageID, item.fileName);
+                if (!holder.imageFilename.equals(newImageFilename)) {
+                    holder.imageFilename = newImageFilename;
+                    // rather display nothing than display the wrong image
+                    holder.itemImageView.setImageDrawable(null);
+                }
+                ImageUtils.loadImageDontAnimate(holder.imageFilename, holder.itemImageView);
+            }
+        }
+
+        holder.mProductBrand.setText(item.brandName);
+        holder.mProductName.setText(item.item);
+        holder.mProductSize.setText(item.size);
+
+        checkoutOrderPriceHelper.setupPriceTextView(holder.mProductPrice, item);
+
+        holder.quantityLayout.setMax(MAX_ITEM_QTY);
+        holder.quantityLayout.setQuantity(item.qty);
+        holder.quantityLayout.setAutoUpdateQuantity(false);
+        holder.quantityLayout.setEditTextToNonEditable();
+
+        final String itemId = item.id;
+        holder.quantityLayout.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
+            @Override
+            public void onQuantityIncrease(ProductQuantityLayout view, int value) {
+                if (itemQuantityChangedListener != null) {
+                    itemQuantityChangedListener.onIncrease(itemId, value, view);
+                }
+            }
+
+            @Override
+            public void onQuantityDecrease(ProductQuantityLayout view, int value) {
+                if (itemQuantityChangedListener != null) {
+                    itemQuantityChangedListener.onDecrease(itemId, value, view);
+                }
+            }
+        });
+
+        holder.itemView.setOnClickListener(v -> {
+            mClickListener.showItemDetail(holder.itemImageView, 0, "",
                     LegacyStringImageUtils.generateImageUrl(item.brandID, item.imageID, item.fileName),
                     "", item.getSaleID(), false, item.getItem(), item.getItem(),
                     String.valueOf(item.getPrice()), String.valueOf(item.getPrice()), item.getItemID());
@@ -349,7 +402,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public static class ItemViewHolder extends RecyclerView.ViewHolder {
+    public static class ItemLargeViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.item_checkout_image)
         ImageView image;
@@ -375,6 +428,31 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         @Nullable
         @BindView(R.id.item_checkout_personalisation_layout)
         PersonalisationLayout personalisationLayout;
+
+        String imageFilename = "";
+
+        public ItemLargeViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    public static class ItemViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.item_image_view)
+        ImageView itemImageView;
+        @BindView(R.id.brand_name)
+        TextView mProductBrand;
+        @BindView(R.id.item_price)
+        TextView mProductPrice;
+        @BindView(R.id.item_name)
+        TextView mProductName;
+        @BindView(R.id.item_size)
+        TextView mProductSize;
+        @BindView(R.id.item_remove)
+        TextView mRemoveButton;
+        @BindView(R.id.item_checkout_quantity)
+        ProductQuantityLayout quantityLayout;
 
         String imageFilename = "";
 

@@ -1910,7 +1910,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 //            showAddedToCartDialog(item);
             String selectedSize = mSelectedSizeIndex >= 0 && !mProductSizes.isEmpty() ? mProductSizes.get(mSelectedSizeIndex).first : "";
             mActivity.getCurrentRouter().pushController(RouterTransaction
-                    .with(SaleItemDetailsCartController.newInstance(item, selectedSize))
+                    .with(SaleItemDetailsCartController.newInstance(cartDetailsResponse))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         }

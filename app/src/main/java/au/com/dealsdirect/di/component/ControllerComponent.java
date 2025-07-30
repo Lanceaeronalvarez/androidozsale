@@ -55,6 +55,7 @@ import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersControl
 import au.com.dealsdirect.ui.controller.returns.returnspolicy.ReturnsPolicyViewController;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesController;
 import au.com.dealsdirect.ui.controller.salefilter.SaleFilterController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsCartController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
@@ -181,7 +182,6 @@ public interface ControllerComponent {
 
     void inject(SaleFilterController controller);
 
-
     void inject(CheckoutEmptyController controller);
 
     void inject(CheckoutStepsController controller);
@@ -195,5 +195,7 @@ public interface ControllerComponent {
     void inject(CheckoutStepsPaymentController controller);
 
     void inject(CheckoutSplitController controller);
+
+    void inject(SaleItemDetailsCartController controller);
 
 }
