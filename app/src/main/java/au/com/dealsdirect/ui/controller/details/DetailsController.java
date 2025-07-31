@@ -545,11 +545,11 @@ public class DetailsController extends BasePullToRefreshController implements De
             return;
         }
 
-        if (isThereAnyChangesInUserDetails()) {
+        if (!isMobileNumberValid()) {
+            return;
+        }
 
-            if (!isMobileNumberValid()) {
-                return;
-            }
+        if (isThereAnyChangesInUserDetails()) {
 
             AlertDialog dialogBuilder = new AlertDialog.Builder(mActivity).create();
             LayoutInflater inflater = mActivity.getLayoutInflater();
