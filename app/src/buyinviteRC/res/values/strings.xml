@@ -197,6 +197,6 @@
     <string name="app_package_name">au.com.buyinvite.bi</string>
 
     <string name="country_code_mobile_number">+61</string>
-    <string name="country_code_mobile_number_start">4</string>
+    <string name="mobile_number_regex">"^\\+614\\d{8}$"</string>
 
 </resources>

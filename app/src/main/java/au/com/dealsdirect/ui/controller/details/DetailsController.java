@@ -572,7 +572,7 @@ public class DetailsController extends BasePullToRefreshController implements De
                 String email = getFieldValue(mEmailAddressText);
                 String dateOfBirth = getFieldValueOfDateOfBirth();
                 String password = getFieldValue(dialogConfirmPasswordText);
-                String mobileNumber = getFieldValue(mMobileNumberEditText).startsWith("+") ? getFieldValue(mMobileNumberEditText).replace(getString(R.string.country_code_mobile_number), "") : getString(R.string.country_code_mobile_number) + getFieldValue(mMobileNumberEditText);
+                String mobileNumber = getString(R.string.country_code_mobile_number) + getFieldValue(mMobileNumberEditText);
 
                 mPresenter.sendUserDetails(createUserDetailRequest(email,
                                 firstname,
@@ -741,7 +741,7 @@ public class DetailsController extends BasePullToRefreshController implements De
             String password = getFieldValue(dialogCurrentPasswordText);
             String newpassword = getFieldValue(dialogNewPasswordText);
             String confirmpassword = getFieldValue(dialogConfirmPasswordText);
-            String mobileNumber = getFieldValue(mMobileNumberEditText).startsWith("+") ? getFieldValue(mMobileNumberEditText).substring(3) : getString(R.string.country_code_mobile_number) + getFieldValue(mMobileNumberEditText);
+            String mobileNumber = getString(R.string.country_code_mobile_number) + getFieldValue(mMobileNumberEditText);
 
             if (dialogConfirmPasswordText.getText().toString().isEmpty() || dialogConfirmPasswordText.getText().toString() == "") {
                 CustomAlertDialog.showCustomAlertDialog(mActivity,
@@ -885,7 +885,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         boolean gender = getFieldValueOfGender();
         String email = getFieldValue(mEmailAddressText);
         String newpassword = getFieldValue(mNewPasswordText);
-        String mobileNumber = getFieldValue(mMobileNumberEditText).startsWith("+") ? getFieldValue(mMobileNumberEditText).substring(3) : getFieldValue(mMobileNumberEditText);
+        String mobileNumber = getString(R.string.country_code_mobile_number) + getFieldValue(mMobileNumberEditText);
 
         String currentFirstname = currentUserDetails.getForename();
         String currentSurname = currentUserDetails.getSurname();
@@ -900,19 +900,12 @@ public class DetailsController extends BasePullToRefreshController implements De
                 currentUserDetails.getMobileNumber() : "";
 
         if (!currentMobileNumber.equals(mobileNumber)) {
-            if (getString(R.string.country_code_mobile_number).equals("+61")) {
-                if (mobileNumber.length() == 9 && mobileNumber.startsWith(getString(R.string.country_code_mobile_number_start))) {
-                    isMobileNumberValid = true;
-                } else {
-                    CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.invalid_phone_number));
-                }
-            }
-            if (getString(R.string.country_code_mobile_number).equals("+64")) {
-                if (mobileNumber.length() <= 10 && mobileNumber.length() >= 9 && mobileNumber.startsWith(getString(R.string.country_code_mobile_number_start))) {
-                    isMobileNumberValid = true;
-                } else {
-                    CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.invalid_phone_number));
-                }
+            final Pattern pattern
+                    = Pattern.compile(getString(R.string.mobile_number_regex));
+            if (pattern.matcher(mobileNumber).matches()) {
+                isMobileNumberValid = true;
+            } else {
+                CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.invalid_phone_number));
             }
         }
 
