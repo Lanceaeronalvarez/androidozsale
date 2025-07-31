@@ -377,7 +377,7 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         String mobileNumber = userDetailsResponse.getMobileNumber();
         Boolean willReceiveSMS = userDetailsResponse.willReceiveSMS();
-        mMobileNumberEditText.setText(mobileNumber != null ? mobileNumber : "");
+        mMobileNumberEditText.setText(mobileNumber != null ? mobileNumber.startsWith("+") ? mobileNumber.replace(getString(R.string.country_code_mobile_number), "") : mobileNumber : "");
         mSmsOptInCheckbox.setChecked(willReceiveSMS != null ? willReceiveSMS : false);
     }
 
@@ -572,7 +572,7 @@ public class DetailsController extends BasePullToRefreshController implements De
                 String email = getFieldValue(mEmailAddressText);
                 String dateOfBirth = getFieldValueOfDateOfBirth();
                 String password = getFieldValue(dialogConfirmPasswordText);
-                String mobileNumber = getFieldValue(mMobileNumberEditText);
+                String mobileNumber = getFieldValue(mMobileNumberEditText).startsWith("+") ? getFieldValue(mMobileNumberEditText).replace(getString(R.string.country_code_mobile_number), "") : getString(R.string.country_code_mobile_number) + getFieldValue(mMobileNumberEditText);
 
                 mPresenter.sendUserDetails(createUserDetailRequest(email,
                                 firstname,
@@ -741,7 +741,7 @@ public class DetailsController extends BasePullToRefreshController implements De
             String password = getFieldValue(dialogCurrentPasswordText);
             String newpassword = getFieldValue(dialogNewPasswordText);
             String confirmpassword = getFieldValue(dialogConfirmPasswordText);
-            String mobileNumber = getFieldValue(mMobileNumberEditText);
+            String mobileNumber = getFieldValue(mMobileNumberEditText).startsWith("+") ? getFieldValue(mMobileNumberEditText).substring(3) : getString(R.string.country_code_mobile_number) + getFieldValue(mMobileNumberEditText);
 
             if (dialogConfirmPasswordText.getText().toString().isEmpty() || dialogConfirmPasswordText.getText().toString() == "") {
                 CustomAlertDialog.showCustomAlertDialog(mActivity,
@@ -885,7 +885,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         boolean gender = getFieldValueOfGender();
         String email = getFieldValue(mEmailAddressText);
         String newpassword = getFieldValue(mNewPasswordText);
-        String mobileNumber = getFieldValue(mMobileNumberEditText);
+        String mobileNumber = getFieldValue(mMobileNumberEditText).startsWith("+") ? getFieldValue(mMobileNumberEditText).substring(3) : getFieldValue(mMobileNumberEditText);
 
         String currentFirstname = currentUserDetails.getForename();
         String currentSurname = currentUserDetails.getSurname();
@@ -895,8 +895,26 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         boolean currentGender = currentUserDetails.getGender();
 
+        boolean isMobileNumberValid = false;
         String currentMobileNumber = currentUserDetails.getMobileNumber() != null ?
                 currentUserDetails.getMobileNumber() : "";
+
+        if (!currentMobileNumber.equals(mobileNumber)) {
+            if (getString(R.string.country_code_mobile_number).equals("+61")) {
+                if (mobileNumber.length() == 9 && mobileNumber.startsWith(getString(R.string.country_code_mobile_number_start))) {
+                    isMobileNumberValid = true;
+                } else {
+                    CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.invalid_phone_number));
+                }
+            }
+            if (getString(R.string.country_code_mobile_number).equals("+64")) {
+                if (mobileNumber.length() <= 10 && mobileNumber.length() >= 9 && mobileNumber.startsWith(getString(R.string.country_code_mobile_number_start))) {
+                    isMobileNumberValid = true;
+                } else {
+                    CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.invalid_phone_number));
+                }
+            }
+        }
 
         return !currentFirstname.equals(firstname) ||
                 !currentSurname.equals(lastname) ||
@@ -905,7 +923,7 @@ public class DetailsController extends BasePullToRefreshController implements De
                 (currentDateOfBirth == null && dateOfBirth != null) ||
                 (currentDateOfBirth != null && currentDateOfBirth.equals(dateOfBirth)) ||
                 !newpassword.isEmpty() ||
-                !currentMobileNumber.equals(mobileNumber);
+                isMobileNumberValid;
     }
 
     private boolean isEmailSubscriptionPreferenceChanged() {

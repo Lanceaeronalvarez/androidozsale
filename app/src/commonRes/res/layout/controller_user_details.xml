@@ -382,6 +382,14 @@
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_caption1" />
 
+                    <TextView
+                        fontPath="@string/font_app_semibold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/country_code_mobile_number"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_caption1" />
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

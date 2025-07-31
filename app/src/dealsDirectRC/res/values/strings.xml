@@ -47,6 +47,8 @@
     <string name="marydoe_gmail_com">marydoe@gmail.com</string>
     <string name="credit_card_number">Credit Card Number</string>
     <string name="_1234_5678_9012_3456">1234 5678 9012 3456</string>
+    <string name="country_code_mobile_number">+61</string>
+    <string name="country_code_mobile_number_start">4</string>
     <string name="new_password">New Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="cardholder_s_name">Cardholder\'s Name</string>
