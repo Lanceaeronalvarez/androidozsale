@@ -547,6 +547,10 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         if (isThereAnyChangesInUserDetails()) {
 
+            if (!isMobileNumberValid()) {
+                return;
+            }
+
             AlertDialog dialogBuilder = new AlertDialog.Builder(mActivity).create();
             LayoutInflater inflater = mActivity.getLayoutInflater();
             View dialogView = inflater.inflate(R.layout.confirm_password_dialog, null);
@@ -895,19 +899,8 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         boolean currentGender = currentUserDetails.getGender();
 
-        boolean isMobileNumberValid = false;
         String currentMobileNumber = currentUserDetails.getMobileNumber() != null ?
                 currentUserDetails.getMobileNumber() : "";
-
-        if (!currentMobileNumber.equals(mobileNumber)) {
-            final Pattern pattern
-                    = Pattern.compile(getString(R.string.mobile_number_regex));
-            if (pattern.matcher(mobileNumber).matches()) {
-                isMobileNumberValid = true;
-            } else {
-                CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.invalid_phone_number));
-            }
-        }
 
         return !currentFirstname.equals(firstname) ||
                 !currentSurname.equals(lastname) ||
@@ -916,7 +909,7 @@ public class DetailsController extends BasePullToRefreshController implements De
                 (currentDateOfBirth == null && dateOfBirth != null) ||
                 (currentDateOfBirth != null && currentDateOfBirth.equals(dateOfBirth)) ||
                 !newpassword.isEmpty() ||
-                isMobileNumberValid;
+                !currentMobileNumber.equals(mobileNumber);
     }
 
     private boolean isEmailSubscriptionPreferenceChanged() {
@@ -1074,6 +1067,21 @@ public class DetailsController extends BasePullToRefreshController implements De
     public void unsubscribeRecycler() {
         isCategorySelectionEnabled = false;
         setRecyclerAdapter();
+    }
+
+    private boolean isMobileNumberValid() {
+        String mobileNumber = getString(R.string.country_code_mobile_number) + getFieldValue(mMobileNumberEditText);
+        boolean isMobileNumberValid = false;
+
+        final Pattern pattern
+                = Pattern.compile(getString(R.string.mobile_number_regex));
+        if (pattern.matcher(mobileNumber).matches()) {
+            isMobileNumberValid = true;
+        } else {
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.invalid_phone_number));
+        }
+
+        return isMobileNumberValid;
     }
 
 }
