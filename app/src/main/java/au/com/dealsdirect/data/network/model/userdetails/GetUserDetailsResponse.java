@@ -50,6 +50,12 @@ public class GetUserDetailsResponse {
     @SerializedName("preference_categories")
     @Expose
     private HashMap<String, Boolean> categories;
+    @SerializedName("mobile_number")
+    @Expose
+    private String mobileNumber;
+    @SerializedName("receive_sms")
+    @Expose
+    private Boolean receiveSMS;
 
     public String getID() {
         return id;
@@ -161,5 +167,21 @@ public class GetUserDetailsResponse {
 
     public void setCategories(HashMap<String, Boolean> categories) {
         this.categories = categories;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
+    public Boolean willReceiveSMS() {
+        return receiveSMS;
+    }
+
+    public void setWillReceiveSMS(Boolean willReceiveSMS) {
+        this.receiveSMS = willReceiveSMS;
     }
 }
