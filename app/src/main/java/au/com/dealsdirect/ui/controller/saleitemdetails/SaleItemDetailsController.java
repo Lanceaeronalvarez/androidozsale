@@ -1129,12 +1129,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 currentSaleImagePosition = 0;
                 return;
             }
-            currentSaleImagePosition += 1;
-            if (currentSaleImagePosition <= qualitySaleImages.size() - 1) {
-                mProductImagesRv.scrollToPosition(currentSaleImagePosition);
-            } else {
-                currentSaleImagePosition = qualitySaleImages.size() - 1;
-            }
+            currentSaleImagePosition = Math.min(currentSaleImagePosition + 1, qualitySaleImages.size() - 1);
+            mProductImagesRv.scrollToPosition(currentSaleImagePosition);
             ImageUtils.loadImageImmediate(qualitySaleImages.get(currentSaleImagePosition), mProductSharedImage, null);
         });
 
@@ -1143,12 +1139,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 currentSaleImagePosition = 0;
                 return;
             }
-            currentSaleImagePosition -= 1;
-            if (currentSaleImagePosition >= 0) {
-                mProductImagesRv.scrollToPosition(currentSaleImagePosition);
-            } else {
-                currentSaleImagePosition = 0;
-            }
+            currentSaleImagePosition = Math.max(currentSaleImagePosition - 1, 0);
+            mProductImagesRv.scrollToPosition(currentSaleImagePosition);
             ImageUtils.loadImageImmediate(qualitySaleImages.get(currentSaleImagePosition), mProductSharedImage, null);
         });
 
