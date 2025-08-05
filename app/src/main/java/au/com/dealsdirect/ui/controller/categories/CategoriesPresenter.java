@@ -21,7 +21,7 @@ public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresen
 
     @Inject
     public CategoriesPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
-            CompositeDisposable compositeDisposable) {
+                               CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
@@ -42,5 +42,10 @@ public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresen
                 getMvpView().showCategories((List<GetCategoryTreeResponse>) response);
             }
         });
+    }
+
+    @Override
+    public String getClearanceUrl() {
+        return getDataManager().getClearanceUrl();
     }
 }

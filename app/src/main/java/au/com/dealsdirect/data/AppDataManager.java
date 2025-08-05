@@ -2076,6 +2076,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public String getClearanceUrl() {
+        return mPreferencesHelper.getClearanceUrl();
+    }
+
+    @Override
+    public void setClearanceUrl(String clearanceUrl) {
+        mPreferencesHelper.setClearanceUrl(clearanceUrl);
+    }
+
+    @Override
     public void cacheRrpText(String id, String rrpText) {
         mPricingInfoCacheHelper.cacheRrpText(id, rrpText);
     }
