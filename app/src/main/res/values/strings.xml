@@ -879,7 +879,8 @@
     
     <string name="returns_policy_step_description_1">You have up to 14 days from the date of receiving your order to request a return. Log in to your account and go to My Returns. Select the item(s) you wish to return and provide the reason for returning. Any attached photos, videos, or additional comments you include in the form will be helpful for us to process your request.\n\n</string>
     <string name="returns_policy_step_description_2">Your return request will be reviewed within 1 - 3 working days. Upon approval, you will receive an email containing your unique Return Authorisation Number (RAN) and detailed return instructions.</string>
-    <string name="returns_policy_step_description_3">Follow the provided instructions carefully. If you\'re returning multiple items, you have the option to consolidate them into a single parcel. However, it\'s crucial to label each return with its corresponding RAN number for proper processing. Remember to ensure that the total weight of the parcel remains within the specified limit. Once prepared, please send your return within 7 calendar days of receiving the return label. Make sure the RAN is clearly visible on the parcel.</string>
+    <string name="returns_policy_step_description_3">Follow the provided instructions carefully. When returning multiple items, ensure they come from the same warehouse, as some may be from third-party sellers. Only items from the same warehouse can be combined. It is important to check your return details carefully; sending an item to the wrong warehouse may delay your refund and incur additional costs for return shipping. Keep the total weight of the parcel within the limit. Send your return within 7 days of
+receiving the return label, and ensure the RAN is clearly visible on the parcel.</string>
     <string name="returns_policy_step_description_4">Attach the provided return label to your parcel and send it to the address indicated in the return email. Sometimes, your return may need to be directed to the third-party Seller\'s warehouse, so it\'s essential to follow the instructions precisely. Once your return reaches the designated warehouse address, you will receive a confirmation email. Refunds or store credits will be processed within 3 - 5 working days upon receipt of the returned items.</string>
 
     <string-array name="returns_policy_step_descriptions">
@@ -946,15 +947,18 @@
         \n\nFor all returns except Change of Mind returns, please use our return delivery services, free of charge. Fill up the simple online form, print out the return label (which should indicate clearly your unique RAN), stick it to the return parcel, and pass it to the delivery service within 7 calendar days.
         \n\nFor Change of Mind returns, you may be requested to arrange for your own preferred delivery service within 7 calendar days. Please ensure your unique RAN is visible on the parcel.
         \n\nIf you still have not received the return guidelines and your unique RAN a few days after your request is approved, please contact our Customer Team via My Returns.</string>
-    <string name="returns_policy_faq_content_5">For all returns except Change of Mind returns, once we have received your returned item(s), we will proceed with the refund back to your original payment method within 3 - 5 working days. Depending on the issuer or payment method, it may take an additional few working days for the refunded amount to appear on your statement.
-        \n\nFor Change of Mind returns, store credits will be deposited into your account and can be used within the next 12 months.</string>
+    <string name="returns_policy_faq_content_5">For all returns except for Change of Mind, once we have received your returned item(s), we will proceed with the refund back to your original payment method within 3–7 business days.\n\nFor Change of Mind returns, store credits will be deposited into your account and can be used within the next 12 months. </string>
     <string name="returns_policy_faq_content_6">Yes, while such cases are not common, we do come across them occasionally. Please contact our Customer Team for further discussion via My Returns.</string>
     <string name="returns_policy_faq_content_7">Change of mind:
-        \nWhen you return an item for “Change of Mind” you will be refunded the amount paid for the item returned, less the original delivery price.
-        \nThis will be refunded in the form of a credit to your customer account.
-        \n\nFaulty/Damaged/Incorrect returns:
-        \nWhen you return an item that is damaged, incorrect, or faulty, then you will be refunded the full amount paid for that item and delivery price for that item, via your original payment method.
-        \nPlease note, depending on the payment method, the refund may take 5-7 days to process.</string>
+\n\nWhen you return an item for Change of Mind, you will be refunded the amount paid for
+\nthe returned item, less the original delivery price.
+\nThis will be refunded in the form of a credit to your customer account, which will be
+\ninvalid for 12 months.
+ \n\nFaulty/Damaged/Incorrect returns:
+\nWhen you return an item that is damaged, incorrect or faulty, then you will be
+\nrefunded the full amount paid for that item and the delivery price for that item, via
+\nyour original payment method. Please note, depending on the payment method, the
+\nrefund may take 5 – 7 days to process.</string>
     <string name="returns_policy_faq_content_8">Unfortunately, our Sellers and us don’t have the necessary facilities to accept any walk-in returns. All returns must be posted. Returns need to be sent to the address provided in your return’s approval email. As we are also a Marketplace you may be returning to our third-party Sellers warehouse directly, whilst most returns are sent locally, in some instance you may even be required to send your return overseas.</string>
 
     <string-array name="returns_policy_faq_content">
