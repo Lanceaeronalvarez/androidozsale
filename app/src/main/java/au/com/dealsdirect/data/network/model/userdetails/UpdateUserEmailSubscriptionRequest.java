@@ -18,9 +18,6 @@ public class UpdateUserEmailSubscriptionRequest {
     @SerializedName("categories")
     @Expose
     private HashMap<String, Boolean> categories;
-    @SerializedName("receive_sms")
-    @Expose
-    private boolean receiveSMS;
 
     public String getEmail() {
         return email;
@@ -52,14 +49,6 @@ public class UpdateUserEmailSubscriptionRequest {
 
     public void setCategories(HashMap<String, Boolean> categories) {
         this.categories = categories;
-    }
-
-    public boolean willReceiveSMS() {
-        return receiveSMS;
-    }
-
-    public void setWillReceiveSMS(boolean willReceiveSMS) {
-        this.receiveSMS = willReceiveSMS;
     }
 }
 
