@@ -39,7 +39,7 @@ public class ReturnsPolicyTopRecyclerViewAdapter extends RecyclerView.Adapter<Re
     public void onBindViewHolder(@NonNull ReturnPolicyStepViewHolder holder, int position) {
         holder.imageView.setImageDrawable(holder.imageView.getContext().getDrawable(drawableIds.get(position)));
         holder.title.setText(titles.get(position));
-        holder.description.setText(descriptions.get(position) + "\n");
+        holder.description.setText(descriptions.get(position) + "\n\n\n");
         //The textview seems to truncate the text. The linebreak added at the end of the string fixes that.
     }
 

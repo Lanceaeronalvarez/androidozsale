@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_default"
     android:fillViewport="true"
     android:orientation="vertical"
-    tools:ignore="MissingPrefix"
-    android:background="@color/background_default">
+    tools:ignore="MissingPrefix">
 
     <LinearLayout
         android:id="@+id/controller_details_background"
@@ -37,8 +37,8 @@
                     android:id="@+id/controller_details_firstname_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/padding_default"
                     android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/padding_default"
                     app:hintEnabled="false">
 
                     <EditText
@@ -66,8 +66,8 @@
                     android:id="@+id/controller_details_lastname_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/padding_default"
                     android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/padding_default"
                     app:hintEnabled="false">
 
                     <EditText
@@ -93,8 +93,8 @@
                     android:id="@+id/controller_details_birthday_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/padding_default"
                     android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/padding_default"
                     app:hintEnabled="false">
 
                     <EditText
@@ -124,8 +124,8 @@
                     style="@style/DDSpinnerTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/padding_default"
                     android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/padding_default"
                     android:gravity="center_vertical">
 
                     <Spinner
@@ -149,8 +149,8 @@
                     android:id="@+id/emailAddressWrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/padding_default"
                     android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/padding_default"
                     app:hintEnabled="false">
 
                     <EditText
@@ -176,8 +176,8 @@
                     android:id="@+id/passwordWrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/padding_default"
                     android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/padding_default"
                     app:hintEnabled="false"
                     app:passwordToggleDrawable="@drawable/ic_show_password_toggle"
                     app:passwordToggleEnabled="true">
@@ -205,8 +205,8 @@
                     android:id="@+id/newPasswordWrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/padding_default"
                     android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/padding_default"
                     app:hintEnabled="false"
                     app:passwordToggleDrawable="@drawable/ic_show_password_toggle"
 
@@ -229,13 +229,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/confirm_password"
-                    android:textColor="@color/text_extra_dark"  />
+                    android:textColor="@color/text_extra_dark" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/controller_details_confirm_password_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/padding_default"
                     app:hintEnabled="false"
                     app:passwordToggleDrawable="@drawable/ic_show_password_toggle"
                     app:passwordToggleEnabled="true">
@@ -252,6 +253,58 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <TextView
+                    fontPath="@string/font_app_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mobile_number"
+                    android:textColor="@color/text_extra_dark" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/controller_details_mobile_number_wrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/margin_small"
+                    android:orientation="horizontal"
+                    app:hintEnabled="false">
+
+                    <EditText
+                        android:id="@+id/controller_details_text_mobile_number"
+                        style="@style/DDEditTextStyle"
+                        fontPath="@string/font_app_medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/mobile_number"
+                        android:inputType="phone"
+                        android:textSize="@dimen/text_size_headline3" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/controller_details_sms_opt_in_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@drawable/custom_preferences_checkbox_selector"
+                        android:checked="false"
+                        android:visibility="visible" />
+
+                    <TextView
+                        fontPath="@string/font_app_semibold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/sms_marketing_opt_in"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_caption1" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
@@ -261,22 +314,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_default">
+
             <TextView
-                fontPath="@string/font_app_semibold"
                 android:id="@+id/controller_details_promo_emails_header"
+                fontPath="@string/font_app_semibold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Please choose how many emails or unsubscribe below"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Please choose how many emails or unsubscribe below"
                 android:textColor="@color/text_medium"
-                android:textSize="@dimen/text_size_caption1"/>
+                android:textSize="@dimen/text_size_caption1" />
+
             <RadioGroup
                 android:id="@+id/controller_details_promo_emails_radio_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/controller_details_promo_emails_header"
                 android:layout_alignParentLeft="true">
+
                 <include layout="@layout/controller_user_details_radio_button" />
             </RadioGroup>
         </RelativeLayout>

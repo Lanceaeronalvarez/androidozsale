@@ -375,4 +375,8 @@ public interface PreferencesHelper {
     void setFacebookLoginEnabled(boolean facebookLoginEnabled);
 
     boolean getFacebookLoginEnabled();
+
+    String getClearanceUrl();
+
+    void setClearanceUrl(String clearanceUrl);
 }
