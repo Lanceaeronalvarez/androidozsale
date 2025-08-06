@@ -51,10 +51,11 @@ public class NewSaleCategoryAdapter extends RecyclerView.Adapter<NewSaleCategory
 
     @Override
     public void onBindViewHolder(@NonNull NewSaleCategoryAdapter.NewSaleCategoryViewHolder holder, int position) {
+
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_NORMAL:
                 final GetCategoryTreeResponse item = mData.get(position);
-                if (item.getName().equals("All")) {
+                if (item.getName().equals("All") || item.getName().equalsIgnoreCase("Gift Cards")) {
                     holder.categoryContainer.setVisibility(View.GONE);
                 }
 
@@ -91,8 +92,9 @@ public class NewSaleCategoryAdapter extends RecyclerView.Adapter<NewSaleCategory
                 break;
             default:
                 break;
+
         }
-            }
+    }
 
     public GetCategoryTreeResponse getItem(int position) {
         return mData.get(position);
