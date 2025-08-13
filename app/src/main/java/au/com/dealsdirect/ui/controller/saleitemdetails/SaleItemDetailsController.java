@@ -717,21 +717,23 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        SaleItemProduct item = currentItem != null ? currentItem : partialProductDetailsToShow;
         outState.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID, mSaleId);
         outState.putString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, mSkuId);
-        String imageUrl = !item.getImages().isEmpty() ? item.getImages().get(0) : "";
-        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, imageUrl);
         outState.putString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, mSeoIdentifier);
-        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME, item.getName());
-        String brandName = item.getBrandName();
-        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_BRAND, brandName);
-        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE, PriceUtils.getPriceStringFromPriceObject(item.getPrice()));
         outState.putInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION, mFromPosition);
         outState.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN, mOrigin);
         outState.putString(BundleKeys.SALEITEMDETAILS_KEY_END_DATE, mEndDate);
-        outState.putBoolean(BundleKeys.SALEITEMDETAILS_KEY_IS_FREE_DELIVERY, item.isFreeDelivery());
-        outState.putBoolean(BundleKeys.SALEITEMDETAILS_KEY_END_IS_SOLD_OUT, item.isSoldOut());
+        SaleItemProduct item = currentItem != null ? currentItem : partialProductDetailsToShow;
+        if (item != null) {
+            String imageUrl = !item.getImages().isEmpty() ? item.getImages().get(0) : "";
+            outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, imageUrl);
+            outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME, item.getName());
+            String brandName = item.getBrandName();
+            outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_BRAND, brandName);
+            outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE, PriceUtils.getPriceStringFromPriceObject(item.getPrice()));
+            outState.putBoolean(BundleKeys.SALEITEMDETAILS_KEY_IS_FREE_DELIVERY, item.isFreeDelivery());
+            outState.putBoolean(BundleKeys.SALEITEMDETAILS_KEY_END_IS_SOLD_OUT, item.isSoldOut());
+        }
         outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
     }
 
@@ -740,11 +742,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         super.onRestoreInstanceState(savedInstanceState);
         mSaleId = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID);
         mSkuId = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID);
-        String itemImageUrl = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID);
+        String itemImageUrl = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, "");
         mSeoIdentifier = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID);
-        String name = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME);
-        String brandName = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_BRAND);
-        String salePrice = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE);
+        String name = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME, "");
+        String brandName = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_BRAND, "");
+        String salePrice = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE, "0");
         mFromPosition = savedInstanceState.getInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION);
         mOrigin = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN);
         mEndDate = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_END_DATE);
@@ -1129,12 +1131,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 currentSaleImagePosition = 0;
                 return;
             }
-            currentSaleImagePosition += 1;
-            if (currentSaleImagePosition <= qualitySaleImages.size() - 1) {
-                mProductImagesRv.scrollToPosition(currentSaleImagePosition);
-            } else {
-                currentSaleImagePosition = qualitySaleImages.size() - 1;
-            }
+            currentSaleImagePosition = Math.min(currentSaleImagePosition + 1, qualitySaleImages.size() - 1);
+            mProductImagesRv.scrollToPosition(currentSaleImagePosition);
             ImageUtils.loadImageImmediate(qualitySaleImages.get(currentSaleImagePosition), mProductSharedImage, null);
         });
 
@@ -1143,12 +1141,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 currentSaleImagePosition = 0;
                 return;
             }
-            currentSaleImagePosition -= 1;
-            if (currentSaleImagePosition >= 0) {
-                mProductImagesRv.scrollToPosition(currentSaleImagePosition);
-            } else {
-                currentSaleImagePosition = 0;
-            }
+            currentSaleImagePosition = Math.max(currentSaleImagePosition - 1, 0);
+            mProductImagesRv.scrollToPosition(currentSaleImagePosition);
             ImageUtils.loadImageImmediate(qualitySaleImages.get(currentSaleImagePosition), mProductSharedImage, null);
         });
 

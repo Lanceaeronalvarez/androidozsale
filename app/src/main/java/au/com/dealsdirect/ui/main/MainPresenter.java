@@ -294,6 +294,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         value.getProductPage().getPriceBlockMode() : 0);
                 getDataManager().setHoursLeftToDisplayTimer(value.getProductPage().getHoursLeftToDisplayTimer() != null ?
                         value.getProductPage().getHoursLeftToDisplayTimer() : 48);
+                getDataManager().setClearanceUrl(value.getShop().getClearanceUrl());
 
                 if (value.getPayments().getVisaCheckout() != null) {
                     getDataManager().setIsVisaCheckoutEnabled(value.getPayments().getVisaCheckout().getVisaCheckoutEnabled());

@@ -13,4 +13,6 @@ public interface CategoriesMvpPresenter <V extends MvpView> extends MvpPresenter
 
     void callGetCategoryTree();
 
+    String getClearanceUrl();
+
 }

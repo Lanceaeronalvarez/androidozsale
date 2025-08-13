@@ -223,7 +223,6 @@
         <item>@string/account_details</item>
         <item>@string/account_addresses</item>
         <item>@string/account_orders</item>
-        <item>@string/account_payments</item>
         <item>@string/account_returns</item>
         <item>@string/account_returns_policy</item>
         <item>@string/account_vouchers</item>

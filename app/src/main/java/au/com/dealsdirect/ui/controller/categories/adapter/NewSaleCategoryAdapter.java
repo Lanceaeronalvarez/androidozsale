@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import au.com.dealsdirect.R;
@@ -22,12 +23,21 @@ import butterknife.ButterKnife;
 
 public class NewSaleCategoryAdapter extends RecyclerView.Adapter<NewSaleCategoryAdapter.NewSaleCategoryViewHolder> {
 
+    private static final int VIEW_TYPE_NORMAL = 0;
+    private static final int VIEW_TYPE_URL = 1;
+
     private List<GetCategoryTreeResponse> mData;
+
+    private String clearanceUrl;
     private final NewSaleCategoryClickListener mCategoryAdapterClickListener;
 
     public NewSaleCategoryAdapter(List<GetCategoryTreeResponse> data,
                                   NewSaleCategoryClickListener categoryClickListener) {
-        mData = data;
+        if (data != null) {
+            mData = new ArrayList<>(data);
+        } else {
+            mData = Collections.emptyList();
+        }
         mCategoryAdapterClickListener = categoryClickListener;
     }
 
@@ -41,35 +51,49 @@ public class NewSaleCategoryAdapter extends RecyclerView.Adapter<NewSaleCategory
 
     @Override
     public void onBindViewHolder(@NonNull NewSaleCategoryAdapter.NewSaleCategoryViewHolder holder, int position) {
-        final GetCategoryTreeResponse item = mData.get(position);
-        if (item.getName().equals("All")) {
-            holder.categoryContainer.setVisibility(View.GONE);
+
+        switch (holder.getItemViewType()) {
+            case VIEW_TYPE_NORMAL:
+                final GetCategoryTreeResponse item = mData.get(position);
+                if (item.getName().equals("All") || item.getName().equalsIgnoreCase("Gift Cards")) {
+                    holder.categoryContainer.setVisibility(View.GONE);
+                }
+
+                final String subCategoryTitle = item.getName();
+                holder.title.setText(subCategoryTitle);
+
+                final String textColor = item.getTextColor();
+                if (textColor != null && !textColor.isEmpty()) {
+                    holder.title.setTextColor(Color.parseColor(textColor));
+                } else {
+                    holder.resetTitleTextColor();
+                }
+
+                holder.imageButton.setVisibility(
+                        item.getChildren() != null && !item.getChildren().isEmpty() ?
+                                View.VISIBLE : View.GONE);
+
+                holder.itemView.setOnClickListener(view -> {
+                    final int pos = holder.getBindingAdapterPosition();
+                    mCategoryAdapterClickListener.onCategoryClicked(pos, mData.get(pos), mData.get(pos).getName());
+                });
+
+                holder.imageButton.setOnClickListener(view -> {
+                    final int pos = holder.getBindingAdapterPosition();
+                    mCategoryAdapterClickListener.onCategoryClicked(pos, mData.get(pos), mData.get(pos).getName());
+                });
+                break;
+            case VIEW_TYPE_URL:
+                holder.title.setText("Clearance");
+                holder.title.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.red));
+                holder.imageButton.setVisibility(View.GONE);
+                holder.itemView.setOnClickListener(v -> mCategoryAdapterClickListener.onURLClicked(clearanceUrl));
+                holder.imageButton.setOnClickListener(v -> mCategoryAdapterClickListener.onURLClicked(clearanceUrl));
+                break;
+            default:
+                break;
+
         }
-        
-        final String subCategoryTitle = item.getName();
-        holder.subCategoryTitle.setText(subCategoryTitle);
-
-        final String textColor = item.getTextColor();
-        if (textColor != null && !textColor.isEmpty()) {
-            holder.subCategoryTitle.setTextColor(Color.parseColor(textColor));
-        } else {
-            holder.resetTitleTextColor();
-        }
-
-        holder.subCategoryImageButton.setVisibility(
-                item.getChildren() != null && !item.getChildren().isEmpty() ?
-                        View.VISIBLE : View.GONE);
-
-        holder.itemView.setOnClickListener(view -> {
-            final int pos = holder.getBindingAdapterPosition();
-            mCategoryAdapterClickListener.onCategoryClicked(pos, mData.get(pos), mData.get(pos).getName());
-        });
-
-        holder.subCategoryImageButton.setOnClickListener(view -> {
-            final int pos = holder.getBindingAdapterPosition();
-            mCategoryAdapterClickListener.onCategoryClicked(pos, mData.get(pos), mData.get(pos).getName());
-        });
-
     }
 
     public GetCategoryTreeResponse getItem(int position) {
@@ -78,17 +102,29 @@ public class NewSaleCategoryAdapter extends RecyclerView.Adapter<NewSaleCategory
 
     @Override
     public int getItemCount() {
-        return mData != null ? mData.size() : 0;
+        return (mData != null ? mData.size() : 0) +
+                (clearanceUrl != null ? 1 : 0);
     }
 
     @Override
     public int getItemViewType(int position) {
-        return position;
+        if (clearanceUrl != null && position >= mData.size()) {
+            return VIEW_TYPE_URL;
+        }
+        return VIEW_TYPE_NORMAL;
     }
 
     public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
         mData = new ArrayList<>(getCategoryTreeResponses);
         notifyDataSetChanged();
+    }
+
+    public String getClearanceUrl() {
+        return clearanceUrl;
+    }
+
+    public void setClearanceUrl(String clearanceUrl) {
+        this.clearanceUrl = clearanceUrl;
     }
 
     public static class NewSaleCategoryViewHolder extends RecyclerView.ViewHolder {
@@ -97,21 +133,21 @@ public class NewSaleCategoryAdapter extends RecyclerView.Adapter<NewSaleCategory
         RelativeLayout categoryContainer;
 
         @BindView(R.id.viewholder_salecategory_title)
-        TextView subCategoryTitle;
+        TextView title;
 
         @BindView(R.id.viewholder_salecategory_image_button)
-        ImageButton subCategoryImageButton;
+        ImageButton imageButton;
 
         private final int titleDefaultTextColor;
 
         public NewSaleCategoryViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            titleDefaultTextColor = subCategoryTitle.getTextColors().getDefaultColor();
+            titleDefaultTextColor = title.getTextColors().getDefaultColor();
         }
 
         public void resetTitleTextColor() {
-            subCategoryTitle.setTextColor(titleDefaultTextColor);
+            title.setTextColor(titleDefaultTextColor);
         }
     }
 

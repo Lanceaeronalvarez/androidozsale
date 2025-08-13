@@ -190,6 +190,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String FACEBOOK_LOGIN_ENABLED = "FACEBOOK_LOGIN_ENABLED";
 
+    private static final String CLEARANCE_URL = "CLEARANCE_URL";
+
     private Context mContext;
 
     @Inject
@@ -1199,5 +1201,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean getFacebookLoginEnabled() {
         return Prefs.getBoolean(FACEBOOK_LOGIN_ENABLED, true);
+    }
+
+    @Override
+    public String getClearanceUrl() {
+        return Prefs.getString(CLEARANCE_URL, "");
+    }
+
+    @Override
+    public void setClearanceUrl(String clearanceUrl) {
+        Prefs.putString(CLEARANCE_URL, clearanceUrl);
     }
 }

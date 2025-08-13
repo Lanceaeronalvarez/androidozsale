@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.categories;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -270,6 +271,7 @@ public class NewSaleCategoriesController extends BaseController
         if (mCategories != null) {
 
             mCategoryAdapter = new NewSaleCategoryAdapter(mCategories, this);
+            mCategoryAdapter.setClearanceUrl(mPresenter.getClearanceUrl());
 
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
             mRecyclerView.setAdapter(mCategoryAdapter);
@@ -549,6 +551,7 @@ public class NewSaleCategoriesController extends BaseController
                     CommonUtils.positionOfControllerInRouterBackstack(getRouter(), this) > 0 ?
                             View.VISIBLE : View.GONE);
             mCategoryAdapter = new NewSaleCategoryAdapter(mCategories, this);
+            mCategoryAdapter.setClearanceUrl(mPresenter.getClearanceUrl());
         } else if (mLevel == 1) {
             mToolbarTextView.setText(mCategoryName);
             mSeeAllButtonText.setText(allText + mCategoryName);
@@ -576,5 +579,10 @@ public class NewSaleCategoriesController extends BaseController
         mRecyclerView.setAdapter(mCategoryAdapter);
         mRecyclerView.setMotionEventSplittingEnabled(false);
         mCategoryAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onURLClicked(String url) {
+        mActivity.getMainController().processDeeplinkUri(Uri.parse(url));
     }
 }
