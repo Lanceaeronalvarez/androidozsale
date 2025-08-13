@@ -39,6 +39,12 @@ public class SetUserDetailsRequest {
     @SerializedName("mobile_number")
     @Expose
     private String mobileNumber;
+    @SerializedName("receive_invitations")
+    @Expose
+    private boolean receiveInvitations;
+    @SerializedName("receive_sms")
+    @Expose
+    private boolean receiveSms;
     @SerializedName("languageID")
     @Expose
     private String languageID;
@@ -129,5 +135,21 @@ public class SetUserDetailsRequest {
 
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
+    }
+
+    public boolean getReceiveInvitation() {
+        return receiveInvitations;
+    }
+
+    public void setReceiveInvitation(boolean receiveInvitations) {
+        this.receiveInvitations = receiveInvitations;
+    }
+
+    public boolean getReceiveSms() {
+        return receiveSms;
+    }
+
+    public void setReceiveSms(boolean receiveSms) {
+        this.receiveSms = receiveSms;
     }
 }
