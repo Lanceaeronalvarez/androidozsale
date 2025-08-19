@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -145,6 +146,9 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @BindView(R.id.controller_details_marketing_preferences_sms_checkbox)
     CheckBox mSmsMarketingCheckbox;
+
+    @BindView(R.id.controller_details_opt_in_message)
+    TextView mOptInMessagetext;
 
     private final List<RadioButton> emailSubscriptionPreferencesRadioButtonsList = new ArrayList<>();
     private final Map<String, RadioButton> emailSubscriptionPreferencesRadioButtonsMap = new HashMap<>();
@@ -334,6 +338,45 @@ public class DetailsController extends BasePullToRefreshController implements De
             public void afterTextChanged(Editable s) {
             }
         });
+
+//        mEmailMarketingCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+//                if(isChecked || mSmsMarketingCheckbox.isChecked()){
+//                    mOptInMessagetext.setVisibility(View.VISIBLE);
+//                }else if(!mSmsMarketingCheckbox.isChecked()){
+//                    mOptInMessagetext.setVisibility(View.GONE);
+//                }
+//            }
+//        });
+//
+//        mSmsMarketingCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+//                if(isChecked || mEmailMarketingCheckbox.isChecked()){
+//                    mOptInMessagetext.setVisibility(View.VISIBLE);
+//                }else if(!mEmailMarketingCheckbox.isChecked()){
+//                    mOptInMessagetext.setVisibility(View.GONE);
+//                }
+//            }
+//        });
+        
+        mEmailMarketingCheckbox.setOnClickListener(v -> {
+            if(mSmsMarketingCheckbox.isChecked() || mEmailMarketingCheckbox.isChecked()){
+                mOptInMessagetext.setVisibility(View.VISIBLE);
+            }else if(!mSmsMarketingCheckbox.isChecked() && !mEmailMarketingCheckbox.isChecked()){
+                mOptInMessagetext.setVisibility(View.GONE);
+            }
+        });
+
+        mSmsMarketingCheckbox.setOnClickListener(v -> {
+            if(mSmsMarketingCheckbox.isChecked() || mEmailMarketingCheckbox.isChecked()){
+                mOptInMessagetext.setVisibility(View.VISIBLE);
+            }else if(!mSmsMarketingCheckbox.isChecked() && !mEmailMarketingCheckbox.isChecked()){
+                mOptInMessagetext.setVisibility(View.GONE);
+            }
+        });
+
     }
 
     @Override
@@ -383,8 +426,11 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         String mobileNumber = userDetailsResponse.getMobileNumber();
         Boolean willReceiveSMS = userDetailsResponse.willReceiveSMS();
+        Boolean willReceiveEmail = userDetailsResponse.getReceiveInvitations();
         mMobileNumberEditText.setText(mobileNumber != null ? mobileNumber.startsWith("+") ? mobileNumber.replace(getString(R.string.country_code_mobile_number), "") : mobileNumber : "");
         mSmsOptInCheckbox.setChecked(willReceiveSMS != null ? willReceiveSMS : false);
+        mEmailMarketingCheckbox.setChecked(willReceiveEmail != null ? willReceiveEmail : false);
+        mSmsMarketingCheckbox.setChecked(willReceiveSMS != null ? willReceiveSMS : false);
     }
 
     @Override
@@ -549,7 +595,7 @@ public class DetailsController extends BasePullToRefreshController implements De
             return;
         }
 
-        if (isThereAnyChangesInUserDetails()) {
+        if (isThereAnyChangesInUserDetails() || isMarketingPreferenceChanged()) {
 
             AlertDialog dialogBuilder = new AlertDialog.Builder(mActivity).create();
             LayoutInflater inflater = mActivity.getLayoutInflater();
@@ -917,6 +963,13 @@ public class DetailsController extends BasePullToRefreshController implements De
                 (currentDateOfBirth != null && currentDateOfBirth.equals(dateOfBirth)) ||
                 !newpassword.isEmpty() ||
                 !currentMobileNumber.equals(mobileNumber);
+    }
+
+    private boolean isMarketingPreferenceChanged() {
+        boolean isEmailMarketingChanged = currentUserDetails.getReceiveInvitations() == mEmailMarketingCheckbox.isChecked();
+        boolean isSMSMarketingChanged = currentUserDetails.willReceiveSMS() == mSmsMarketingCheckbox.isChecked();
+
+        return isEmailMarketingChanged || isSMSMarketingChanged;
     }
 
     private boolean isEmailSubscriptionPreferenceChanged() {

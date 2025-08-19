@@ -541,7 +541,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/marginBottom_10"
-                        android:text="Subscribe to email marketing communications"
+                        android:text="@string/subscribe_to_email"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_caption1" />
 
@@ -562,11 +562,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/marginBottom_10"
-                        android:text="Subscribe to SMS marketing communications"
+                        android:text="@string/subscribe_to_sms"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_caption1" />
 
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/controller_details_opt_in_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_medium"
+                    android:text="@string/opt_in_message"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_caption1"
+                    android:visibility="gone"/>
 
                 <Button
                     android:id="@+id/controller_account_deletion_button"
