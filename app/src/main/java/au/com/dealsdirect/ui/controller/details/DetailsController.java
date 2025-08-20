@@ -935,8 +935,8 @@ public class DetailsController extends BasePullToRefreshController implements De
     }
 
     private boolean isMarketingPreferenceChanged() {
-        boolean isEmailMarketingChanged = currentUserDetails.getReceiveInvitations() == mEmailMarketingCheckbox.isChecked();
-        boolean isSMSMarketingChanged = currentUserDetails.willReceiveSMS() == mSmsMarketingCheckbox.isChecked();
+        boolean isEmailMarketingChanged = currentUserDetails.getReceiveInvitations() != mEmailMarketingCheckbox.isChecked();
+        boolean isSMSMarketingChanged = currentUserDetails.willReceiveSMS() != mSmsMarketingCheckbox.isChecked();
 
         return isEmailMarketingChanged || isSMSMarketingChanged;
     }
