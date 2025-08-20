@@ -400,9 +400,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
             android:text="@string/opt_in_message"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_caption1"
-            android:visibility="gone"/>
+            android:textSize="@dimen/text_size_caption1"/>
 
         <Button
             android:id="@+id/controller_details_button"

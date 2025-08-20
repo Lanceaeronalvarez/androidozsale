@@ -337,22 +337,6 @@ public class DetailsController extends BasePullToRefreshController implements De
             public void afterTextChanged(Editable s) {
             }
         });
-        
-        mEmailMarketingCheckbox.setOnClickListener(v -> {
-            if(mSmsMarketingCheckbox.isChecked() || mEmailMarketingCheckbox.isChecked()){
-                mOptInMessagetext.setVisibility(View.VISIBLE);
-            }else if(!mSmsMarketingCheckbox.isChecked() && !mEmailMarketingCheckbox.isChecked()){
-                mOptInMessagetext.setVisibility(View.GONE);
-            }
-        });
-
-        mSmsMarketingCheckbox.setOnClickListener(v -> {
-            if(mSmsMarketingCheckbox.isChecked() || mEmailMarketingCheckbox.isChecked()){
-                mOptInMessagetext.setVisibility(View.VISIBLE);
-            }else if(!mSmsMarketingCheckbox.isChecked() && !mEmailMarketingCheckbox.isChecked()){
-                mOptInMessagetext.setVisibility(View.GONE);
-            }
-        });
 
     }
 
