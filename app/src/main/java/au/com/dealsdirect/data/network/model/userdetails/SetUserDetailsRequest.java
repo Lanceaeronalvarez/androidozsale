@@ -3,6 +3,8 @@ package au.com.dealsdirect.data.network.model.userdetails;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
+
 /**
  * Created by smartwave on 08/01/2017.
  */
@@ -48,6 +50,12 @@ public class SetUserDetailsRequest {
     @SerializedName("languageID")
     @Expose
     private String languageID;
+    @SerializedName("member_preference")
+    @Expose
+    private String memberPreference;
+    @SerializedName("preference_categories")
+    @Expose
+    private HashMap<String, Boolean> categories;
 
     public String getPassword() {
         return password;
@@ -151,5 +159,21 @@ public class SetUserDetailsRequest {
 
     public void setReceiveSms(boolean receiveSms) {
         this.receiveSms = receiveSms;
+    }
+
+    public String getMemberPreference() {
+        return memberPreference;
+    }
+
+    public void setMemberPreference(String memberPreference) {
+        this.memberPreference = memberPreference;
+    }
+
+    public HashMap<String, Boolean> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(HashMap<String, Boolean> categories) {
+        this.categories = categories;
     }
 }

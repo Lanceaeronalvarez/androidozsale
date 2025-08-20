@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -338,28 +337,6 @@ public class DetailsController extends BasePullToRefreshController implements De
             public void afterTextChanged(Editable s) {
             }
         });
-
-//        mEmailMarketingCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-//                if(isChecked || mSmsMarketingCheckbox.isChecked()){
-//                    mOptInMessagetext.setVisibility(View.VISIBLE);
-//                }else if(!mSmsMarketingCheckbox.isChecked()){
-//                    mOptInMessagetext.setVisibility(View.GONE);
-//                }
-//            }
-//        });
-//
-//        mSmsMarketingCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-//                if(isChecked || mEmailMarketingCheckbox.isChecked()){
-//                    mOptInMessagetext.setVisibility(View.VISIBLE);
-//                }else if(!mEmailMarketingCheckbox.isChecked()){
-//                    mOptInMessagetext.setVisibility(View.GONE);
-//                }
-//            }
-//        });
         
         mEmailMarketingCheckbox.setOnClickListener(v -> {
             if(mSmsMarketingCheckbox.isChecked() || mEmailMarketingCheckbox.isChecked()){
@@ -635,7 +612,9 @@ public class DetailsController extends BasePullToRefreshController implements De
                                 "",
                                 mobileNumber,
                                 mEmailMarketingCheckbox.isChecked(),
-                                mSmsMarketingCheckbox.isChecked()),
+                                mSmsMarketingCheckbox.isChecked(),
+                                currentUserDetails.getMemberPreference(),
+                                currentUserDetails.getCategories()),
                         success -> {
                             if (success) {
                                 dialogBuilder.dismiss();
@@ -814,7 +793,9 @@ public class DetailsController extends BasePullToRefreshController implements De
                         confirmpassword,
                         mobileNumber,
                         mEmailMarketingCheckbox.isChecked(),
-                        mSmsMarketingCheckbox.isChecked()), new DetailsPasswordCallback() {
+                        mSmsMarketingCheckbox.isChecked(),
+                        currentUserDetails.getMemberPreference(),
+                        currentUserDetails.getCategories()), new DetailsPasswordCallback() {
                     @Override
                     public void onEvent(boolean success) {
                         if (success) {
@@ -902,7 +883,9 @@ public class DetailsController extends BasePullToRefreshController implements De
                                                          String confirmPassword,
                                                          String mobileNumber,
                                                          boolean receiveInvitation,
-                                                         boolean receiveSms) {
+                                                         boolean receiveSms,
+                                                         String memberPreference,
+                                                         HashMap<String, Boolean> categories) {
         SetUserDetailsRequest userDetailsRequest = new SetUserDetailsRequest();
         userDetailsRequest.setUserName(userName);
         userDetailsRequest.setFirstname(firstName);
@@ -916,6 +899,8 @@ public class DetailsController extends BasePullToRefreshController implements De
         userDetailsRequest.setMobileNumber(mobileNumber);
         userDetailsRequest.setReceiveInvitation(receiveInvitation);
         userDetailsRequest.setReceiveSms(receiveSms);
+        userDetailsRequest.setMemberPreference(memberPreference);
+        userDetailsRequest.setCategories(categories);
 
         return userDetailsRequest;
     }
