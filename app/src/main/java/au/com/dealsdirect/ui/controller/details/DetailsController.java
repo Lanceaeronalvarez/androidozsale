@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -132,6 +133,12 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @BindView(R.id.controller_success_message)
     TextView emailCategoryPreferencesSuccessMessage;
+
+    @BindView(R.id.controller_details_text_mobile_number)
+    EditText mMobileNumberEditText;
+
+    @BindView(R.id.controller_details_sms_opt_in_checkbox)
+    CheckBox mSmsOptInCheckbox;
 
     private final List<RadioButton> emailSubscriptionPreferencesRadioButtonsList = new ArrayList<>();
     private final Map<String, RadioButton> emailSubscriptionPreferencesRadioButtonsMap = new HashMap<>();
@@ -368,13 +375,49 @@ public class DetailsController extends BasePullToRefreshController implements De
             setRecyclerAdapter();
         }
 
+        String mobileNumber = userDetailsResponse.getMobileNumber();
+        Boolean willReceiveSMS = userDetailsResponse.willReceiveSMS();
+        mMobileNumberEditText.setText(mobileNumber != null ? mobileNumber.startsWith("+") ? mobileNumber.replace(getString(R.string.country_code_mobile_number), "") : mobileNumber : "");
+        mSmsOptInCheckbox.setChecked(willReceiveSMS != null ? willReceiveSMS : false);
     }
 
     @Override
     public void saveUserDetailsSuccess() {
-        CustomAlertDialog.showCustomAlertDialog(mActivity,
-                CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                "User details is saved");
+        clearPasswordFields();
+
+        String firstname = getFieldValue(mFirstNameText);
+        String lastname = getFieldValue(mLastNameText);
+        boolean gender = getFieldValueOfGender();
+        String email = getFieldValue(mEmailAddressText);
+        String dateOfBirth = getFieldValueOfDateOfBirth();
+        String mobileNumber = getFieldValue(mMobileNumberEditText);
+
+        currentUserDetails.setForename(firstname);
+        currentUserDetails.setSurname(lastname);
+        currentUserDetails.setGender(gender);
+        currentUserDetails.setEmail(email);
+        currentUserDetails.setDateOfBirth(dateOfBirth);
+        currentUserDetails.setMobileNumber(mobileNumber);
+
+        if (isEmailSubscriptionPreferenceChanged()) {
+            updateEmailSubscriptionPreference(mEmailAddressText.getText().toString());
+        } else {
+            String message = "Changes Saved";
+            if (SHOULD_SHOW_SUCCESS_DIALOGS) {
+                CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, message);
+            } else {
+                emailCategoryPreferencesSuccessMessage.setVisibility(View.VISIBLE);
+                emailCategoryPreferencesSuccessMessage.setText(message);
+
+                final Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                    if (!isViewAttached() || emailCategoryPreferencesSuccessMessage == null) {
+                        return;
+                    }
+                    emailCategoryPreferencesSuccessMessage.setVisibility(View.GONE);
+                }, showApiResponseMillis);
+            }
+        }
     }
 
     @Override
@@ -502,6 +545,10 @@ public class DetailsController extends BasePullToRefreshController implements De
             return;
         }
 
+        if (!isMobileNumberValid()) {
+            return;
+        }
+
         if (isThereAnyChangesInUserDetails()) {
 
             AlertDialog dialogBuilder = new AlertDialog.Builder(mActivity).create();
@@ -529,18 +576,24 @@ public class DetailsController extends BasePullToRefreshController implements De
                 String email = getFieldValue(mEmailAddressText);
                 String dateOfBirth = getFieldValueOfDateOfBirth();
                 String password = getFieldValue(dialogConfirmPasswordText);
+                String mobileNumber = getString(R.string.country_code_mobile_number) + getFieldValue(mMobileNumberEditText);
 
-                mPresenter.sendUserDetails(createUserDetailRequest(email, firstname, lastname, dateOfBirth,
-                                gender, email, password, "", ""),
-                        new DetailsPasswordCallback() {
-                            @Override
-                            public void onEvent(boolean success) {
-                                if (success) {
-                                    dialogBuilder.dismiss();
-                                } else {
-                                    confirmPasswordErrorText.setVisibility(View.VISIBLE);
-                                    confirmPasswordErrorText.setText("Incorrect Password");
-                                }
+                mPresenter.sendUserDetails(createUserDetailRequest(email,
+                                firstname,
+                                lastname,
+                                dateOfBirth,
+                                gender,
+                                email,
+                                password,
+                                "",
+                                "",
+                                mobileNumber),
+                        success -> {
+                            if (success) {
+                                dialogBuilder.dismiss();
+                            } else {
+                                confirmPasswordErrorText.setVisibility(View.VISIBLE);
+                                confirmPasswordErrorText.setText("Incorrect Password");
                             }
                         });
 
@@ -692,6 +745,7 @@ public class DetailsController extends BasePullToRefreshController implements De
             String password = getFieldValue(dialogCurrentPasswordText);
             String newpassword = getFieldValue(dialogNewPasswordText);
             String confirmpassword = getFieldValue(dialogConfirmPasswordText);
+            String mobileNumber = getString(R.string.country_code_mobile_number) + getFieldValue(mMobileNumberEditText);
 
             if (dialogConfirmPasswordText.getText().toString().isEmpty() || dialogConfirmPasswordText.getText().toString() == "") {
                 CustomAlertDialog.showCustomAlertDialog(mActivity,
@@ -701,8 +755,17 @@ public class DetailsController extends BasePullToRefreshController implements De
             }
 
             if (newpassword.equals(confirmpassword)) {
-                mPresenter.sendUserDetails(createUserDetailRequest(email, firstname, lastname, dateOfBirth,
-                        gender, email, password, newpassword, confirmpassword), new DetailsPasswordCallback() {
+                mPresenter.sendUserDetails(createUserDetailRequest(
+                        email,
+                        firstname,
+                        lastname,
+                        dateOfBirth,
+                        gender,
+                        email,
+                        password,
+                        newpassword,
+                        confirmpassword,
+                        mobileNumber), new DetailsPasswordCallback() {
                     @Override
                     public void onEvent(boolean success) {
                         if (success) {
@@ -779,9 +842,16 @@ public class DetailsController extends BasePullToRefreshController implements De
         mDateOfBirthText.setText(dateOfBirth == null ? null : uiDateFormat.format(dateOfBirth));
     }
 
-    public SetUserDetailsRequest createUserDetailRequest(String userName, String firstName, String lastName,
-                                                         String dateOfBirth, boolean gender, String email,
-                                                         String password, String newPassword, String confirmPassword) {
+    public SetUserDetailsRequest createUserDetailRequest(String userName,
+                                                         String firstName,
+                                                         String lastName,
+                                                         String dateOfBirth,
+                                                         boolean gender,
+                                                         String email,
+                                                         String password,
+                                                         String newPassword,
+                                                         String confirmPassword,
+                                                         String mobileNumber) {
         SetUserDetailsRequest userDetailsRequest = new SetUserDetailsRequest();
         userDetailsRequest.setUserName(userName);
         userDetailsRequest.setFirstname(firstName);
@@ -792,6 +862,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         userDetailsRequest.setPassword(password);
         userDetailsRequest.setNewPassword(newPassword);
         userDetailsRequest.setConfirmPassword(confirmPassword);
+        userDetailsRequest.setMobileNumber(mobileNumber);
 
         return userDetailsRequest;
     }
@@ -818,6 +889,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         boolean gender = getFieldValueOfGender();
         String email = getFieldValue(mEmailAddressText);
         String newpassword = getFieldValue(mNewPasswordText);
+        String mobileNumber = getString(R.string.country_code_mobile_number) + getFieldValue(mMobileNumberEditText);
 
         String currentFirstname = currentUserDetails.getForename();
         String currentSurname = currentUserDetails.getSurname();
@@ -827,19 +899,24 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         boolean currentGender = currentUserDetails.getGender();
 
+        String currentMobileNumber = currentUserDetails.getMobileNumber() != null ?
+                currentUserDetails.getMobileNumber() : "";
+
         return !currentFirstname.equals(firstname) ||
                 !currentSurname.equals(lastname) ||
                 !currentEmail.equals(email) ||
                 (currentGender != gender && getBoolean(R.bool.is_gender_enabled)) ||
                 (currentDateOfBirth == null && dateOfBirth != null) ||
                 (currentDateOfBirth != null && currentDateOfBirth.equals(dateOfBirth)) ||
-                !newpassword.isEmpty();
+                !newpassword.isEmpty() ||
+                !currentMobileNumber.equals(mobileNumber);
     }
 
     private boolean isEmailSubscriptionPreferenceChanged() {
         return currentUserDetails != null &&
-                emailSubscriptionPreferenceDate != null &&
-                !emailSubscriptionPreferenceDate.equals(getDateFromServerDateString(currentUserDetails.getPreferenceDate()));
+                (emailSubscriptionPreferenceDate != null &&
+                        !emailSubscriptionPreferenceDate.equals(getDateFromServerDateString(currentUserDetails.getPreferenceDate())) ||
+                        mSmsOptInCheckbox.isChecked() != currentUserDetails.willReceiveSMS());
     }
 
     private void updateEmailSubscriptionPreference(String email) {
@@ -848,6 +925,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         request.setPreference(emailSubscriptionPreference);
         request.setStatus(emailSubscriptionPreference != null && !emailSubscriptionPreference.equalsIgnoreCase(UNSUBSCRIBE_PREFERENCE_KEY));
         request.setCategories(mCategories);
+        request.setWillReceiveSMS(mSmsOptInCheckbox.isChecked());
 
         mPresenter.updateEmailSubscriptionPreference(request);
     }
@@ -857,6 +935,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         request.setEmail(currentUserDetails.getEmail());
         request.setPreference(UNSUBSCRIBE_PREFERENCE_KEY);
         request.setStatus(false);
+        request.setWillReceiveSMS(mSmsOptInCheckbox.isChecked());
 
         mPresenter.updateEmailSubscriptionPreference(request);
         emailSubscriptionPreferencesRadioGroup.clearCheck();
@@ -988,6 +1067,21 @@ public class DetailsController extends BasePullToRefreshController implements De
     public void unsubscribeRecycler() {
         isCategorySelectionEnabled = false;
         setRecyclerAdapter();
+    }
+
+    private boolean isMobileNumberValid() {
+        String mobileNumber = getString(R.string.country_code_mobile_number) + getFieldValue(mMobileNumberEditText);
+        boolean isMobileNumberValid = false;
+
+        final Pattern pattern
+                = Pattern.compile(getString(R.string.mobile_number_regex));
+        if (pattern.matcher(mobileNumber).matches()) {
+            isMobileNumberValid = true;
+        } else {
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.invalid_phone_number));
+        }
+
+        return isMobileNumberValid;
     }
 
 }
