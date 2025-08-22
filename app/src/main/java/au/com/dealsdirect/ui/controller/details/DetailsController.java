@@ -140,6 +140,15 @@ public class DetailsController extends BasePullToRefreshController implements De
     @BindView(R.id.controller_details_sms_opt_in_checkbox)
     CheckBox mSmsOptInCheckbox;
 
+    @BindView(R.id.controller_details_marketing_preferences_email_checkbox)
+    CheckBox mEmailMarketingCheckbox;
+
+    @BindView(R.id.controller_details_marketing_preferences_sms_checkbox)
+    CheckBox mSmsMarketingCheckbox;
+
+    @BindView(R.id.controller_details_opt_in_message)
+    TextView mOptInMessagetext;
+
     private final List<RadioButton> emailSubscriptionPreferencesRadioButtonsList = new ArrayList<>();
     private final Map<String, RadioButton> emailSubscriptionPreferencesRadioButtonsMap = new HashMap<>();
     private final Map<Integer, String> emailSubscriptionPreferencesRadioButtonsIdMap = new HashMap<>();
@@ -328,6 +337,7 @@ public class DetailsController extends BasePullToRefreshController implements De
             public void afterTextChanged(Editable s) {
             }
         });
+
     }
 
     @Override
@@ -377,8 +387,11 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         String mobileNumber = userDetailsResponse.getMobileNumber();
         Boolean willReceiveSMS = userDetailsResponse.willReceiveSMS();
+        Boolean willReceiveEmail = userDetailsResponse.getReceiveInvitations();
         mMobileNumberEditText.setText(mobileNumber != null ? mobileNumber.startsWith("+") ? mobileNumber.replace(getString(R.string.country_code_mobile_number), "") : mobileNumber : "");
         mSmsOptInCheckbox.setChecked(willReceiveSMS != null ? willReceiveSMS : false);
+        mEmailMarketingCheckbox.setChecked(willReceiveEmail != null ? willReceiveEmail : false);
+        mSmsMarketingCheckbox.setChecked(willReceiveSMS != null ? willReceiveSMS : false);
     }
 
     @Override
@@ -399,24 +412,20 @@ public class DetailsController extends BasePullToRefreshController implements De
         currentUserDetails.setDateOfBirth(dateOfBirth);
         currentUserDetails.setMobileNumber(mobileNumber);
 
-        if (isEmailSubscriptionPreferenceChanged()) {
-            updateEmailSubscriptionPreference(mEmailAddressText.getText().toString());
+        String message = "Changes Saved";
+        if (SHOULD_SHOW_SUCCESS_DIALOGS) {
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, message);
         } else {
-            String message = "Changes Saved";
-            if (SHOULD_SHOW_SUCCESS_DIALOGS) {
-                CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, message);
-            } else {
-                emailCategoryPreferencesSuccessMessage.setVisibility(View.VISIBLE);
-                emailCategoryPreferencesSuccessMessage.setText(message);
+            emailCategoryPreferencesSuccessMessage.setVisibility(View.VISIBLE);
+            emailCategoryPreferencesSuccessMessage.setText(message);
 
-                final Handler handler = new Handler();
-                handler.postDelayed(() -> {
-                    if (!isViewAttached() || emailCategoryPreferencesSuccessMessage == null) {
-                        return;
-                    }
-                    emailCategoryPreferencesSuccessMessage.setVisibility(View.GONE);
-                }, showApiResponseMillis);
-            }
+            final Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                if (!isViewAttached() || emailCategoryPreferencesSuccessMessage == null) {
+                    return;
+                }
+                emailCategoryPreferencesSuccessMessage.setVisibility(View.GONE);
+            }, showApiResponseMillis);
         }
     }
 
@@ -446,9 +455,7 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         clearPasswordFields();
 
-        if (isEmailSubscriptionPreferenceChanged()) {
-            updateEmailSubscriptionPreference(mEmailAddressText.getText().toString());
-        } else if (SHOULD_SHOW_SUCCESS_DIALOGS) {
+        if (SHOULD_SHOW_SUCCESS_DIALOGS) {
             CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, "Changes Saved");
         }
     }
@@ -490,7 +497,7 @@ public class DetailsController extends BasePullToRefreshController implements De
                     return;
                 }
                 new Handler(mActivity.getMainLooper()).post(() -> {
-                    emailSubscriptionPreferencesContainerView.setVisibility(View.VISIBLE);
+                    emailSubscriptionPreferencesContainerView.setVisibility(View.GONE);
 
                     // Set Header Text
                     emailSubscriptionPreferencesHeaderTextView.setText(emailSubscriptionTemplates.getTitle());
@@ -549,7 +556,7 @@ public class DetailsController extends BasePullToRefreshController implements De
             return;
         }
 
-        if (isThereAnyChangesInUserDetails()) {
+        if (isThereAnyChangesInUserDetails() || isMarketingPreferenceChanged()) {
 
             AlertDialog dialogBuilder = new AlertDialog.Builder(mActivity).create();
             LayoutInflater inflater = mActivity.getLayoutInflater();
@@ -587,7 +594,11 @@ public class DetailsController extends BasePullToRefreshController implements De
                                 password,
                                 "",
                                 "",
-                                mobileNumber),
+                                mobileNumber,
+                                mEmailMarketingCheckbox.isChecked(),
+                                mSmsMarketingCheckbox.isChecked(),
+                                currentUserDetails.getMemberPreference(),
+                                currentUserDetails.getCategories()),
                         success -> {
                             if (success) {
                                 dialogBuilder.dismiss();
@@ -613,9 +624,8 @@ public class DetailsController extends BasePullToRefreshController implements De
             dialogBuilder.setView(dialogView);
             dialogBuilder.show();
 
-        } else if (isEmailSubscriptionPreferenceChanged()) {
-            updateEmailSubscriptionPreference(currentUserDetails.getEmail());
         }
+
     }
 
     @OnClick(R.id.controller_details_reset_password)
@@ -765,7 +775,11 @@ public class DetailsController extends BasePullToRefreshController implements De
                         password,
                         newpassword,
                         confirmpassword,
-                        mobileNumber), new DetailsPasswordCallback() {
+                        mobileNumber,
+                        mEmailMarketingCheckbox.isChecked(),
+                        mSmsMarketingCheckbox.isChecked(),
+                        currentUserDetails.getMemberPreference(),
+                        currentUserDetails.getCategories()), new DetailsPasswordCallback() {
                     @Override
                     public void onEvent(boolean success) {
                         if (success) {
@@ -851,7 +865,11 @@ public class DetailsController extends BasePullToRefreshController implements De
                                                          String password,
                                                          String newPassword,
                                                          String confirmPassword,
-                                                         String mobileNumber) {
+                                                         String mobileNumber,
+                                                         boolean receiveInvitation,
+                                                         boolean receiveSms,
+                                                         String memberPreference,
+                                                         HashMap<String, Boolean> categories) {
         SetUserDetailsRequest userDetailsRequest = new SetUserDetailsRequest();
         userDetailsRequest.setUserName(userName);
         userDetailsRequest.setFirstname(firstName);
@@ -863,6 +881,10 @@ public class DetailsController extends BasePullToRefreshController implements De
         userDetailsRequest.setNewPassword(newPassword);
         userDetailsRequest.setConfirmPassword(confirmPassword);
         userDetailsRequest.setMobileNumber(mobileNumber);
+        userDetailsRequest.setReceiveInvitation(receiveInvitation);
+        userDetailsRequest.setReceiveSms(receiveSms);
+        userDetailsRequest.setMemberPreference(memberPreference);
+        userDetailsRequest.setCategories(categories);
 
         return userDetailsRequest;
     }
@@ -910,6 +932,13 @@ public class DetailsController extends BasePullToRefreshController implements De
                 (currentDateOfBirth != null && currentDateOfBirth.equals(dateOfBirth)) ||
                 !newpassword.isEmpty() ||
                 !currentMobileNumber.equals(mobileNumber);
+    }
+
+    private boolean isMarketingPreferenceChanged() {
+        boolean isEmailMarketingChanged = currentUserDetails.getReceiveInvitations() != mEmailMarketingCheckbox.isChecked();
+        boolean isSMSMarketingChanged = currentUserDetails.willReceiveSMS() != mSmsMarketingCheckbox.isChecked();
+
+        return isEmailMarketingChanged || isSMSMarketingChanged;
     }
 
     private boolean isEmailSubscriptionPreferenceChanged() {
