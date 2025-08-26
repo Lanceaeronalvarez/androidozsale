@@ -58,8 +58,6 @@ lane :dd_build do |options|
 
   uploadToFirebase(options[:app_name], emails, options[:apk_name], options[:app_path], options[:app_flavor], options[:app_notes_path], options[:app_id])
 
-  increment_version_code_android(product_flavor: options[:app_flavor])
-
 end
 
 # Uploads the app to Firebase
