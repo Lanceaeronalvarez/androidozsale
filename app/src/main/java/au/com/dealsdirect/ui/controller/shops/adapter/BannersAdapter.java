@@ -43,6 +43,8 @@ import io.reactivex.functions.Consumer;
 
 public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ResettableDimensions {
 
+    public static final boolean HIDE_OVERLAY = true;
+
     private int mOrientation;
 
     private int mComputedWidth = -1;
@@ -420,26 +422,33 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         bannerViewHolder.name.setVisibility(View.GONE);
                     }
 
-                    if (item.getBannerText() != null && !item.getBannerText().isEmpty()) {
-                        bannerViewHolder.discount.setVisibility(View.VISIBLE);
-                        bannerViewHolder.discount.setText(item.getBannerText());
-                    } else {
+                    if (HIDE_OVERLAY) {
                         bannerViewHolder.discount.setVisibility(View.GONE);
-                    }
-
-                    if (item.getPercentOffText() != null && item.getPercentOffText().length() > 0 && bannerViewHolder.itemView.getContext().getResources().getBoolean(R.bool.is_dynamic_discount_banners_enabled)) {
-                        bannerViewHolder.percentOff.setVisibility(View.VISIBLE);
-                        bannerViewHolder.percentOff.setText(item.getPercentOffText());
-                    } else {
                         bannerViewHolder.percentOff.setVisibility(View.GONE);
-                    }
+                        bannerViewHolder.freeShipping.setVisibility(View.GONE);
+                        bannerViewHolder.freeShipping.setOnClickListener(null);
+                    } else {
+                        if (item.getBannerText() != null && !item.getBannerText().isEmpty()) {
+                            bannerViewHolder.discount.setVisibility(View.VISIBLE);
+                            bannerViewHolder.discount.setText(item.getBannerText());
+                        } else {
+                            bannerViewHolder.discount.setVisibility(View.GONE);
+                        }
 
-                    bannerViewHolder.freeShipping.setVisibility(item.getFreeDelivery() ? View.VISIBLE : View.GONE);
+                        if (item.getPercentOffText() != null && item.getPercentOffText().length() > 0 && bannerViewHolder.itemView.getContext().getResources().getBoolean(R.bool.is_dynamic_discount_banners_enabled)) {
+                            bannerViewHolder.percentOff.setVisibility(View.VISIBLE);
+                            bannerViewHolder.percentOff.setText(item.getPercentOffText());
+                        } else {
+                            bannerViewHolder.percentOff.setVisibility(View.GONE);
+                        }
 
-                    if (item.getDeliveryType() != null) {
-                        bannerViewHolder.freeShipping.setOnClickListener(v -> {
-                            bannersAdapterHelper.onClickFreeDelivery(String.valueOf(item.getDeliveryThreshold()), item.getDeliveryType());
-                        });
+                        bannerViewHolder.freeShipping.setVisibility(item.getFreeDelivery() ? View.VISIBLE : View.GONE);
+
+                        if (item.getDeliveryType() != null) {
+                            bannerViewHolder.freeShipping.setOnClickListener(v -> {
+                                bannersAdapterHelper.onClickFreeDelivery(String.valueOf(item.getDeliveryThreshold()), item.getDeliveryType());
+                            });
+                        }
                     }
 
                     bannerViewHolder.rearrangeStickers(mComputedWidth);
