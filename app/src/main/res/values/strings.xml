@@ -242,6 +242,8 @@
     <string name="send">send</string>
     <string name="gender">Gender</string>
     <string name="email_address">Email Address</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="sms_marketing_opt_in">SMS Marketing Opt In</string>
     <string name="password_hint">******</string>
     <string name="email_hint">example@email.com</string>
     <string name="password">Password</string>
@@ -266,6 +268,9 @@
     <string name="new_password">New Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="save_changes">Save Changes</string>
+    <string name="subscribe_to_email">Subscribe to email marketing communications *</string>
+    <string name="subscribe_to_sms">Subscribe to SMS marketing communications *</string>
+    <string name="opt_in_message">* By selecting the options above, I agree to receive promotional communication featuring our hottest deals and smartest prices on leading brands.</string>
 
     <!--ADDRESS STRINGS-->
     <string name="signature_on_delivery_note">*Your order will be left unattended. Please specify your preference
