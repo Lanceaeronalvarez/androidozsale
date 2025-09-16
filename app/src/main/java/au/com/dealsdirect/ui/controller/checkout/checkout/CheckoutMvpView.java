@@ -89,4 +89,6 @@ public interface CheckoutMvpView extends MvpView {
     void showPricingInfoText(String rrpText, Double totalPercentOff, Double originalPrice, String combinedPricingInfoText);
 
     void showRecentlyViewedItems(List<RecentlyViewedItemResponse> response);
+
+    double getCartTotalAmount();
 }

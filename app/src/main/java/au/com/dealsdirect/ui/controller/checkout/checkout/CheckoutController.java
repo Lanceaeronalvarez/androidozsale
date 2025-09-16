@@ -1132,7 +1132,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         return mValue.getThreeDSecureRequired();
     }
 
-    private double getCartTotalAmount() {
+    @Override
+    public double getCartTotalAmount() {
         if (mValue == null) {
             return 0d;
         }

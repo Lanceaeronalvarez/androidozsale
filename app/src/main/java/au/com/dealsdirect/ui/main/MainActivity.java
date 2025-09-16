@@ -19,7 +19,6 @@ import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
-import androidx.webkit.internal.ApiFeature;
 import androidx.window.java.layout.WindowInfoTrackerCallbackAdapter;
 import androidx.window.layout.WindowInfoTracker;
 import androidx.window.layout.WindowLayoutInfo;
@@ -355,6 +354,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 getMainController().processDeeplinkUri(uri);
             }
         }
+
+        setIntent(intent);
     }
 
     @Override
@@ -906,6 +907,25 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             return;
         }
         mBraintreeClientHelper.getPaymentHandler().startPaypalPayment();
+        mBraintreeClientHelper.setPaypalResultHandler(new BraintreeClientHelper.PaypalResultHandler() {
+            @Override
+            public void onGettingNonce(String nonce) {
+                PaymentMethod paymentMethod = new PaymentMethod();
+                paymentMethod.setPaymentType(AppConstants.PAYPAL);
+                paymentMethod.setProviderType(AppConstants.BRAINTREE);
+                paymentMethod.setToken("");
+                callCreatePaymentTransaction(
+                        paymentMethod,
+                        nonce,
+                        false,
+                        getMainController().getCheckoutView().getCartTotalAmount());
+            }
+
+            @Override
+            public void onError(Exception error) {
+                MainActivity.this.onError(error.getMessage());
+            }
+        });
     }
 
     public void startPaypalCreditPayment(String totalCost) {

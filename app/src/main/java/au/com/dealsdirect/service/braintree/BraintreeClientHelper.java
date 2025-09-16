@@ -220,4 +220,8 @@ public class BraintreeClientHelper {
     public void setCurrencyCode(String currencyCode) {
         this.currencyCode = currencyCode;
     }
+
+    public void setPaypalResultHandler(PaypalResultHandler mPaypalResultHandler) {
+        this.mPaypalResultHandler = mPaypalResultHandler;
+    }
 }
