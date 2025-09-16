@@ -938,13 +938,12 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 new CreatePaymentTransaction.RequestValue.Request();
         requestValue.setPaymentType(paymentType);
         requestValue.setPaymentNonce(paymentNonce);
+        requestValue.setPaymentToken(paymentToken);
         if (provider.equalsIgnoreCase(AppConstants.BRAINTREE)) {
             requestValue.setProvider("");
             requestValue.setSelectedPaymentOption(AppConstants.BRAINTREE);
-            requestValue.setPaymentToken("");
         } else {
             requestValue.setProvider(provider);
-            requestValue.setPaymentToken(paymentToken);
         }
         requestValue.setDeviceData(deviceData);
         getCompositeDisposable().add(getDataManager()
