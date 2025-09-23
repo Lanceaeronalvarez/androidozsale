@@ -730,4 +730,9 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
             mCheckoutDetailView.setSelectedPaymentMethod(selectedPaymentMethod);
         }
     }
+
+    @Override
+    public double getCartTotalAmount() {
+        return mCheckoutDetailView.getCartTotalAmount();
+    }
 }
