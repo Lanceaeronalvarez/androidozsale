@@ -187,9 +187,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private String sc = "19";
     private String c = "BestSeller";
     private String ca = "Shop";
-    private String utm_source = "BestSeller";
-    private String utm_campaign = "BestSellerShop";
-
     private GridLayoutManager mLayoutManager;
 
     private List<GetCategoryTreeResponse> mPreLoadedCategories = new LinkedList<>();
@@ -1024,8 +1021,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 utmKeys.put("sc", sc);
                 utmKeys.put("c", c);
                 utmKeys.put("ca", ca);
-                utmKeys.put("utm_source", utm_source);
-                utmKeys.put("utm_campaign", utm_campaign);
 
                 SaleItemDetailsController.Parameters.FromSaleItemProduct parameters = new SaleItemDetailsController.Parameters.FromSaleItemProduct(item, utmKeys);
 
