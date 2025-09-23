@@ -35,8 +35,8 @@ public class RegisterUserRequest {
         this.languageID = languageID;
         this.countryID = countryID;
         this.clientType = clientType;
-        this.foreName = foreName;
-        this.surName = surName;
+        this.foreName = foreName.trim();
+        this.surName = surName.trim();
         this.email = email;
         this.password = password;
         this.referredBy = referredBy;
@@ -82,7 +82,7 @@ public class RegisterUserRequest {
     }
 
     public void setForeName(String foreName) {
-        this.foreName = foreName;
+        this.foreName = foreName.trim();
     }
 
     public String getSurName() {
@@ -90,7 +90,7 @@ public class RegisterUserRequest {
     }
 
     public void setSurName(String surName) {
-        this.surName = surName;
+        this.surName = surName.trim();
     }
 
     public String getEmail() {

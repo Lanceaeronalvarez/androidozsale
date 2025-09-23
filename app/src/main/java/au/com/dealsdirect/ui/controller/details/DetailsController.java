@@ -317,6 +317,12 @@ public class DetailsController extends BasePullToRefreshController implements De
             }
         });
 
+        mFirstNameText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                mFirstNameText.setText(mFirstNameText.getText().toString().trim());
+            }
+        });
+
         mLastNameText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -338,6 +344,11 @@ public class DetailsController extends BasePullToRefreshController implements De
             }
         });
 
+        mLastNameText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                mLastNameText.setText(mLastNameText.getText().toString().trim());
+            }
+        });
     }
 
     @Override
@@ -1112,5 +1123,4 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         return isMobileNumberValid;
     }
-
 }

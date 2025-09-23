@@ -94,7 +94,7 @@ public class GetUserDetailsResponse {
     }
 
     public void setForename(String forename) {
-        this.forename = forename;
+        this.forename = forename.trim();
     }
 
     public String getSurname() {
@@ -102,7 +102,7 @@ public class GetUserDetailsResponse {
     }
 
     public void setSurname(String surname) {
-        this.surname = surname;
+        this.surname = surname.trim();
     }
 
     public Boolean getGender() {
