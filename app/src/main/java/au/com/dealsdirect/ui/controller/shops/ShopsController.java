@@ -1013,7 +1013,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
                 if (mCategoryName != "" && mCategoryName != null) {
                     ca = mCategoryName;
-                    utm_campaign = "BestSeller" + mCategoryName;
                 }
 
                 Map<String, String> utmKeys = new HashMap<>();
