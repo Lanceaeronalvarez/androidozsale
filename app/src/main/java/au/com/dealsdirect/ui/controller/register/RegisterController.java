@@ -289,6 +289,12 @@ public class RegisterController extends BaseController implements RegisterMvpVie
             }
         });
 
+        mRegisterForenameField.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                mRegisterForenameField.setText(mRegisterForenameField.getText().toString().trim());
+            }
+        });
+
         mRegisterSurnameField.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -307,6 +313,12 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
+
+        mRegisterSurnameField.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                mRegisterSurnameField.setText(mRegisterSurnameField.getText().toString().trim());
             }
         });
 

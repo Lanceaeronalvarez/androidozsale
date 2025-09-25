@@ -214,6 +214,12 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
                         }
                     });
+
+                    editTextValue.setOnFocusChangeListener((v, hasFocus) -> {
+                        if (!hasFocus) {
+                            editTextValue.setText(editTextValue.getText().toString().trim());
+                        }
+                    });
                 }
 
                 if (infoList.getName().equalsIgnoreCase("surname")) {
@@ -262,6 +268,12 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                         @Override
                         public void afterTextChanged(Editable s) {
 
+                        }
+                    });
+
+                    editTextValue.setOnFocusChangeListener((v, hasFocus) -> {
+                        if (!hasFocus) {
+                            editTextValue.setText(editTextValue.getText().toString().trim());
                         }
                     });
                 }

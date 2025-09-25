@@ -666,8 +666,6 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
         utmKeys.put("sc", "");
         utmKeys.put("c", "");
         utmKeys.put("ca", "");
-        utmKeys.put("utm_source", "");
-        utmKeys.put("utm_campaign", "");
 
         CookieUtils.addCookie(utmKeys);
     }

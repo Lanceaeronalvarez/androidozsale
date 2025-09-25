@@ -80,9 +80,7 @@ public class PersistentCookieJar implements ClearableCookieJar {
                 validCookies.add(currentCookie);
             } else if(currentCookie.name().equals("sc") ||
                     currentCookie.name().equals("c") ||
-                    currentCookie.name().equals("ca") ||
-                    currentCookie.name().equals("utm_source") ||
-                    currentCookie.name().equals("utm_campaign")){
+                    currentCookie.name().equals("ca")){
                 cookiesToRemove.add(currentCookie);
             }
         }
